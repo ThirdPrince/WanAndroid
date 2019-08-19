@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingTop="8dp"
+    tools:context=".fragment.KnowledgeSysFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+       android:padding="10dp"
+        >
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:textColor="@color/colorTitle"
+        android:layout_gravity="top"
+        android:textSize="18sp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:layout_gravity="bottom"
+        android:textSize="16sp"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

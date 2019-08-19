@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/g1">
+        <item
+            android:id="@+id/nav_criminal_manage"
+            android:icon="@drawable/ic_nav_black_24dp"
+            android:title="WanAndroid" />
+
+        <item
+            android:id="@+id/nav_collection"
+            android:icon="@drawable/collection_on"
+            android:title="收藏" />
+
+        <item
+            android:id="@+id/nav_loginout"
+            android:icon="@drawable/ic_nav_black_24dp"
+            android:title="设置" />
+    </group>
+    <group android:checkableBehavior="none">
+
+
+
+    </group>
+
+    <!--<group android:id="@+id/g2">-->
+    <!--<item-->
+    <!--android:id="@+id/nav_flayer"-->
+    <!--android:icon="@mipmap/ic_launcher"-->
+    <!--android:title="飞手" />-->
+    <!--</group>-->
+    <!--<group android:id="@+id/g3">-->
+    <!--<item-->
+    <!--android:id="@+id/nav_entrustment"-->
+    <!--android:icon="@mipmap/ic_launcher"-->
+    <!--android:title="委托函" />-->
+    <!--</group>-->
+    <!--<group android:id="@+id/g4">-->
+    <!--<item-->
+    <!--android:id="@+id/nav_loginout"-->
+    <!--android:icon="@mipmap/ic_launcher"-->
+    <!--android:title="注销" />-->
+    <!--</group>-->
+
+</menu>
