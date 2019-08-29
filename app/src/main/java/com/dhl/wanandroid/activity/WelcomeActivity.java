@@ -1,5 +1,6 @@
 package com.dhl.wanandroid.activity;
 
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -8,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -34,36 +37,63 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
+/**
+ * 启动页
+ */
 public class WelcomeActivity extends Activity {
 
     private static final String TAG = "WelcomeActivity";
     private ImageView imageView ;
 
     private TextView splash_tv ;
-   /* DrawableCrossFadeFactory factory =
-            new DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build();*/
-    private ObjectAnimator objectAnimator ;
+
+    private static final int RC_SD_PERM = 1000;
+
+    private static  final int WHAT = 1024 ;
+    private Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what)
+            {
+                case WHAT :
+                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                finish();
+                break;
+            }
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         imageView = findViewById(R.id.image);
         splash_tv = findViewById(R.id.splash_tv);
-        //objectAnimator = ObjectAnimator.ofFloat(imageView,"alpha",0.6f,1.0f);
+        EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.rationale_sd),
+                RC_SD_PERM,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+    }
+
+    @AfterPermissionGranted(RC_SD_PERM)
+    private void getImage()
+    {
         ImageBean imageBean = LitePal.findLast(ImageBean.class);
         if(imageBean != null) {
             String imagePath = imageBean.getImagePath();
-            //Environment.getExternalStorageDirectory().getAbsolutePath()+"/splash.jpg";
-            Log.e(TAG, "imagePath ==" + imagePath);
             if (new File(imagePath).exists()) {
                 Glide.with(this).load(imagePath).into(imageView);
                 splash_tv.setText(imageBean.getCopyright());
                 AnimatorSet set = new AnimatorSet();
-                //ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.12f)
                 set.playTogether(
                         ObjectAnimator.ofFloat(imageView,"alpha",0.88f,1f),
                         ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.12f),
@@ -71,21 +101,22 @@ public class WelcomeActivity extends Activity {
                 );
                 set.setDuration(2500);
                 set.start();
-                //imageView.startAnimation(anim);
-                //GlideApp.with(this).load(imagePath).into(imageView);
             }
         }
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-                finish();
-
-            }
-        },2500);
-       // getImages();
+        handler.sendEmptyMessageDelayed(WHAT,2500);
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-
+        // EasyPermissions handles the request result.
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeMessages(WHAT);
+    }
 }
