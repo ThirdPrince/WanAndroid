@@ -33,6 +33,7 @@ import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -45,31 +46,30 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 /**
  * 启动页
  */
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends Activity implements EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = "WelcomeActivity";
-    private ImageView imageView ;
+    private ImageView imageView;
 
-    private TextView splash_tv ;
+    private TextView splash_tv;
 
     private static final int RC_SD_PERM = 1000;
 
-    private static  final int WHAT = 1024 ;
-    private Handler handler = new Handler()
-    {
+    private static final int WHAT = 1024;
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
-                case WHAT :
-                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-                finish();
-                break;
+            switch (msg.what) {
+                case WHAT:
+                    startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+                    finish();
+                    break;
             }
 
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,26 +85,29 @@ public class WelcomeActivity extends Activity {
     }
 
     @AfterPermissionGranted(RC_SD_PERM)
-    private void getImage()
-    {
+    private void getImage() {
         ImageBean imageBean = LitePal.findLast(ImageBean.class);
-        if(imageBean != null) {
+        if (imageBean != null) {
             String imagePath = imageBean.getImagePath();
             if (new File(imagePath).exists()) {
                 Glide.with(this).load(imagePath).into(imageView);
                 splash_tv.setText(imageBean.getCopyright());
                 AnimatorSet set = new AnimatorSet();
                 set.playTogether(
-                        ObjectAnimator.ofFloat(imageView,"alpha",0.88f,1f),
+                        ObjectAnimator.ofFloat(imageView, "alpha", 0.88f, 1f),
                         ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.12f),
                         ObjectAnimator.ofFloat(imageView, "scaleY", 1f, 1.12f)
                 );
                 set.setDuration(2500);
                 set.start();
             }
+            handler.sendEmptyMessageDelayed(WHAT, 2500);
+        } else {
+            handler.sendEmptyMessageDelayed(WHAT, 500);
         }
-        handler.sendEmptyMessageDelayed(WHAT,2500);
+
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
@@ -114,9 +117,26 @@ public class WelcomeActivity extends Activity {
         // EasyPermissions handles the request result.
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         handler.removeMessages(WHAT);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> list) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> list) {
+
+        EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.rationale_sd),
+                RC_SD_PERM,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
     }
 }

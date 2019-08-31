@@ -2,7 +2,10 @@ apply plugin: 'com.android.application'
 //apply plugin: 'com.tencent.tinker.patch'
 android {
     compileSdkVersion 28
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     signingConfigs {
         release {
             storeFile file('D:/dhlkeystore.jks')
@@ -19,12 +22,17 @@ android {
     }
     defaultConfig {
         applicationId "com.dhl.wanandroid"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
     }
     buildTypes {
         release {
@@ -71,5 +79,8 @@ dependencies {
     implementation 'com.just.agentweb:agentweb:4.0.3-beta'
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     implementation 'pub.devrel:easypermissions:2.0.1'
+    implementation 'com.jakewharton:butterknife:5.1.1'
+    //annotationProcessor "com.jakewharton:butterknife-compiler-5.1.1"
+    //annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     implementation('com.tencent.tinker:tinker-android-lib:1.9.1')
 }
