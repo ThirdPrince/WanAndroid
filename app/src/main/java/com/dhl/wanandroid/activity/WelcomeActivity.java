@@ -64,6 +64,8 @@ public class WelcomeActivity extends Activity implements EasyPermissions.Permiss
                 case WHAT:
                     startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
                     finish();
+                    //取消界面跳转时的动画
+                    overridePendingTransition(0, 0);
                     break;
             }
 

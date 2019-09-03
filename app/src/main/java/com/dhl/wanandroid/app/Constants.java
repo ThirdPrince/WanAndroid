@@ -48,6 +48,12 @@ public class Constants {
 
     public static final String IMAGES_URL = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
 
+
+    /**
+     * register
+     */
+
+    public  static final String REGISTER_URL = "https://www.wanandroid.com/user/register";
     /**
      * login
      */

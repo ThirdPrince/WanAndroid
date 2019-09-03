@@ -2,6 +2,7 @@ package com.dhl.wanandroid.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ActivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,21 +10,54 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.dhl.wanandroid.R;
+import com.dhl.wanandroid.app.Constants;
+import com.dhl.wanandroid.http.OkHttpManager;
+import com.dhl.wanandroid.model.RegisterBean;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
+/**
+ * 注册
+ */
 public class RegisterActivity extends AppCompatActivity {
+
+
+    private static final String TAG = "RegisterActivity";
 
     @InjectView(R.id.fab)
     FloatingActionButton fab;
     @InjectView(R.id.cv_add)
     CardView cvAdd;
+
+    @InjectView(R.id.et_username)
+    EditText et_username;
+
+    @InjectView(R.id.et_password)
+    EditText et_password;
+
+    @InjectView(R.id.et_repeatpassword)
+    EditText et_repeatpassword;
+
+    @InjectView(R.id.bt_register)
+    Button bt_register ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +68,25 @@ public class RegisterActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ShowEnterAnimation();
         }
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+    }
+
+    @OnClick({R.id.bt_register,R.id.fab})
+    public void onClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.bt_register:
+                String userName = et_username.getText().toString();
+                String password = et_password.getText().toString();
+                String repeatPassword = et_repeatpassword.getText().toString();
+                register(userName,password,repeatPassword);
+                break;
+
+            case R.id.fab:
                 animateRevealClose();
-            }
-        });
+                break;
+        }
     }
 
     private void ShowEnterAnimation() {
@@ -115,6 +162,45 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
         mAnimator.start();
+    }
+
+    /**
+     * 注册
+     */
+    private void register(String userName,String password,String repeatPassword)
+    {
+
+        OkHttpManager.getInstance().register(Constants.REGISTER_URL, userName, password, repeatPassword, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String rsp = response.body().string();
+                Log.e(TAG,"rsp::"+rsp);
+                Gson gson = new Gson();
+                RegisterBean registerBean = gson.fromJson(rsp,RegisterBean.class);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(registerBean.getErrorCode() ==0)
+                        {
+                            ToastUtils.showLong("注册成功");
+                            animateRevealClose();
+                        }else
+                        {
+                            ToastUtils.showLong(registerBean.getErrorMsg());
+                        }
+
+                    }
+                });
+
+
+            }
+        });
     }
     @Override
     public void onBackPressed() {

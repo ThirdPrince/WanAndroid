@@ -115,6 +115,22 @@ public class OkHttpManager {
     }
 
     /**
+     * 注册
+     */
+
+    public void register(String url ,String username,String password,String repassword,Callback callback)
+    {
+
+        FormBody formBody = new FormBody.Builder()
+                .add("username",username)
+                .add("password",password)
+                .add("repassword",repassword)
+                .build();
+        Request request = new Request.Builder().post(formBody).url(url).build();
+        okHttpClient.newCall(request).enqueue(callback);
+    }
+
+    /**
      * 获取收藏列表
      * @param url
      * @param callback

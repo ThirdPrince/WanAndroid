@@ -8,7 +8,7 @@
 
     <FrameLayout
         android:layout_centerInParent="true"
-        android:paddingTop="70dp"
+        android:paddingTop="40dp"
         android:layout_width="320dp"
         android:layout_height="400dp">
         <android.support.v7.widget.CardView
@@ -117,12 +117,12 @@
                <Button
                    android:layout_marginTop="20dp"
                    android:layout_gravity="center_horizontal"
-                   android:id="@+id/bt_go"
+                   android:id="@+id/bt_register"
                    android:background="@drawable/bt_shape_2"
                    android:stateListAnimator="@drawable/state_list_animator_z"
                    android:layout_width="150dp"
                    android:layout_height="50dp"
-                   android:text="@string/next"
+                   android:text="@string/register"
                    android:textColor="#2fa881"
                    >
                </Button>
