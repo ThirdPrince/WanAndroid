@@ -137,7 +137,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FragmentTransaction fragmentTransaction ;
     FragmentTransaction ft  ;
 
+    /**
+     * 下载
+     */
     private static final  int DOWNLOAD_IMAGE = 1024 ;
+
+    /**
+     * 退出应用
+     */
+    private static final  int EXIT_APP = 1025 ;
     /**
      * 必应图片
      */
@@ -167,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 {
                     case DOWNLOAD_IMAGE:
                         mainActivity.downLoadImage();
+                        break;
+                    case EXIT_APP:
+
                         break;
                 }
             }
@@ -359,7 +370,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        moveTaskToBack(true);
+        //moveTaskToBack(true);
+        if(myHandler.hasMessages(EXIT_APP))
+        {
+            finish();
+        }else {
+            ToastUtils.showShort("再按一次退出程序");
+            myHandler.sendEmptyMessageDelayed(EXIT_APP, 2000);
+        }
     }
     //@AfterPermissionGranted(RC_SD_PERM)
     private void getImages()

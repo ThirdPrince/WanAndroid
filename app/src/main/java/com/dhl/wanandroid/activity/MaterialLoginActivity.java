@@ -1,7 +1,12 @@
 package com.dhl.wanandroid.activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,16 +16,22 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.http.OkHttpManager;
+import com.dhl.wanandroid.model.ImageBean;
 import com.dhl.wanandroid.model.LoginBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import org.litepal.LitePal;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,7 +53,8 @@ public class MaterialLoginActivity extends AppCompatActivity {
 
     private static final String TAG = "MaterialLoginActivity";
 
-
+    @InjectView(R.id.login_bg)
+    RelativeLayout login_bg ;
 
     @InjectView(R.id.tool_bar)
     Toolbar toolbar ;
@@ -64,6 +76,14 @@ public class MaterialLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_material_login);
         ButterKnife.inject(this);
         toolbar.setTitle("登录");
+       /* ImageBean imageBean = LitePal.findLast(ImageBean.class);
+        if (imageBean != null) {
+            String imagePath = imageBean.getImagePath();
+            if (new File(imagePath).exists()) {
+                Drawable drawable = new BitmapDrawable(BitmapFactory.decodeFile(imageBean.getImagePath()));
+                login_bg.setBackground(drawable);
+            }
+        }*/
     }
 
     @OnClick({R.id.bt_go,R.id.fab})
