@@ -36,6 +36,7 @@ import com.dhl.wanandroid.activity.CollectionActivity;
 import com.dhl.wanandroid.activity.LoginActivity;
 import com.dhl.wanandroid.activity.MaterialLoginActivity;
 import com.dhl.wanandroid.app.Constants;
+import com.dhl.wanandroid.app.LoginInfo;
 import com.dhl.wanandroid.fragment.KnowledgeSysFragment;
 import com.dhl.wanandroid.fragment.MainFragment;
 import com.dhl.wanandroid.fragment.NavFragment;
@@ -151,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
       private static List<ImageBean> imageInfoList ;
 
-      private LoginBean loginBean ;
+      private  LoginBean loginBean ;
 
 
 
@@ -458,6 +459,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     JsonObject jsonObject = gson.fromJson(json,JsonObject.class);
                     JsonObject data =  jsonObject.getAsJsonObject("data");
                     loginBean = gson.fromJson(data.toString(),LoginBean.class);
+                    LoginInfo.getInstance().setLoginInfo(loginBean);
                     loginBean.setErrorCode(0);
                 }
                 if (response.isSuccessful()) { //response 请求成功

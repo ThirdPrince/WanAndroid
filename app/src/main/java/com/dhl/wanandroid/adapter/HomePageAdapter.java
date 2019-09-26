@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.dhl.wanandroid.R;
+import com.dhl.wanandroid.app.LoginInfo;
 import com.dhl.wanandroid.model.HomePageData;
+import com.dhl.wanandroid.model.LoginBean;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -35,7 +37,18 @@ public class HomePageAdapter extends CommonAdapter<HomePageData> {
         TextView title = (TextView) holder.getView(R.id.content);
         title.setText(Html.fromHtml(homePageData.getTitle()));
         final ImageView collection = holder.getView(R.id.collection);
-        if(homePageData.isCollect())
+       /* LoginBean loginBean = LoginInfo.getInstance().getLoginBean();
+        if(loginBean != null)
+        {
+            if(loginBean.getCollectIds().contains(homePageData.getCourseId()))
+            {
+                collection.setSelected(true);
+            }else
+            {
+                collection.setSelected(false);
+            }
+        }*/
+       if(homePageData.isCollect())
         {
             collection.setSelected(true);
         }else

@@ -121,6 +121,8 @@ public class CollectionActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
 
                 String json = response.body().string();
+                Log.e(TAG,"json::"+json);
+
                 JsonObject fromJson = new Gson().fromJson(json, JsonObject.class);
                 JsonPrimitive errorCode = fromJson.getAsJsonPrimitive("errorCode");
                 JsonElement jsonElement = new JsonParser().parse(json);
