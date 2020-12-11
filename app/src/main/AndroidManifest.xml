@@ -39,7 +39,6 @@
         <activity
             android:name=".activity.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
             android:theme="@style/WelcomeActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
