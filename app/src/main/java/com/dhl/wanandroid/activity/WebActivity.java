@@ -2,9 +2,9 @@ package com.dhl.wanandroid.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.model.HomePageData;
 import com.just.agentweb.AgentWeb;
 
 public class WebActivity extends AppCompatActivity {

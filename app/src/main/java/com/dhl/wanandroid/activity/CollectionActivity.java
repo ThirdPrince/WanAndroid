@@ -1,27 +1,24 @@
 package com.dhl.wanandroid.activity;
 
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.adapter.CollectionAdapter;
 import com.dhl.wanandroid.adapter.OnCollectionListener;
-import com.dhl.wanandroid.adapter.WxArticleAdapter;
 import com.dhl.wanandroid.http.OkHttpManager;
 import com.dhl.wanandroid.model.CollectionBean;
-import com.dhl.wanandroid.model.WxArticleBean;
 import com.dhl.wanandroid.util.APIUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

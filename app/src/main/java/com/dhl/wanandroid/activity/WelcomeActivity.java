@@ -5,39 +5,24 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import androidx.annotation.NonNull;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.dhl.wanandroid.MainActivity;
 import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.app.Constants;
-import com.dhl.wanandroid.http.OkHttpManager;
 import com.dhl.wanandroid.model.ImageBean;
-import com.dhl.wanandroid.module.GlideApp;
-import com.google.gson.JsonElement;
 
 import org.litepal.LitePal;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 

@@ -2,14 +2,9 @@ package com.dhl.wanandroid.util;
 
 
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
+
+import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

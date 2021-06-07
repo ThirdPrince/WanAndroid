@@ -2,9 +2,9 @@ package com.dhl.wanandroid.fragment;
 
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +13,9 @@ import android.view.ViewGroup;
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.activity.WebActivity;
 import com.dhl.wanandroid.adapter.KnowledgeChildBeanAdapter;
-import com.dhl.wanandroid.adapter.WxArticleAdapter;
 import com.dhl.wanandroid.app.Constants;
 import com.dhl.wanandroid.http.OkHttpManager;
-import com.dhl.wanandroid.model.KnowledgeInfochild;
 import com.dhl.wanandroid.model.KnowledgeInfochildBean;
-import com.dhl.wanandroid.model.WxArticleBean;
-import com.dhl.wanandroid.util.APIUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -29,8 +25,6 @@ import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
-
-import org.litepal.LitePal;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -9,7 +9,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.6.1'
         //classpath ('com.tencent.tinker:tinker-patch-gradle-plugin:1.9.1')
         
 

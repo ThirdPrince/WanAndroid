@@ -2,22 +2,21 @@ package com.dhl.wanandroid.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.dhl.wanandroid.R;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
@@ -29,14 +28,14 @@ import java.util.Locale;
  * Fragment 基类
  * A simple {@link Fragment} subclass.
  */
-public  abstract  class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     private static final String TITLE = "title";
 
     /**
      * 共用ToolBar
      */
-    protected Toolbar toolbar ;
+    protected Toolbar toolbar;
 
     /**
      * 没有人员
@@ -49,13 +48,13 @@ public  abstract  class BaseFragment extends Fragment {
     /**
      * smartRefresh
      */
-    protected RefreshLayout refreshLayout ;
+    protected RefreshLayout refreshLayout;
     protected ClassicsHeader mClassicsHeader;
     protected Drawable mDrawableProgress;
     /**
      * rcy
      */
-    protected RecyclerView recyclerView ;
+    protected RecyclerView recyclerView;
 
 
     protected static final int REQUEST_CODE = 1024;
@@ -84,16 +83,15 @@ public  abstract  class BaseFragment extends Fragment {
         super.onAttach(context);
     }
 
-    protected void initToolbar(View view)
-    {
+    protected void initToolbar(View view) {
         toolbar = view.findViewById(R.id.tool_bar);
 
     }
-    protected void initRcy(View view)
-    {
+
+    protected void initRcy(View view) {
         recyclerView = view.findViewById(R.id.rcy_view);
         refreshLayout = view.findViewById(R.id.refreshLayout);
-        mClassicsHeader = (ClassicsHeader)refreshLayout.getRefreshHeader();
+        mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
         //mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis()-deta));
         mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

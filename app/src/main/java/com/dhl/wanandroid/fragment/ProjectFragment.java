@@ -2,26 +2,21 @@ package com.dhl.wanandroid.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.adapter.NavInfoAdapter;
 import com.dhl.wanandroid.adapter.TabFragmentAdapter;
 import com.dhl.wanandroid.app.Constants;
 import com.dhl.wanandroid.http.OkHttpManager;
-import com.dhl.wanandroid.model.ArticlesBean;
-import com.dhl.wanandroid.model.NavInfo;
 import com.dhl.wanandroid.model.ProjectBean;
-import com.dhl.wanandroid.model.WxArticleInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -29,8 +24,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.litepal.LitePal;
 
