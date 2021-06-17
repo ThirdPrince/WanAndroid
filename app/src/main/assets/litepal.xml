@@ -50,6 +50,6 @@
         the application can place persistent files it owns which everyone
         can access. "internal" will act as default.
         For example:-->
-        <storage value="external" />
+
 
 </litepal>

@@ -2,10 +2,12 @@ package com.dhl.wanandroid.fragment;
 
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,12 +58,11 @@ public class KnowledgeSysFragment extends BaseFragment {
     private String mParam2;
 
 
-    private List<KnowledgeInfo> knowledgeInfoList ;
+    private List<KnowledgeInfo> knowledgeInfoList;
 
 
+    private KnowledgeAdapter knowledgeAdapter;
 
-
-    private KnowledgeAdapter knowledgeAdapter ;
     public KnowledgeSysFragment() {
         // Required empty public constructor
     }
@@ -108,14 +109,13 @@ public class KnowledgeSysFragment extends BaseFragment {
         initRcy(view);
         knowledgeInfoList = LitePal.findAll(KnowledgeInfo.class);
 
-        for( KnowledgeInfo knowledge :knowledgeInfoList)
-        {
-            List<KnowledgeInfochild> list = LitePal.where("knowledgeInfo_id = "+knowledge.getId()).find(KnowledgeInfochild.class);
-                    //LitePal.findAll(KnowledgeInfochild.class,knowledge.getId());
+        for (KnowledgeInfo knowledge : knowledgeInfoList) {
+            List<KnowledgeInfochild> list = LitePal.where("knowledgeInfo_id = " + knowledge.getId()).find(KnowledgeInfochild.class);
+            //LitePal.findAll(KnowledgeInfochild.class,knowledge.getId());
             knowledge.setChildren(list);
         }
         refreshLayout.finishRefresh();
-        knowledgeAdapter = new KnowledgeAdapter(getActivity(),R.layout.fragment_knowledge_item,knowledgeInfoList);
+        knowledgeAdapter = new KnowledgeAdapter(getActivity(), R.layout.fragment_knowledge_item, knowledgeInfoList);
         recyclerView.setAdapter(knowledgeAdapter);
 
         //initViews(view);
@@ -137,8 +137,8 @@ public class KnowledgeSysFragment extends BaseFragment {
 
 
     }
-    private void getKnowledge()
-    {
+
+    private void getKnowledge() {
         OkHttpManager.getInstance().get(Constants.KNOWLEDGE_URL, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -160,11 +160,11 @@ public class KnowledgeSysFragment extends BaseFragment {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 JsonArray jsonArray = jsonObject.getAsJsonArray("data");
                 Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-                knowledgeInfoList = gson.fromJson(jsonArray.toString(),new TypeToken<List<KnowledgeInfo>>(){}.getType());
+                knowledgeInfoList = gson.fromJson(jsonArray.toString(), new TypeToken<List<KnowledgeInfo>>() {
+                }.getType());
                 LitePal.deleteAll(KnowledgeInfochild.class);
                 LitePal.deleteAll(KnowledgeInfo.class);
-                for(KnowledgeInfo knowledgeInfo : knowledgeInfoList)
-                {
+                for (KnowledgeInfo knowledgeInfo : knowledgeInfoList) {
                     List<KnowledgeInfochild> list = knowledgeInfo.getChildren();
                     LitePal.saveAll(list);
                 }
@@ -174,7 +174,7 @@ public class KnowledgeSysFragment extends BaseFragment {
                     @Override
                     public void run() {
                         refreshLayout.finishRefresh();
-                        knowledgeAdapter = new KnowledgeAdapter(getActivity(),R.layout.fragment_knowledge_item,knowledgeInfoList);
+                        knowledgeAdapter = new KnowledgeAdapter(getActivity(), R.layout.fragment_knowledge_item, knowledgeInfoList);
                         recyclerView.setAdapter(knowledgeAdapter);
                         setOnClick();
 
@@ -186,14 +186,13 @@ public class KnowledgeSysFragment extends BaseFragment {
         });
     }
 
-    private void setOnClick()
-    {
-        if(knowledgeAdapter != null) {
+    private void setOnClick() {
+        if (knowledgeAdapter != null) {
             knowledgeAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                     KnowledgeInfo knowledgeInfo = knowledgeInfoList.get(position);
-                    KnowledgeInfoActivity.startActivity(getActivity(),knowledgeInfo);
+                    KnowledgeInfoActivity.startActivity(getActivity(), knowledgeInfo);
 
                 }
 

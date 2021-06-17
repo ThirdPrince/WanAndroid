@@ -2,11 +2,13 @@ package com.dhl.wanandroid.fragment;
 
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,6 @@ import static androidx.recyclerview.widget.DividerItemDecoration.VERTICAL;
 
 /**
  * 首页Fragment
- *
  */
 public class MainFragment extends BaseFragment {
     private static final String TAG = "MainFragment";
@@ -65,31 +66,30 @@ public class MainFragment extends BaseFragment {
     private String mParam2;
 
 
+    private ViewPager view_pager;
 
-    private ViewPager view_pager ;
-
-    private Banner banner ;
+    private Banner banner;
 
     /**
      * banner List
      */
-    private  List<BannerInfo> bannerInfoList;
+    private List<BannerInfo> bannerInfoList;
 
-    private List<String> imageUrlList =  new ArrayList<>();
-
+    private List<String> imageUrlList = new ArrayList<>();
 
 
     /**
      *
      */
-    private static  int pageCount = 0 ;
+    private static int pageCount = 0;
 
-    private HomePageAdapter homePageAdapter ;
-    private  HeaderAndFooterWrapper headerAndFooterWrapper ;
-    private List<HomePageData> homePageDataList ;
+    private HomePageAdapter homePageAdapter;
+    private HeaderAndFooterWrapper headerAndFooterWrapper;
+    private List<HomePageData> homePageDataList;
 
 
-    private    LinearLayout mHeaderGroup ;
+    private LinearLayout mHeaderGroup;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -134,8 +134,7 @@ public class MainFragment extends BaseFragment {
         initView(view);
         bannerInfoList = LitePal.findAll(BannerInfo.class);
         homePageDataList.addAll(LitePal.findAll(HomePageData.class));
-        if(bannerInfoList.size() >0)
-        {
+        if (bannerInfoList.size() > 0) {
             setBanner();
         }
         setHomePageAdapter();
@@ -144,20 +143,19 @@ public class MainFragment extends BaseFragment {
         //getHomePage(pageCount);
     }
 
-    private void initView(View view)
-    {
+    private void initView(View view) {
         homePageDataList = new ArrayList<>();
         initToolbar(view);
         initRcy(view);
         mHeaderGroup = ((LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_main_banner, null));
-        banner  = mHeaderGroup.findViewById(R.id.banner);
+        banner = mHeaderGroup.findViewById(R.id.banner);
         toolbar.setTitle("首页");
         refreshLayout.autoRefresh();
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 pageCount = 0;
-                getHomePage(pageCount,true);
+                getHomePage(pageCount, true);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -165,17 +163,16 @@ public class MainFragment extends BaseFragment {
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
 
                 pageCount++;
-                getHomePage(pageCount,false);
+                getHomePage(pageCount, false);
             }
         });
 
 
     }
-    private void setBanner()
-    {
+
+    private void setBanner() {
         imageUrlList.clear();
-        for(BannerInfo banner : bannerInfoList)
-        {
+        for (BannerInfo banner : bannerInfoList) {
             imageUrlList.add(banner.getImagePath());
         }
         banner.setImages(imageUrlList).setImageLoader(new GlideImageLoader()).start();
@@ -184,7 +181,7 @@ public class MainFragment extends BaseFragment {
             public void OnBannerClick(int position) {
 
                 BannerInfo bannerInfo = bannerInfoList.get(position);
-                WebActivity.startActivity(getActivity(), bannerInfo.getTitle(),bannerInfo.getUrl());
+                WebActivity.startActivity(getActivity(), bannerInfo.getTitle(), bannerInfo.getUrl());
 
             }
         });
@@ -192,9 +189,8 @@ public class MainFragment extends BaseFragment {
 
     }
 
-    private void setHomePageAdapter()
-    {
-        homePageAdapter = new HomePageAdapter(getActivity(),R.layout.fragment_homepage_item,homePageDataList);
+    private void setHomePageAdapter() {
+        homePageAdapter = new HomePageAdapter(getActivity(), R.layout.fragment_homepage_item, homePageDataList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         headerAndFooterWrapper = new HeaderAndFooterWrapper(homePageAdapter);
         headerAndFooterWrapper.addHeaderView(mHeaderGroup);
@@ -202,13 +198,12 @@ public class MainFragment extends BaseFragment {
         setListOnClick();
     }
 
-    private void getBanner()
-    {
+    private void getBanner() {
         OkHttpManager.getInstance().get(Constants.BANNER_URL, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
-                Log.e(TAG,"IOException=="+e.getMessage());
+                Log.e(TAG, "IOException==" + e.getMessage());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -225,7 +220,8 @@ public class MainFragment extends BaseFragment {
                 JsonElement jsonElement = new JsonParser().parse(response.body().string());
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 JsonArray jsonArray = jsonObject.getAsJsonArray("data");
-                bannerInfoList = new Gson().fromJson(jsonArray.toString(),new TypeToken<List<BannerInfo>>(){}.getType());
+                bannerInfoList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<BannerInfo>>() {
+                }.getType());
                 LitePal.deleteAll(BannerInfo.class);
                 LitePal.saveAll(bannerInfoList);
                 getActivity().runOnUiThread(new Runnable() {
@@ -240,19 +236,19 @@ public class MainFragment extends BaseFragment {
 
     /**
      * 下拉 上滑共用一个方法
+     *
      * @param page
      * @param onRefresh
      */
-    private void getHomePage(int page,final boolean onRefresh)
-    {
-        if(onRefresh) {
-            page = 0 ;
+    private void getHomePage(int page, final boolean onRefresh) {
+        if (onRefresh) {
+            page = 0;
         }
-        OkHttpManager.getInstance().getAddCookie(APIUtil.getHomePageUrl(page),true, new Callback() {
+        OkHttpManager.getInstance().getAddCookie(APIUtil.getHomePageUrl(page), true, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
-                Log.e(TAG,"IOException=="+e.getMessage());
+                Log.e(TAG, "IOException==" + e.getMessage());
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -265,22 +261,22 @@ public class MainFragment extends BaseFragment {
             public void onResponse(Call call, Response response) throws IOException {
 
                 String rsp = response.body().string();
-                 Log.e(TAG,"response="+rsp);
+                Log.e(TAG, "response=" + rsp);
                 JsonElement jsonElement = new JsonParser().parse(rsp);
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 JsonObject data = jsonObject.getAsJsonObject("data");
                 JsonArray jsonArray = data.getAsJsonArray("datas");
-                ArrayList<HomePageData> pageDataList =  new Gson().fromJson(jsonArray.toString(),new TypeToken<List<HomePageData>>(){}.getType());
+                ArrayList<HomePageData> pageDataList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<HomePageData>>() {
+                }.getType());
                /* HomePageData homePageData = new HomePageData();
                 homePageData.setAuthor("charlie");
                 homePageData.setTitle("test");
                 pageDataList.add(0,homePageData);*/
-                if(onRefresh)
-                {
+                if (onRefresh) {
                     homePageDataList.clear();
                 }
                 homePageDataList.addAll(pageDataList);
-                if(onRefresh) // 只保存 前面20条数据
+                if (onRefresh) // 只保存 前面20条数据
                 {
                     LitePal.deleteAll(HomePageData.class);
                     LitePal.saveAll(homePageDataList);
@@ -303,14 +299,13 @@ public class MainFragment extends BaseFragment {
         });
     }
 
-    private void setListOnClick()
-    {
-        if(homePageAdapter != null) {
+    private void setListOnClick() {
+        if (homePageAdapter != null) {
             homePageAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                    HomePageData homePageData = homePageDataList.get(position-1);
-                    WebActivity.startActivity(getActivity(), homePageData.getTitle(),homePageData.getLink());
+                    HomePageData homePageData = homePageDataList.get(position - 1);
+                    WebActivity.startActivity(getActivity(), homePageData.getTitle(), homePageData.getLink());
 
                 }
 
@@ -321,8 +316,8 @@ public class MainFragment extends BaseFragment {
             });
             homePageAdapter.setOnCollectionListener(new OnCollectionListener() {
                 public void onCollectionClick(final View view, int position) {
-                    HomePageData homePageData = homePageDataList.get(position-1);
-                    OkHttpManager.getInstance().postCollectionOut(APIUtil.collectionArticleOut(),homePageData.getTitle(),homePageData.getAuthor(),homePageData.getLink(),  new Callback() {
+                    HomePageData homePageData = homePageDataList.get(position - 1);
+                    OkHttpManager.getInstance().postCollectionOut(APIUtil.collectionArticleOut(), homePageData.getTitle(), homePageData.getAuthor(), homePageData.getLink(), new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
 
@@ -333,7 +328,7 @@ public class MainFragment extends BaseFragment {
                         public void onResponse(Call call, Response response) throws IOException {
 
                             String rsp = response.body().string();
-                            Log.e(TAG,"rsp="+rsp);
+                            Log.e(TAG, "rsp=" + rsp);
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

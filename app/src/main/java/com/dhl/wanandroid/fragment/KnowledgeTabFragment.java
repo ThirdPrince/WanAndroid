@@ -2,9 +2,11 @@ package com.dhl.wanandroid.fragment;
 
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +37,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 /**
- @author  dhl
- 知识体系下的文章
+ * @author dhl
+ * 知识体系下的文章
  */
 public class KnowledgeTabFragment extends BaseFragment {
 
@@ -50,13 +52,13 @@ public class KnowledgeTabFragment extends BaseFragment {
     private String title;
     private String articleId;
 
-    private KnowledgeChildBeanAdapter knowledgeChildBeanAdapter ;
+    private KnowledgeChildBeanAdapter knowledgeChildBeanAdapter;
 
-    private List<KnowledgeInfochildBean> knowledgeInfochildBeanList ;
+    private List<KnowledgeInfochildBean> knowledgeInfochildBeanList;
 
-    private boolean isViewCreate = false ;
+    private boolean isViewCreate = false;
 
-    private boolean isDataInited = false ;
+    private boolean isDataInited = false;
 
     public KnowledgeTabFragment() {
         // Required empty public constructor
@@ -105,7 +107,7 @@ public class KnowledgeTabFragment extends BaseFragment {
         //Log.e(TAG,"onViewCreated");
         initRcy(view);
         //ViewCompat.setNestedScrollingEnabled(recyclerView, true);
-        isViewCreate = true ;
+        isViewCreate = true;
 
     }
 
@@ -113,8 +115,7 @@ public class KnowledgeTabFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //Log.e(TAG,"onActivityCreated");
-        if(isViewCreate && getUserVisibleHint() && !isDataInited)
-        {
+        if (isViewCreate && getUserVisibleHint() && !isDataInited) {
             onLoadData();
         }
     }
@@ -122,26 +123,25 @@ public class KnowledgeTabFragment extends BaseFragment {
     /**
      * 加载数据
      */
-    private void onLoadData()
-   {
-       knowledgeInfochildBeanList = new ArrayList<>();
-       knowledgeChildBeanAdapter = new KnowledgeChildBeanAdapter(getActivity(),R.layout.fragment_homepage_item,knowledgeInfochildBeanList);
-       recyclerView.setAdapter(knowledgeChildBeanAdapter);
-       refreshLayout.autoRefresh();
-       refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-           @Override
-           public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-               getWxArticle(Integer.parseInt(articleId),1);
-           }
-       });
-       isDataInited = true ;
+    private void onLoadData() {
+        knowledgeInfochildBeanList = new ArrayList<>();
+        knowledgeChildBeanAdapter = new KnowledgeChildBeanAdapter(getActivity(), R.layout.fragment_homepage_item, knowledgeInfochildBeanList);
+        recyclerView.setAdapter(knowledgeChildBeanAdapter);
+        refreshLayout.autoRefresh();
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                getWxArticle(Integer.parseInt(articleId), 1);
+            }
+        });
+        isDataInited = true;
 
-   }
-    private void getWxArticle(int id, final int page)
-    {
-        Log.e(TAG,"url=="+Constants.KNOWLEDGE_URL_LIST +id);
+    }
 
-        OkHttpManager.getInstance().get(Constants.KNOWLEDGE_URL_LIST +id, new Callback() {
+    private void getWxArticle(int id, final int page) {
+        Log.e(TAG, "url==" + Constants.KNOWLEDGE_URL_LIST + id);
+
+        OkHttpManager.getInstance().get(Constants.KNOWLEDGE_URL_LIST + id, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -161,7 +161,8 @@ public class KnowledgeTabFragment extends BaseFragment {
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
                 JsonObject data = jsonObject.getAsJsonObject("data");
                 JsonArray jsonArray = data.getAsJsonArray("datas");
-                final List<KnowledgeInfochildBean> wxArticleBeans =  new Gson().fromJson(jsonArray.toString(),new TypeToken<List<KnowledgeInfochildBean>>(){}.getType());
+                final List<KnowledgeInfochildBean> wxArticleBeans = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<KnowledgeInfochildBean>>() {
+                }.getType());
 
                 knowledgeInfochildBeanList.addAll(wxArticleBeans);
                 getActivity().runOnUiThread(new Runnable() {
@@ -173,7 +174,7 @@ public class KnowledgeTabFragment extends BaseFragment {
                             @Override
                             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                                 KnowledgeInfochildBean knowledgeInfochildBean = knowledgeInfochildBeanList.get(position);
-                                WebActivity.startActivity(getActivity(), knowledgeInfochildBean.getTitle(),knowledgeInfochildBean.getLink());
+                                WebActivity.startActivity(getActivity(), knowledgeInfochildBean.getTitle(), knowledgeInfochildBean.getLink());
                             }
 
                             @Override
@@ -186,24 +187,20 @@ public class KnowledgeTabFragment extends BaseFragment {
                 });
 
 
-
-
             }
 
         });
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-       // Log.e(TAG,"setUserVisibleHint :::this is "+title+"::::isVisible=="+isVisibleToUser);
-        if(isVisibleToUser && isViewCreate && !isDataInited)
-        {
+        // Log.e(TAG,"setUserVisibleHint :::this is "+title+"::::isVisible=="+isVisibleToUser);
+        if (isVisibleToUser && isViewCreate && !isDataInited) {
             onLoadData();
         }
     }
@@ -218,6 +215,6 @@ public class KnowledgeTabFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-       //Log.e(TAG,"onDestroyView");
+        //Log.e(TAG,"onDestroyView");
     }
 }
