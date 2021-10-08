@@ -9,20 +9,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.dhl.wanandroid.MainActivity;
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.model.ImageBean;
+import com.dhl.wanandroid.viewmodel.SplashViewModel;
 
 import org.litepal.LitePal;
-
 import java.io.File;
 import java.util.List;
-
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -31,7 +32,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 /**
  * 启动页
  */
-public class WelcomeActivity extends Activity implements EasyPermissions.PermissionCallbacks {
+public class WelcomeActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = "WelcomeActivity";
     private ImageView imageView;
@@ -41,6 +42,8 @@ public class WelcomeActivity extends Activity implements EasyPermissions.Permiss
     private static final int RC_SD_PERM = 1000;
 
     private static final int WHAT = 1024;
+
+    private SplashViewModel splashViewModel ;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -61,6 +64,7 @@ public class WelcomeActivity extends Activity implements EasyPermissions.Permiss
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
         imageView = findViewById(R.id.image);
         splash_tv = findViewById(R.id.splash_tv);
         EasyPermissions.requestPermissions(
@@ -68,12 +72,21 @@ public class WelcomeActivity extends Activity implements EasyPermissions.Permiss
                 getString(R.string.rationale_sd),
                 RC_SD_PERM,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        splashViewModel.getImage().observe(this, new Observer<ImageBean>() {
+            @Override
+            public void onChanged(ImageBean imageBean) {
+                showImage(imageBean);
+            }
+        });
 
     }
 
     @AfterPermissionGranted(RC_SD_PERM)
     private void getImage() {
-        ImageBean imageBean = LitePal.findLast(ImageBean.class);
+
+    }
+
+    private void showImage(ImageBean imageBean){
         if (imageBean != null) {
             String imagePath = imageBean.getImagePath();
             if (new File(imagePath).exists()) {
@@ -92,7 +105,6 @@ public class WelcomeActivity extends Activity implements EasyPermissions.Permiss
         } else {
             handler.sendEmptyMessageDelayed(WHAT, 500);
         }
-
     }
 
     @Override

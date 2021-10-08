@@ -8,7 +8,7 @@
     <color name="colorCard">#FFFFFF</color>
     <color name="colorText">#2C2C2C</color>
     <color name="colorLogo">#FED530</color>
-
+    <color name="gray_bg">#edeff5</color>
     <color name="fab_bg">#FF4081</color>
     <color name="drawer_item_bg_p">#e8e8e8</color>
     <color name="drawer_item_bg_n">#fffff9</color>

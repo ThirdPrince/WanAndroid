@@ -52,6 +52,7 @@ import okhttp3.Response;
 import static androidx.recyclerview.widget.DividerItemDecoration.VERTICAL;
 
 /**
+ * @author dhl
  * 首页Fragment
  */
 public class MainFragment extends BaseFragment {
@@ -66,7 +67,6 @@ public class MainFragment extends BaseFragment {
     private String mParam2;
 
 
-    private ViewPager view_pager;
 
     private Banner banner;
 
@@ -94,15 +94,6 @@ public class MainFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MainFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static MainFragment newInstance(String param1, String param2) {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
@@ -139,8 +130,6 @@ public class MainFragment extends BaseFragment {
         }
         setHomePageAdapter();
         getBanner();
-        //setListOnClick();
-        //getHomePage(pageCount);
     }
 
     private void initView(View view) {
@@ -281,7 +270,6 @@ public class MainFragment extends BaseFragment {
                     LitePal.deleteAll(HomePageData.class);
                     LitePal.saveAll(homePageDataList);
                 }
-
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override

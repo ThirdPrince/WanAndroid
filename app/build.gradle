@@ -81,11 +81,10 @@ dependencies {
     implementation 'com.hyman:flowlayout-lib:1.1.2'
     implementation 'pub.devrel:easypermissions:2.0.1'
     implementation 'com.jakewharton:butterknife:5.1.1'
-    //annotationProcessor "com.jakewharton:butterknife-compiler-5.1.1"
-    //annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     implementation('com.tencent.tinker:tinker-android-lib:1.9.1')
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:1.6.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 }
 repositories {
     mavenCentral()
