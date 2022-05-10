@@ -31,7 +31,7 @@ class SplashViewModel:ViewModel() {
     }
 
 
-    fun fetchImage(){
+    private fun fetchImage(){
        viewModelScope.launch {
            withContext(Dispatchers.IO){
                val imageBean = findLast(ImageBean::class.java)
