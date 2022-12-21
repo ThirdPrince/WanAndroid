@@ -11,10 +11,10 @@ import kotlinx.coroutines.withContext
 import org.litepal.LitePal.findLast
 
 /**
- * @Title: $
+ * @Title: 下载必应的图片
  * @Package $
  * @Description: 获取要展示的图片
- * @author $
+ * @author dhl
  * @date $
  * @version V1.0
  */

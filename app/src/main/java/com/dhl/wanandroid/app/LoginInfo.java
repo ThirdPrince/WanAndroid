@@ -8,39 +8,33 @@ import com.dhl.wanandroid.model.LoginBean;
  */
 public class LoginInfo {
 
-    private static  LoginInfo loginInfo ;
+    private static LoginInfo loginInfo;
 
-    private LoginBean loginBean ;
-    private LoginInfo ()
-    {
+    private LoginBean loginBean;
+
+    private LoginInfo() {
 
     }
 
-    public static LoginInfo  getInstance()
-    {
-        if(loginInfo == null)
-        {
-            synchronized (LoginInfo.class)
-            {
-                if(loginInfo == null)
-                {
+    public static LoginInfo getInstance() {
+        if (loginInfo == null) {
+            synchronized (LoginInfo.class) {
+                if (loginInfo == null) {
                     loginInfo = new LoginInfo();
                 }
             }
         }
 
-        return loginInfo ;
+        return loginInfo;
     }
 
-    public  void setLoginInfo(LoginBean loginBean)
-    {
-        this.loginBean = loginBean ;
+    public void setLoginInfo(LoginBean loginBean) {
+        this.loginBean = loginBean;
 
     }
 
-    public LoginBean getLoginBean()
-    {
-        return  loginBean ;
+    public LoginBean getLoginBean() {
+        return loginBean;
     }
 
 

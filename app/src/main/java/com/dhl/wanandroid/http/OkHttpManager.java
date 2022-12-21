@@ -29,7 +29,6 @@ import okio.BufferedSink;
 
 /**
  * 封装OKHttp
- *
  * @author dhl 2016 6.6
  */
 public class OkHttpManager {
@@ -44,7 +43,7 @@ public class OkHttpManager {
 
     private OkHttpManager() {
         okHttpClient = new okhttp3.OkHttpClient.Builder()
-                .connectTimeout(2, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 /*       cookieJar(new CookieJar() {

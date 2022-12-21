@@ -1,226 +1,141 @@
-package com.dhl.wanandroid.fragment;
+package com.dhl.wanandroid.fragment
 
-
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
-import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.activity.WebActivity;
-import com.dhl.wanandroid.adapter.HomePageAdapter;
-import com.dhl.wanandroid.adapter.OnCollectionListener;
-import com.dhl.wanandroid.app.Constants;
-import com.dhl.wanandroid.http.OkHttpManager;
-import com.dhl.wanandroid.model.BannerInfo;
-import com.dhl.wanandroid.model.HomePageData;
-import com.dhl.wanandroid.module.GlideImageLoader;
-import com.dhl.wanandroid.util.APIUtil;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.youth.banner.Banner;
-import com.youth.banner.listener.OnBannerListener;
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
-import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
-
-import org.litepal.LitePal;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-import static androidx.recyclerview.widget.DividerItemDecoration.VERTICAL;
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.dhl.wanandroid.R
+import com.dhl.wanandroid.activity.WebActivity
+import com.dhl.wanandroid.adapter.HomePageAdapter
+import com.dhl.wanandroid.app.Constants
+import com.dhl.wanandroid.http.OkHttpManager
+import com.dhl.wanandroid.model.BannerInfo
+import com.dhl.wanandroid.model.HomePageData
+import com.dhl.wanandroid.module.GlideImageLoader
+import com.dhl.wanandroid.util.APIUtil
+import com.dhl.wanandroid.vm.MainViewModel
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
+import com.youth.banner.Banner
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
+import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import org.litepal.LitePal.deleteAll
+import org.litepal.LitePal.findAll
+import org.litepal.LitePal.saveAll
+import java.io.IOException
+import java.util.*
 
 /**
  * @author dhl
  * 首页Fragment
  */
-public class MainFragment extends BaseFragment {
-    private static final String TAG = "MainFragment";
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-
-
-    private Banner banner;
+class MainFragment : BaseFragment() {
+    private var banner: Banner? = null
 
     /**
      * banner List
      */
-    private List<BannerInfo> bannerInfoList;
+    private var bannerInfoList: List<BannerInfo>? = null
+    private val imageUrlList: MutableList<String?> = ArrayList()
+    private var homePageAdapter: HomePageAdapter? = null
+    private var headerAndFooterWrapper: HeaderAndFooterWrapper<*>? = null
+    private var homePageDataList: MutableList<HomePageData>? = null
+    private var mHeaderGroup: LinearLayout? = null
 
-    private List<String> imageUrlList = new ArrayList<>();
+    lateinit var  mainViewModel: MainViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    /**
-     *
-     */
-    private static int pageCount = 0;
-
-    private HomePageAdapter homePageAdapter;
-    private HeaderAndFooterWrapper headerAndFooterWrapper;
-    private List<HomePageData> homePageDataList;
-
-
-    private LinearLayout mHeaderGroup;
-
-    public MainFragment() {
-        // Required empty public constructor
     }
 
-    public static MainFragment newInstance(String param1, String param2) {
-        MainFragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initView(view);
-        bannerInfoList = LitePal.findAll(BannerInfo.class);
-        homePageDataList.addAll(LitePal.findAll(HomePageData.class));
-        if (bannerInfoList.size() > 0) {
-            setBanner();
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView(view)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        bannerInfoList = findAll(BannerInfo::class.java)
+        homePageDataList!!.addAll(findAll(HomePageData::class.java))
+        if (bannerInfoList?.size!! > 0) {
+            setBanner()
         }
-        setHomePageAdapter();
-        getBanner();
+        mainViewModel.getBanner()
+        setHomePageAdapter()
+        getBanner()
     }
 
-    private void initView(View view) {
-        homePageDataList = new ArrayList<>();
-        initToolbar(view);
-        initRcy(view);
-        mHeaderGroup = ((LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_main_banner, null));
-        banner = mHeaderGroup.findViewById(R.id.banner);
-        toolbar.setTitle("首页");
-        refreshLayout.autoRefresh();
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                pageCount = 0;
-                getHomePage(pageCount, true);
-            }
-        });
-        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-
-                pageCount++;
-                getHomePage(pageCount, false);
-            }
-        });
-
-
-    }
-
-    private void setBanner() {
-        imageUrlList.clear();
-        for (BannerInfo banner : bannerInfoList) {
-            imageUrlList.add(banner.getImagePath());
+    private fun initView(view: View) {
+        homePageDataList = ArrayList()
+        initToolbar(view)
+        initRcy(view)
+        mHeaderGroup = LayoutInflater.from(activity).inflate(R.layout.fragment_main_banner, null) as LinearLayout
+        banner = mHeaderGroup!!.findViewById(R.id.banner)
+        toolbar.title = "首页"
+        refreshLayout.autoRefresh()
+        refreshLayout.setOnRefreshListener {
+            pageCount = 0
+            getHomePage(pageCount, true)
         }
-        banner.setImages(imageUrlList).setImageLoader(new GlideImageLoader()).start();
-        banner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-
-                BannerInfo bannerInfo = bannerInfoList.get(position);
-                WebActivity.startActivity(getActivity(), bannerInfo.getTitle(), bannerInfo.getUrl());
-
-            }
-        });
-
-
+        refreshLayout.setOnLoadMoreListener {
+            pageCount++
+            getHomePage(pageCount, false)
+        }
     }
 
-    private void setHomePageAdapter() {
-        homePageAdapter = new HomePageAdapter(getActivity(), R.layout.fragment_homepage_item, homePageDataList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        headerAndFooterWrapper = new HeaderAndFooterWrapper(homePageAdapter);
-        headerAndFooterWrapper.addHeaderView(mHeaderGroup);
-        recyclerView.setAdapter(headerAndFooterWrapper);
-        setListOnClick();
+    private fun setBanner() {
+        imageUrlList.clear()
+        for (banner in bannerInfoList!!) {
+            imageUrlList.add(banner.imagePath)
+        }
+        banner!!.setImages(imageUrlList).setImageLoader(GlideImageLoader()).start()
+        banner!!.setOnBannerListener { position ->
+            val bannerInfo = bannerInfoList!![position]
+            WebActivity.startActivity(activity, bannerInfo.title, bannerInfo.url)
+        }
     }
 
-    private void getBanner() {
-        OkHttpManager.getInstance().get(Constants.BANNER_URL, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
+    private fun setHomePageAdapter() {
+        homePageAdapter = HomePageAdapter(activity, R.layout.fragment_homepage_item, homePageDataList)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        headerAndFooterWrapper = HeaderAndFooterWrapper<Any?>(homePageAdapter)
+        headerAndFooterWrapper?.addHeaderView(mHeaderGroup)
+        recyclerView.adapter = headerAndFooterWrapper
+        setListOnClick()
+    }
 
-                Log.e(TAG, "IOException==" + e.getMessage());
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.finishRefresh();
-                    }
-                });
-
-
+    private fun getBanner() {
+        OkHttpManager.getInstance()[Constants.BANNER_URL, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "IOException==" + e.message)
+                activity!!.runOnUiThread { refreshLayout.finishRefresh() }
             }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                JsonElement jsonElement = new JsonParser().parse(response.body().string());
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                JsonArray jsonArray = jsonObject.getAsJsonArray("data");
-                bannerInfoList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<BannerInfo>>() {
-                }.getType());
-                LitePal.deleteAll(BannerInfo.class);
-                LitePal.saveAll(bannerInfoList);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setBanner();
-                    }
-                });
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val jsonElement = JsonParser().parse(response.body!!.string())
+                val jsonObject = jsonElement.asJsonObject
+                val jsonArray = jsonObject.getAsJsonArray("data")
+                bannerInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<BannerInfo?>?>() {}.type)
+                deleteAll(BannerInfo::class.java)
+                saveAll(bannerInfoList!!)
+                activity!!.runOnUiThread { setBanner() }
             }
-        });
+        }]
     }
 
     /**
@@ -229,105 +144,86 @@ public class MainFragment extends BaseFragment {
      * @param page
      * @param onRefresh
      */
-    private void getHomePage(int page, final boolean onRefresh) {
+    private fun getHomePage(page: Int, onRefresh: Boolean) {
+        var page = page
         if (onRefresh) {
-            page = 0;
+            page = 0
         }
-        OkHttpManager.getInstance().getAddCookie(APIUtil.getHomePageUrl(page), true, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-                Log.e(TAG, "IOException==" + e.getMessage());
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.finishRefresh();
-                    }
-                });
+        OkHttpManager.getInstance().getAddCookie(APIUtil.getHomePageUrl(page), true, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "IOException==" + e.message)
+                activity!!.runOnUiThread { refreshLayout.finishRefresh() }
             }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                String rsp = response.body().string();
-                Log.e(TAG, "response=" + rsp);
-                JsonElement jsonElement = new JsonParser().parse(rsp);
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                JsonObject data = jsonObject.getAsJsonObject("data");
-                JsonArray jsonArray = data.getAsJsonArray("datas");
-                ArrayList<HomePageData> pageDataList = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<HomePageData>>() {
-                }.getType());
-               /* HomePageData homePageData = new HomePageData();
-                homePageData.setAuthor("charlie");
-                homePageData.setTitle("test");
-                pageDataList.add(0,homePageData);*/
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                val rsp = response.body!!.string()
+                Log.e(TAG, "response=$rsp")
+                val jsonElement = JsonParser().parse(rsp)
+                val jsonObject = jsonElement.asJsonObject
+                val data = jsonObject.getAsJsonObject("data")
+                val jsonArray = data.getAsJsonArray("datas")
+                val pageDataList = Gson().fromJson<ArrayList<HomePageData>>(jsonArray.toString(), object : TypeToken<List<HomePageData?>?>() {}.type)
                 if (onRefresh) {
-                    homePageDataList.clear();
+                    homePageDataList!!.clear()
                 }
-                homePageDataList.addAll(pageDataList);
-                if (onRefresh) // 只保存 前面20条数据
-                {
-                    LitePal.deleteAll(HomePageData.class);
-                    LitePal.saveAll(homePageDataList);
+                homePageDataList!!.addAll(pageDataList)
+                if (onRefresh) {
+                    deleteAll(HomePageData::class.java)
+                    saveAll(homePageDataList!!)
                 }
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        //homePageAdapter.notifyDataSetChanged();
-                        headerAndFooterWrapper.notifyDataSetChanged(); //一定要headerAndFooterWrapper 刷新
-                        refreshLayout.finishRefresh();
-                        refreshLayout.finishLoadMore();
-                        setListOnClick();
-                    }
-                });
-
+                activity!!.runOnUiThread { //homePageAdapter.notifyDataSetChanged();
+                    headerAndFooterWrapper!!.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
+                    refreshLayout.finishRefresh()
+                    refreshLayout.finishLoadMore()
+                    setListOnClick()
+                }
             }
-        });
+        })
     }
 
-    private void setListOnClick() {
+    private fun setListOnClick() {
         if (homePageAdapter != null) {
-            homePageAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                    HomePageData homePageData = homePageDataList.get(position - 1);
-                    WebActivity.startActivity(getActivity(), homePageData.getTitle(), homePageData.getLink());
-
+            homePageAdapter!!.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
+                override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
+                    val homePageData = homePageDataList!![position - 1]
+                    WebActivity.startActivity(activity, homePageData.title, homePageData.link)
                 }
 
-                @Override
-                public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                    return false;
+                override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
+                    return false
                 }
-            });
-            homePageAdapter.setOnCollectionListener(new OnCollectionListener() {
-                public void onCollectionClick(final View view, int position) {
-                    HomePageData homePageData = homePageDataList.get(position - 1);
-                    OkHttpManager.getInstance().postCollectionOut(APIUtil.collectionArticleOut(), homePageData.getTitle(), homePageData.getAuthor(), homePageData.getLink(), new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
+            })
+            homePageAdapter!!.setOnCollectionListener { view, position ->
+                val homePageData = homePageDataList!![position - 1]
+                OkHttpManager.getInstance().postCollectionOut(APIUtil.collectionArticleOut(), homePageData.title, homePageData.author, homePageData.link, object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        e.printStackTrace()
+                    }
 
-                            e.printStackTrace();
-                        }
+                    @Throws(IOException::class)
+                    override fun onResponse(call: Call, response: Response) {
+                        val rsp = response.body!!.string()
+                        Log.e(TAG, "rsp=$rsp")
+                        activity!!.runOnUiThread { view.isSelected = true }
+                    }
+                })
+            }
+        }
+    }
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
+    companion object {
+        private const val TAG = "MainFragment"
 
-                            String rsp = response.body().string();
-                            Log.e(TAG, "rsp=" + rsp);
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    view.setSelected(true);
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-
+        /**
+         *
+         */
+        private var pageCount = 0
+        fun newInstance(param1: String?, param2: String?): MainFragment {
+            val fragment = MainFragment()
+            val args = Bundle()
+            fragment.arguments = args
+            return fragment
         }
     }
 }

@@ -8,6 +8,10 @@ public class Constants {
 
 
     /**
+     * Retrofit BaseUrl
+     */
+    public static final String  BASE_URL = "https://www.wanandroid.com/";
+    /**
      * 首页数据
      */
     public static final String HOME_PAGE= "https://www.wanandroid.com" ;

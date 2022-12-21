@@ -294,7 +294,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 @Throws(IOException::class)
                 override fun onResponse(call: Call, response: Response) {
-                    val jsonElement = JsonParser().parse(response.body().string())
+                    val jsonElement = JsonParser().parse(response.body?.string())
                     val jsonObject = jsonElement.asJsonObject
                     val jsonArray = jsonObject.getAsJsonArray("images")
                     imageInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<ImageBean?>?>() {}.type)
@@ -336,7 +336,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
-                val json = response.body().string()
+                val json = response.body?.string()
                 Log.e(TAG, "response::$json")
                 val gson = Gson()
                 val jsonPrimitive = gson.fromJson(json, JsonObject::class.java).getAsJsonPrimitive("errorCode")
@@ -349,7 +349,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     loginBean?.setErrorCode(0)
                 }
                 if (response.isSuccessful) { //response 请求成功
-                    val headers = response.headers()
+                    val headers = response.headers
                     val cookies = headers.values("Set-Cookie")
                     if (cookies.size > 0) {
                         val session = cookies[0]

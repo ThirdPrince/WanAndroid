@@ -52,17 +52,21 @@ class SplashImageService : IntentService("SplashImageService") {
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
-                val inputStream = response.body().byteStream()
+                val inputStream = response.body?.byteStream()
                 imagePath = getExternalFilesDir("image").toString() + "/" + simpleDateFormat!!.format(Date()) + "_splash.jpg"
                 val fileOutputStream = FileOutputStream(imagePath)
                 val bytes = ByteArray(1024)
                 var len = 0
-                while (inputStream.read(bytes).also { len = it } != -1) {
+                while (inputStream?.read(bytes).also {
+                            if (it != null) {
+                                len = it
+                            }
+                        } != -1) {
                     fileOutputStream.write(bytes, 0, len)
                 }
                 fileOutputStream.flush()
                 fileOutputStream.close()
-                inputStream.close()
+                inputStream?.close()
                 //LitePal.deleteAll(ImageBean.class);
                 imageBean.imagePath = imagePath
                 imageBean.save()
