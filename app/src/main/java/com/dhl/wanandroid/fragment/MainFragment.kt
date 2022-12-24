@@ -10,11 +10,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.HomePageAdapter
 import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.http.OkHttpManager
+import com.dhl.wanandroid.model.Article
+import com.dhl.wanandroid.model.BannerBean
 import com.dhl.wanandroid.model.BannerInfo
 import com.dhl.wanandroid.model.HomePageData
 import com.dhl.wanandroid.module.GlideImageLoader
@@ -40,19 +43,55 @@ import java.util.*
  * 首页Fragment
  */
 class MainFragment : BaseFragment() {
-    private var banner: Banner? = null
+
+
 
     /**
      * banner List
      */
-    private var bannerInfoList: List<BannerInfo>? = null
-    private val imageUrlList: MutableList<String?> = ArrayList()
-    private var homePageAdapter: HomePageAdapter? = null
-    private var headerAndFooterWrapper: HeaderAndFooterWrapper<*>? = null
-    private var homePageDataList: MutableList<HomePageData>? = null
-    private var mHeaderGroup: LinearLayout? = null
+    private var bannerList: MutableList<BannerBean> = mutableListOf()
 
-    lateinit var  mainViewModel: MainViewModel
+    /**
+     * banner ImageList
+     */
+    private val imageUrlList: MutableList<String> = mutableListOf()
+
+    /**
+     * adapter
+     */
+    private val homePageAdapter: HomePageAdapter by lazy {
+        HomePageAdapter(activity, R.layout.fragment_homepage_item, homePageDataList)
+    }
+
+    /**
+     * 头
+     */
+    private val headerAndFooterWrapper: HeaderAndFooterWrapper<*> by lazy {
+        HeaderAndFooterWrapper<Any?>(homePageAdapter)
+    }
+
+    private val homePageDataList: MutableList<Article> = mutableListOf()
+
+    /**
+     * banner Header
+     */
+    private val mHeaderGroup: LinearLayout by lazy {
+        LayoutInflater.from(activity).inflate(R.layout.fragment_main_banner, null) as LinearLayout
+    }
+
+    /**
+     * Banner
+     */
+    private val banner: Banner by lazy {
+        mHeaderGroup.findViewById(R.id.banner)
+    }
+
+    /**
+     * viewModel
+     */
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,130 +100,94 @@ class MainFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView(view)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        bannerInfoList = findAll(BannerInfo::class.java)
-        homePageDataList!!.addAll(findAll(HomePageData::class.java))
-        if (bannerInfoList?.size!! > 0) {
-            setBanner()
-        }
-        mainViewModel.getBanner()
-        setHomePageAdapter()
-        getBanner()
     }
 
     private fun initView(view: View) {
-        homePageDataList = ArrayList()
         initToolbar(view)
         initRcy(view)
-        mHeaderGroup = LayoutInflater.from(activity).inflate(R.layout.fragment_main_banner, null) as LinearLayout
-        banner = mHeaderGroup!!.findViewById(R.id.banner)
         toolbar.title = "首页"
         refreshLayout.autoRefresh()
         refreshLayout.setOnRefreshListener {
             pageCount = 0
-            getHomePage(pageCount, true)
+            getData(0)
         }
         refreshLayout.setOnLoadMoreListener {
             pageCount++
-            getHomePage(pageCount, false)
+            getData(pageCount)
         }
     }
 
+    /**
+     * 初始化数据
+     */
+    private fun getData(pageNo:Int){
+        mainViewModel.getBanner().observe(this,{
+            if(it.isSuccess){
+                bannerList = it.result!!
+                setBanner()
+                setHomePageAdapter()
+            }else{
+                ToastUtils.showLong(it.errorMessage)
+            }
+            refreshLayout.finishRefresh()
+            refreshLayout.finishLoadMore()
+        })
+
+        mainViewModel.getArticle(pageNo).observe(this,{
+            if(it.isSuccess){
+                if(pageNo == 0){
+                    homePageDataList?.clear()
+                }
+                homePageDataList.addAll(it.result!!)
+                headerAndFooterWrapper.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
+
+                setListOnClick()
+            }else{
+                ToastUtils.showLong(it.errorMessage)
+            }
+            refreshLayout.finishRefresh()
+            refreshLayout.finishLoadMore()
+
+        })
+    }
+
+    /**
+     * 给Banner 赋值
+     */
     private fun setBanner() {
         imageUrlList.clear()
-        for (banner in bannerInfoList!!) {
+        for (banner in bannerList) {
             imageUrlList.add(banner.imagePath)
         }
-        banner!!.setImages(imageUrlList).setImageLoader(GlideImageLoader()).start()
-        banner!!.setOnBannerListener { position ->
-            val bannerInfo = bannerInfoList!![position]
-            WebActivity.startActivity(activity, bannerInfo.title, bannerInfo.url)
+        banner.setImages(imageUrlList).setImageLoader(GlideImageLoader()).start()
+        banner.setOnBannerListener { position ->
+            val bannerBean = bannerList[position]
+            WebActivity.startActivity(activity, bannerBean.title, bannerBean.url)
         }
     }
 
+    /**
+     * setAdapter
+     */
     private fun setHomePageAdapter() {
-        homePageAdapter = HomePageAdapter(activity, R.layout.fragment_homepage_item, homePageDataList)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        headerAndFooterWrapper = HeaderAndFooterWrapper<Any?>(homePageAdapter)
         headerAndFooterWrapper?.addHeaderView(mHeaderGroup)
         recyclerView.adapter = headerAndFooterWrapper
         setListOnClick()
     }
 
-    private fun getBanner() {
-        OkHttpManager.getInstance()[Constants.BANNER_URL, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, "IOException==" + e.message)
-                activity!!.runOnUiThread { refreshLayout.finishRefresh() }
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                val jsonElement = JsonParser().parse(response.body!!.string())
-                val jsonObject = jsonElement.asJsonObject
-                val jsonArray = jsonObject.getAsJsonArray("data")
-                bannerInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<BannerInfo?>?>() {}.type)
-                deleteAll(BannerInfo::class.java)
-                saveAll(bannerInfoList!!)
-                activity!!.runOnUiThread { setBanner() }
-            }
-        }]
-    }
 
     /**
-     * 下拉 上滑共用一个方法
-     *
-     * @param page
-     * @param onRefresh
+     * onClick
      */
-    private fun getHomePage(page: Int, onRefresh: Boolean) {
-        var page = page
-        if (onRefresh) {
-            page = 0
-        }
-        OkHttpManager.getInstance().getAddCookie(APIUtil.getHomePageUrl(page), true, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, "IOException==" + e.message)
-                activity!!.runOnUiThread { refreshLayout.finishRefresh() }
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                val rsp = response.body!!.string()
-                Log.e(TAG, "response=$rsp")
-                val jsonElement = JsonParser().parse(rsp)
-                val jsonObject = jsonElement.asJsonObject
-                val data = jsonObject.getAsJsonObject("data")
-                val jsonArray = data.getAsJsonArray("datas")
-                val pageDataList = Gson().fromJson<ArrayList<HomePageData>>(jsonArray.toString(), object : TypeToken<List<HomePageData?>?>() {}.type)
-                if (onRefresh) {
-                    homePageDataList!!.clear()
-                }
-                homePageDataList!!.addAll(pageDataList)
-                if (onRefresh) {
-                    deleteAll(HomePageData::class.java)
-                    saveAll(homePageDataList!!)
-                }
-                activity!!.runOnUiThread { //homePageAdapter.notifyDataSetChanged();
-                    headerAndFooterWrapper!!.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
-                    refreshLayout.finishRefresh()
-                    refreshLayout.finishLoadMore()
-                    setListOnClick()
-                }
-            }
-        })
-    }
-
     private fun setListOnClick() {
-        if (homePageAdapter != null) {
-            homePageAdapter!!.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
+            homePageAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
                     val homePageData = homePageDataList!![position - 1]
                     WebActivity.startActivity(activity, homePageData.title, homePageData.link)
@@ -194,7 +197,7 @@ class MainFragment : BaseFragment() {
                     return false
                 }
             })
-            homePageAdapter!!.setOnCollectionListener { view, position ->
+            homePageAdapter.setOnCollectionListener { view, position ->
                 val homePageData = homePageDataList!![position - 1]
                 OkHttpManager.getInstance().postCollectionOut(APIUtil.collectionArticleOut(), homePageData.title, homePageData.author, homePageData.link, object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
@@ -209,7 +212,7 @@ class MainFragment : BaseFragment() {
                     }
                 })
             }
-        }
+
     }
 
     companion object {

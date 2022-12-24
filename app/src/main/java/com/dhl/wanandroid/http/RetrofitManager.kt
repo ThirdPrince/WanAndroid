@@ -1,10 +1,14 @@
 package com.dhl.wanandroid.http
 import com.dhl.wanandroid.api.ApiService
 import com.dhl.wanandroid.app.Constants
+import com.dhl.wanandroid.app.MyApplication
+import com.dhl.wanandroid.http.interceptor.CacheInterceptor
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.io.File
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
@@ -29,6 +33,10 @@ object RetrofitManager {
         buildRetrofit(Constants.BASE_URL, buildHttpClient())
     }
 
+    private val cacheFile = File(MyApplication.context.externalCacheDir, "cache")
+    private val cache = Cache(cacheFile, 5 *1024*1024 )
+
+
 
     /**
      * 构建自己的OKHttp
@@ -38,8 +46,10 @@ object RetrofitManager {
         logging.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
                 .addInterceptor(logging)
+                .addInterceptor(CacheInterceptor())
                 .connectTimeout(CONNECTION_TIME_OUT,TimeUnit.SECONDS)
                 .readTimeout(READ_TIME_OUT,TimeUnit.SECONDS)
+                .cache(cache)
                 .proxy(Proxy.NO_PROXY)
 
     }

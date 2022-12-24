@@ -26,7 +26,7 @@ import java.util.Locale;
 
 /**
  * Fragment 基类
- * A simple {@link Fragment} subclass.
+ *
  */
 public abstract class BaseFragment extends Fragment {
 
@@ -37,14 +37,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected Toolbar toolbar;
 
-    /**
-     * 没有人员
-     */
-    protected RelativeLayout no_task;
 
-    protected ImageView no_img;
-
-    protected TextView no_tv;
     /**
      * smartRefresh
      */
@@ -57,9 +50,7 @@ public abstract class BaseFragment extends Fragment {
     protected RecyclerView recyclerView;
 
 
-    protected static final int REQUEST_CODE = 1024;
 
-    protected static final int DELAY = 1025;
 
     public BaseFragment() {
         // Required empty public constructor
@@ -74,7 +65,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //initToolbar(view);
+
 
     }
 
