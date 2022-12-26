@@ -6,7 +6,7 @@ import android.text.TextUtils
  * @Title: RepoResult
  * @Package $
  * @Description: 包装网络请求成功与失败的情况
- * @author $
+ * @author dhl
  * @date 2022 12 23
  * @version V2.0
  */

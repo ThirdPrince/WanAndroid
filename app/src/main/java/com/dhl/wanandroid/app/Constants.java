@@ -3,6 +3,7 @@ package com.dhl.wanandroid.app;
 
 /**
  * 一些基本常量
+ * @author dhl
  */
 public class Constants {
 

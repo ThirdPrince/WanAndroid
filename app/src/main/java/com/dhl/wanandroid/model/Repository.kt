@@ -1,30 +1,37 @@
 package com.dhl.wanandroid.model
 
 import com.squareup.moshi.Json
+import java.io.Serializable
 
 /**
  * @Title: $
  * @Package $
- * @Description: $(用一句话描述)
- * @author $
- * @date $
- * @version V1.0
+ * @Description: 基本Bean
+ * @author dhl
+ * @date 2022 12 21
+ * @version V2.0
  */
 
 data class HttpData<T>(
         @Json(name = "data") val data: T
 )
+
+/**
+ * 首页的Banner
+ */
 data class BannerBean(@Json(name = "desc") val desc: String,
-                  @Json(name = "id") val id: Int,
-                  @Json(name = "imagePath") val imagePath: String,
-                  @Json(name = "isVisible") val isVisible: Int,
-                  @Json(name = "order") val order: Int,
-                  @Json(name = "title") val title: String,
-                  @Json(name = "type") val type: Int,
-                  @Json(name = "url") val url: String)
+                      @Json(name = "id") val id: Int,
+                      @Json(name = "imagePath") val imagePath: String,
+                      @Json(name = "isVisible") val isVisible: Int,
+                      @Json(name = "order") val order: Int,
+                      @Json(name = "title") val title: String,
+                      @Json(name = "type") val type: Int,
+                      @Json(name = "url") val url: String)
 
 
-//文章
+/**
+ * 包装了 MutableList<Article>
+ */
 data class ArticleData(
         @Json(name = "curPage") val curPage: Int,
         @Json(name = "datas") var datas: MutableList<Article>,
@@ -34,6 +41,10 @@ data class ArticleData(
         @Json(name = "size") val size: Int,
         @Json(name = "total") val total: Int
 )
+
+/**
+ * 文章
+ */
 data class Article(
         @Json(name = "apkLink") val apkLink: String,
         @Json(name = "audit") val audit: Int,
@@ -65,7 +76,43 @@ data class Article(
         @Json(name = "zan") val zan: Int,
         @Json(name = "top") var top: String
 )
+
+/**
+ * 知识体系Tree
+ */
+data class KnowledgeTreeData(
+        @Json(name = "children") val children: MutableList<Knowledge>,
+        @Json(name = "courseId") val courseId: Int,
+        @Json(name = "cover") val cover: String,
+        @Json(name = "desc") val desc: String,
+        @Json(name = "id") val id: Int,
+        @Json(name = "lisense") val lisense: String,
+        @Json(name = "lisenseLink") val lisenseLink: String,
+        @Json(name = "name") val name: String,
+        @Json(name = "order") val order: Int,
+        @Json(name = "parentChapterId") val parentChapterId: Int,
+        @Json(name = "visible") val visible: Int
+):Serializable
+
+data class Knowledge(
+        @Json(name = "children") val children: List<Any>,
+        @Json(name = "courseId") val courseId: Int,
+        @Json(name = "cover") val cover: String,
+        @Json(name = "desc") val desc: String,
+        @Json(name = "id") val id: Int,
+        @Json(name = "lisense") val lisense: String,
+        @Json(name = "lisenseLink") val lisenseLink: String,
+        @Json(name = "name") val name: String,
+        @Json(name = "order") val order: Int,
+        @Json(name = "parentChapterId") val parentChapterId: Int,
+        @Json(name = "visible") val visible: Int
+
+)
+
+
 data class Tag(
         @Json(name = "name") val name: String,
         @Json(name = "url") val url: String
 )
+
+

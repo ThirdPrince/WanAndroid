@@ -40,15 +40,13 @@ class MainViewModel : ViewModel() {
 
         viewModelScope.launch(exception) {
             val response = api.getBanner()
-            Log.e(tag, " response=${response}")
+            Log.i(tag, " response=${response}")
             var data = response.body()?.data
             if(data != null){
                 resultLiveData.value = RepoResult(data!!,"")
             }else{
                 resultLiveData.value = RepoResult(response.message())
             }
-
-            //Log.i(tag, response?.body()!!.data!!.toString())
 
         }
         return resultLiveData
@@ -66,7 +64,7 @@ class MainViewModel : ViewModel() {
 
         viewModelScope.launch(exception) {
             val response = api.getArticleList(pageNum)
-            Log.e(tag, " response=${response}")
+            Log.i(tag, " response=${response}")
             val data = response.body()?.data
             if (data !=null){
                 resultLiveData.value = RepoResult(response.body()?.data?.datas!!,"")

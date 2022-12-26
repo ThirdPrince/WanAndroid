@@ -18,13 +18,21 @@ interface ApiService {
 
 
     /**
-     * 获取Banner
+     * 主页Banner
      */
     @GET("banner/json")
     suspend fun getBanner():Response<HttpData<MutableList<BannerBean>>>
 
+    /**
+     * 主页文章
+     */
     @GET("article/list/{pageNum}/json")
     suspend fun getArticleList(@Path("pageNum")pageNum:Int):Response<HttpData<ArticleData>>
 
+    /**
+     * 知识体系
+     */
+    @GET("tree/json")
+    suspend fun getKnowledge():Response<HttpData<MutableList<KnowledgeTreeData>>>
 
 }

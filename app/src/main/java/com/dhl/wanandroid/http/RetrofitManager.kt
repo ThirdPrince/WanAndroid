@@ -1,4 +1,5 @@
 package com.dhl.wanandroid.http
+
 import com.dhl.wanandroid.api.ApiService
 import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.app.MyApplication
@@ -26,29 +27,29 @@ object RetrofitManager {
     private const val READ_TIME_OUT = 10L
 
     val apiService: ApiService by lazy { retrofit.create(ApiService::class.java) }
+
     /**
      * 懒加载
      */
-    private val retrofit:Retrofit by lazy {
+    private val retrofit: Retrofit by lazy {
         buildRetrofit(Constants.BASE_URL, buildHttpClient())
     }
 
     private val cacheFile = File(MyApplication.context.externalCacheDir, "cache")
-    private val cache = Cache(cacheFile, 5 *1024*1024 )
-
+    private val cache = Cache(cacheFile, 5 * 1024 * 1024)
 
 
     /**
      * 构建自己的OKHttp
      */
-    private fun buildHttpClient():OkHttpClient.Builder{
+    private fun buildHttpClient(): OkHttpClient.Builder {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
                 .addInterceptor(logging)
                 .addInterceptor(CacheInterceptor())
-                .connectTimeout(CONNECTION_TIME_OUT,TimeUnit.SECONDS)
-                .readTimeout(READ_TIME_OUT,TimeUnit.SECONDS)
+                .connectTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS)
+                .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
                 .cache(cache)
                 .proxy(Proxy.NO_PROXY)
 
@@ -57,7 +58,7 @@ object RetrofitManager {
     /**
      * 构建 Retrofit
      */
-    private fun buildRetrofit(baseUrl:String,build:OkHttpClient.Builder):Retrofit{
+    private fun buildRetrofit(baseUrl: String, build: OkHttpClient.Builder): Retrofit {
 
         val client = build.build()
         return Retrofit.Builder()
