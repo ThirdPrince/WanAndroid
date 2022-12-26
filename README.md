@@ -1,2 +1,2 @@
 # WanAndroid
-练手项目
+kotlin + MVVM + Coroutine
