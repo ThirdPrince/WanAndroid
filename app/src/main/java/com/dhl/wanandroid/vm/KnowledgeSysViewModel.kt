@@ -24,7 +24,13 @@ class KnowledgeSysViewModel:ViewModel() {
 
     private val TAG = "KnowledgeSysViewModel"
 
-    private val resultLiveData: MutableLiveData<RepoResult<MutableList<KnowledgeTreeData>>> = MutableLiveData<RepoResult<MutableList<KnowledgeTreeData>>>()
+    private val _resultLiveData = MutableLiveData<RepoResult<MutableList<KnowledgeTreeData>>>()
+
+    private val resultLiveData :LiveData<RepoResult<MutableList<KnowledgeTreeData>>>
+        get() = _resultLiveData
+
+
+
 
     /**
      * 获取知识体系
@@ -32,7 +38,7 @@ class KnowledgeSysViewModel:ViewModel() {
     fun getKnowledgeTree(): LiveData<RepoResult<MutableList<KnowledgeTreeData>>> {
 
         val exception = CoroutineExceptionHandler { _, throwable ->
-            resultLiveData.value = throwable.message?.let { RepoResult(it) }
+            _resultLiveData.value = throwable.message?.let { RepoResult(it) }
             Log.e("CoroutinesViewModel", throwable.message!!)
         }
         viewModelScope.launch(exception){
@@ -40,9 +46,9 @@ class KnowledgeSysViewModel:ViewModel() {
             Log.i(TAG, " response=${response}")
             val data = response.body()?.data
             if(data != null){
-                resultLiveData.value = RepoResult(data,"")
+                _resultLiveData.value = RepoResult(data,"")
             }else{
-                resultLiveData.value = RepoResult(response.message())
+                _resultLiveData.value = RepoResult(response.message())
             }
 
         }

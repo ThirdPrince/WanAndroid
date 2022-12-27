@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dhl.wanandroid.http.RetrofitManager
-import com.dhl.wanandroid.model.Article
-import com.dhl.wanandroid.model.ArticleData
-import com.dhl.wanandroid.model.BannerBean
-import com.dhl.wanandroid.model.RepoResult
+import com.dhl.wanandroid.model.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
@@ -27,14 +24,24 @@ class MainViewModel : ViewModel() {
 
     private val api by lazy { RetrofitManager.apiService }
 
+    private val _resultBanner = MutableLiveData<RepoResult<MutableList<BannerBean>>>()
+
+    private val resultBanner :LiveData<RepoResult<MutableList<BannerBean>>>
+        get() = _resultBanner
+
+
+    private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
+    private val resultArticle :LiveData<RepoResult<MutableList<Article>>>
+        get() = _resultArticle
+
 
     /**
      * 获取Banner
      */
     fun getBanner():LiveData<RepoResult<MutableList<BannerBean>>>{
-        val resultLiveData: MutableLiveData<RepoResult<MutableList<BannerBean>>> = MutableLiveData<RepoResult<MutableList<BannerBean>>>()
+
         val exception = CoroutineExceptionHandler { _, throwable ->
-            resultLiveData.value = throwable.message?.let { RepoResult(it) }
+            _resultBanner.value = throwable.message?.let { RepoResult(it) }
             Log.e("CoroutinesViewModel", throwable.message!!)
         }
 
@@ -43,22 +50,21 @@ class MainViewModel : ViewModel() {
             Log.i(tag, " response=${response}")
             var data = response.body()?.data
             if(data != null){
-                resultLiveData.value = RepoResult(data!!,"")
+                _resultBanner.value = RepoResult(data!!,"")
             }else{
-                resultLiveData.value = RepoResult(response.message())
+                _resultBanner.value = RepoResult(response.message())
             }
 
         }
-        return resultLiveData
+        return resultBanner
     }
 
     /**
      * 获取文章
      */
     fun getArticle(pageNum: Int):LiveData<RepoResult<MutableList<Article>>> {
-        val resultLiveData: MutableLiveData<RepoResult<MutableList<Article>>> = MutableLiveData<RepoResult<MutableList<Article>>>()
         val exception = CoroutineExceptionHandler { _, throwable ->
-            resultLiveData.value = throwable.message?.let { RepoResult(it) }
+            _resultArticle.value = throwable.message?.let { RepoResult(it) }
             Log.e(tag, throwable.message!!)
         }
 
@@ -67,14 +73,14 @@ class MainViewModel : ViewModel() {
             Log.i(tag, " response=${response}")
             val data = response.body()?.data
             if (data !=null){
-                resultLiveData.value = RepoResult(response.body()?.data?.datas!!,"")
+                _resultArticle.value = RepoResult(response.body()?.data?.datas!!,"")
             }else{
-                resultLiveData.value = RepoResult(response.message())
+                _resultArticle.value = RepoResult(response.message())
             }
 
 
         }
-        return resultLiveData
+        return resultArticle
     }
 
 
