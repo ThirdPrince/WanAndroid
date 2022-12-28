@@ -54,7 +54,11 @@ private const val NAV_INDEX = 0x004
 
 private const val PROJECT_INDEX = 0x005
 
-
+/**
+ * @author dhl
+ * 主页面
+ * 包括五个tab ,首页，知识体系，公众号，导航，项目
+ */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     /**
      * 底部Bottom
@@ -63,13 +67,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var drawerLayout: DrawerLayout? = null
     private var toolbar: Toolbar? = null
     private var navView: NavigationView? = null
-    private val headerLayout: View? = null
     private var tv_login: TextView? = null
 
     /**
      * 首页Fragment
      */
-    private var mainFragment: MainFragment? = null
+    private lateinit var mainFragment: MainFragment
 
     /**
      * 知识体系fragment
@@ -90,9 +93,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      * 项目
      */
     private var projectFragment: ProjectFragment? = null
-    private var fm: FragmentManager? = null
-    private var fragmentTransaction: FragmentTransaction? = null
+
+    /**
+     * FragmentManager
+     */
+    private val fm: FragmentManager by lazy {
+        supportFragmentManager
+    }
+    private val fragmentTransaction: FragmentTransaction by lazy {
+        fm.beginTransaction()
+    }
     var ft: FragmentTransaction? = null
+
     private var loginBean: LoginBean? = null
 
     private class MyHandler(context: MainActivity) : Handler() {
@@ -111,28 +123,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    private var myHandler: MyHandler? = null
+    /**
+     * Handler
+     */
+    private val myHandler: MyHandler by lazy {
+        MyHandler(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
         login()
-        myHandler = MyHandler(this)
-        fm = supportFragmentManager
         mainFragment = MainFragment.newInstance("", "")
-        fragmentTransaction = fm?.beginTransaction()
         if (savedInstanceState == null) {
-            fragmentTransaction!!.add(R.id.content, mainFragment!!, MainFragment::class.java.simpleName).commit()
+            fragmentTransaction.add(R.id.content, mainFragment!!, MainFragment::class.java.simpleName).commit()
         } else {
-            mainFragment = fm?.findFragmentByTag(MainFragment::class.java.simpleName) as MainFragment?
-            knowledgeSysFragment = fm?.findFragmentByTag(KnowledgeSysFragment::class.java.simpleName) as KnowledgeSysFragment?
-            wxArticleFragment = fm?.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
-            navFragment = fm?.findFragmentByTag(NavFragment::class.java.simpleName) as NavFragment?
+            mainFragment = (fm.findFragmentByTag(MainFragment::class.java.simpleName) as MainFragment?)!!
+            knowledgeSysFragment = fm.findFragmentByTag(KnowledgeSysFragment::class.java.simpleName) as KnowledgeSysFragment?
+            wxArticleFragment = fm.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
+            navFragment = fm.findFragmentByTag(NavFragment::class.java.simpleName) as NavFragment?
         }
         initEvent()
         images
-        // Ask for one permission
-        //bottom_navigation.setSelectedItemId(R.id.navigation_home);
     }
 
     private fun initView() {
@@ -200,9 +213,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             MAIN_INDEX -> {
                 if (mainFragment == null) {
                     mainFragment = MainFragment.newInstance("", "")
-                    fragmentTransaction.add(R.id.content, mainFragment!!, MainFragment::class.java.simpleName)
+                    fragmentTransaction.add(R.id.content, mainFragment, MainFragment::class.java.simpleName)
                 } else {
-                    fragmentTransaction.show(mainFragment!!)
+                    fragmentTransaction.show(mainFragment)
                 }
                 toolbar!!.title = "首页"
             }
@@ -249,6 +262,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    /**
+     * 隐藏fragment
+     */
     private fun hideFragments(fragmentTransaction: FragmentTransaction) {
         if (mainFragment != null) {
             fragmentTransaction.hide(mainFragment!!)

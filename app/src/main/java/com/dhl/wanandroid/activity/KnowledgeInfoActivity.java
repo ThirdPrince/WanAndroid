@@ -18,6 +18,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.dhl.wanandroid.R;
@@ -31,6 +32,8 @@ import java.util.List;
 
 /**
  * 知识体系 详情
+ * @author dhl
+ * @date 2022 12-28
  */
 public class KnowledgeInfoActivity extends AppCompatActivity {
 
@@ -65,7 +68,6 @@ public class KnowledgeInfoActivity extends AppCompatActivity {
 
     private void initView() {
         toolbar = findViewById(R.id.tool_bar);
-        //toolbar.setNavigationIcon(R.mipmap.toolbar_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -79,10 +81,10 @@ public class KnowledgeInfoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             knowledgeTreeData = (KnowledgeTreeData) intent.getSerializableExtra("KnowledgeTreeData");
-            toolbar.setTitle(knowledgeTreeData.getName());
-            for (Knowledge knowledgeInfochild : knowledgeTreeData.getChildren()) {
-                indicators.add(knowledgeInfochild.getName());
-                fragmentList.add(KnowledgeTabFragment.newInstance(knowledgeInfochild.getName(), knowledgeInfochild.getId() + ""));
+            getSupportActionBar().setTitle(knowledgeTreeData.getName());
+            for (Knowledge knowledge : knowledgeTreeData.getChildren()) {
+                indicators.add(knowledge.getName());
+                fragmentList.add(KnowledgeTabFragment.newInstance(knowledge.getName(), knowledge.getId() + ""));
             }
             viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
                 @Override

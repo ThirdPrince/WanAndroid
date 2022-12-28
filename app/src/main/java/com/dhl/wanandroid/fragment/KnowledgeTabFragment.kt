@@ -14,6 +14,8 @@ import com.dhl.wanandroid.vm.KnowledgeTabViewModel
 /**
  * @author dhl
  * 知识体系下的文章
+ * 懒加载
+ * @date 2022 12 28
  */
 class KnowledgeTabFragment : BaseFragment() {
     var title: String? = null
@@ -86,7 +88,6 @@ class KnowledgeTabFragment : BaseFragment() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        // Log.e(TAG,"setUserVisibleHint :::this is "+title+"::::isVisible=="+isVisibleToUser);
         if (isVisibleToUser && isViewCreate && !isDataInited) {
             onLoadData()
         }
