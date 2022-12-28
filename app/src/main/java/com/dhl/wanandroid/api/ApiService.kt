@@ -39,8 +39,16 @@ interface ApiService {
 
     /**
      * 知识体系文章
+     *
      */
     @GET("article/list/{pageNum}/json")
     suspend fun getKnowledgeArticleList(@Path("pageNum")pageNum:Int,@Query("cid")cid:Int):Response<HttpData<ArticleData>>
+
+    /**
+     * 微信公众号文章
+     * https://wanandroid.com/wxarticle/list/408/1/json
+     */
+    @GET("wxarticle/list/{id}/{pageNum}/json")
+    suspend fun getWxArticleList(@Path("id")id:Int,@Path("pageNum")pageNum:Int):Response<HttpData<ArticleData>>
 
 }

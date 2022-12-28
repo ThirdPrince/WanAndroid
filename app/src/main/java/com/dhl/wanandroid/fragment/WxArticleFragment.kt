@@ -1,221 +1,147 @@
-package com.dhl.wanandroid.fragment;
+package com.dhl.wanandroid.fragment
 
-
-import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.app.Constants;
-import com.dhl.wanandroid.http.OkHttpManager;
-import com.dhl.wanandroid.model.WxArticleInfo;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-
-import org.litepal.LitePal;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
+import com.dhl.wanandroid.R
+import com.dhl.wanandroid.app.Constants
+import com.dhl.wanandroid.http.OkHttpManager
+import com.dhl.wanandroid.model.WxArticleInfo
+import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import org.litepal.LitePal.deleteAll
+import org.litepal.LitePal.findAll
+import org.litepal.LitePal.saveAll
+import java.io.IOException
+import java.util.*
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link WxArticleFragment#newInstance} factory method to
+ * A simple [Fragment] subclass.
+ * Use the [WxArticleFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-public class WxArticleFragment extends BaseFragment {
-    private static final String TAG = "WxArticleFragment";
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+class WxArticleFragment : BaseFragment() {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private var wxArticleInfoList: MutableList<WxArticleInfo> = mutableListOf()
 
-    private List<WxArticleInfo> wxArticleInfoList ;
-
-    private TextView toolbar_title ;
 
     /**
      * tabLayout
      */
-    private TabLayout tabLayout ;
-
+    private val tabLayout: TabLayout by lazy {
+        view!!.findViewById(R.id.tab_layout)
+    }
 
     /**
      * viewPager
      */
-    private ViewPager viewPager ;
-
-    private List<WxArticleTabFragment> wxArticleTabFragmentList ;
-
-    private List<String> tabIndicator ;
-
-    public WxArticleFragment() {
-        // Required empty public constructor
+    private val viewPager: ViewPager by lazy {
+        view!!.findViewById(R.id.content_vp)
     }
+    private var wxArticleTabFragmentList: MutableList<WxArticleTabFragment> = mutableListOf()
+    private var tabIndicator: MutableList<String> = mutableListOf()
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment WxArticleFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static WxArticleFragment newInstance(String param1, String param2) {
-        WxArticleFragment fragment = new WxArticleFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_wx_article, container, false);
+        return inflater.inflate(R.layout.fragment_wx_article, container, false)
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initToolbar(view);
-        initView(view);
-        toolbar.setTitle("公众号");
-        //toolbar_title.setText("公众号");
-        getWxArticleInfo();
-    }
-    private void initView(View view)
-    {
-       // toolbar_title = view.findViewById(R.id.toolbar_title);
-        tabLayout = view.findViewById(R.id.tab_layout);
-        viewPager = view.findViewById(R.id.content_vp);
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initToolbar(view)
+        toolbar.title = "公众号"
+        wxArticleInfo
     }
 
 
-    private void getWxArticleInfo()
-    {
-        wxArticleTabFragmentList = new ArrayList<>();
-        tabIndicator = new ArrayList<>();
-        wxArticleInfoList = LitePal.findAll(WxArticleInfo.class);
-        if(wxArticleInfoList.size() > 0) {
-            setViewPageTab();
-        }
-
-        OkHttpManager.getInstance().get(Constants.WX_ARTICLE_URL, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
+    private val wxArticleInfo: Unit
+        private get() {
+            wxArticleTabFragmentList = ArrayList()
+            tabIndicator = ArrayList()
+            wxArticleInfoList = findAll(WxArticleInfo::class.java)
+            if (wxArticleInfoList.size > 0) {
+                setViewPageTab()
             }
+            OkHttpManager.getInstance()[Constants.WX_ARTICLE_URL, object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    e.printStackTrace()
+                }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                JsonElement jsonElement = new JsonParser().parse(response.body().string());
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                JsonArray jsonArray = jsonObject.getAsJsonArray("data");
-                if(wxArticleInfoList.size()  == 0)
-                {
-                    wxArticleInfoList = new Gson().fromJson(jsonArray.toString(),new TypeToken<List<WxArticleInfo>>(){}.getType());
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setViewPageTab();
-                        }
-                    });
-
-                }else
-                {
-                    wxArticleInfoList = new Gson().fromJson(jsonArray.toString(),new TypeToken<List<WxArticleInfo>>(){}.getType());
-                    // Log.e(TAG,"list=="+knowledgeInfo.toString());
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                @Throws(IOException::class)
+                override fun onResponse(call: Call, response: Response) {
+                    val jsonElement = JsonParser().parse(response.body!!.string())
+                    val jsonObject = jsonElement.asJsonObject
+                    val jsonArray = jsonObject.getAsJsonArray("data")
+                    if (wxArticleInfoList.size == 0) {
+                        wxArticleInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<WxArticleInfo?>?>() {}.type)
+                        activity!!.runOnUiThread { setViewPageTab() }
+                    } else {
+                        wxArticleInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<WxArticleInfo?>?>() {}.type)
+                        // Log.e(TAG,"list=="+knowledgeInfo.toString());
+                        activity!!.runOnUiThread {
                             //tabLayout.removeAllTabs();
                             //refreshLayout.finishRefresh();
-                            wxArticleTabFragmentList.clear();
-                            for(WxArticleInfo wxArticleInfo :wxArticleInfoList) {
+                            wxArticleTabFragmentList.clear()
+                            for (wxArticleInfo in wxArticleInfoList) {
                                 // tabLayout.addTab(tabLayout.newTab().setText(wxArticleInfo.getName()));
-                                wxArticleTabFragmentList.add(WxArticleTabFragment.newInstance(wxArticleInfo.getName(),wxArticleInfo.getId()+""));
+                                wxArticleTabFragmentList.add(WxArticleTabFragment.newInstance(wxArticleInfo.name, wxArticleInfo.id.toString() + ""))
                             }
-
                         }
-                    });
+                    }
+                    deleteAll(WxArticleInfo::class.java)
+                    saveAll(wxArticleInfoList)
                 }
-                LitePal.deleteAll(WxArticleInfo.class);
-                LitePal.saveAll(wxArticleInfoList);
-
-            }
-        });
-
-
-    }
-
-    private void setViewPageTab()
-    {
-        wxArticleTabFragmentList.clear();
-        for (WxArticleInfo wxArticleInfo : wxArticleInfoList) {
-            tabIndicator.add(wxArticleInfo.getName());
-            wxArticleTabFragmentList.add(WxArticleTabFragment.newInstance(wxArticleInfo.getName(), wxArticleInfo.getId()+""));
+            }]
         }
-        viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
-            @Override
-            public Fragment getItem(int i) {
-                return wxArticleTabFragmentList.get(i);
+
+    private fun setViewPageTab() {
+        wxArticleTabFragmentList.clear()
+        for (wxArticleInfo in wxArticleInfoList!!) {
+            tabIndicator!!.add(wxArticleInfo.name)
+            wxArticleTabFragmentList!!.add(WxArticleTabFragment.newInstance(wxArticleInfo.name, wxArticleInfo.id.toString() + ""))
+        }
+        viewPager!!.adapter = object : FragmentPagerAdapter(childFragmentManager) {
+            override fun getItem(i: Int): Fragment {
+                return wxArticleTabFragmentList!![i]
             }
 
-            @Override
-            public int getCount() {
-                return wxArticleTabFragmentList.size();
+            override fun getCount(): Int {
+                return wxArticleTabFragmentList!!.size
             }
 
-            @Nullable
-            @Override
-            public CharSequence getPageTitle(int position) {
-
-                return tabIndicator.get(position);
+            override fun getPageTitle(position: Int): CharSequence? {
+                return tabIndicator!![position]
             }
-        });
-        viewPager.setOffscreenPageLimit(wxArticleTabFragmentList.size());
-        tabLayout.setupWithViewPager(viewPager);
+        }
+        viewPager!!.offscreenPageLimit = wxArticleTabFragmentList!!.size
+        tabLayout!!.setupWithViewPager(viewPager)
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
 
 
+    companion object {
+        private const val TAG = "WxArticleFragment"
+        private const val ARG_PARAM1 = "param1"
+        private const val ARG_PARAM2 = "param2"
+        fun newInstance(param1: String?, param2: String?): WxArticleFragment {
+            val fragment = WxArticleFragment()
+            val args = Bundle()
+            args.putString(ARG_PARAM1, param1)
+            args.putString(ARG_PARAM2, param2)
+            fragment.arguments = args
+            return fragment
+        }
     }
 }
