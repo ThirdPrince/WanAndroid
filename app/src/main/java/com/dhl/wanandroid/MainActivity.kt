@@ -294,11 +294,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
-        if (myHandler!!.hasMessages(EXIT_APP)) {
+        if (myHandler.hasMessages(EXIT_APP)) {
             finish()
         } else {
             ToastUtils.showShort("再按一次退出程序")
-            myHandler!!.sendEmptyMessageDelayed(EXIT_APP, 2000)
+            myHandler.sendEmptyMessageDelayed(EXIT_APP, 2000)
         }
     }
 

@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 /**
  * @Title: ApiService
- * @Package
+ * @Package com.dhl.wanandroid.api
  * @Description: api
  * @author dhl
  * @date 2022 12-20
@@ -36,11 +36,9 @@ interface ApiService {
     @GET("tree/json")
     suspend fun getKnowledge():Response<HttpData<MutableList<KnowledgeTreeData>>>
 
+
     /**
-     *
-     */
-    /**
-     * 主页文章
+     * 知识体系文章
      */
     @GET("article/list/{pageNum}/json")
     suspend fun getKnowledgeArticleList(@Path("pageNum")pageNum:Int,@Query("cid")cid:Int):Response<HttpData<ArticleData>>

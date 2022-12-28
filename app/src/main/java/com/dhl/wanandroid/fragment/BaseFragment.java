@@ -25,8 +25,10 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
+ * @author dhl
  * Fragment 基类
- *
+ * Fragment 的存在，是 专注于承担 “视图控制器” 责任，
+ * 以分担 Activity 责任、让 Activity 更专注于 “幕后协调者” 工作。
  */
 public abstract class BaseFragment extends Fragment {
 

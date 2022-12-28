@@ -1,121 +1,106 @@
-package com.dhl.wanandroid.activity;
+package com.dhl.wanandroid.activity
 
-import android.app.Activity;
-import android.content.Intent;
-
-import androidx.annotation.Nullable;
-
-import com.dhl.wanandroid.model.Knowledge;
-import com.dhl.wanandroid.model.KnowledgeTreeData;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
-import android.view.MenuItem;
-
-import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.fragment.KnowledgeTabFragment;
-import com.dhl.wanandroid.model.KnowledgeInfo;
-import com.dhl.wanandroid.model.KnowledgeInfochild;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
+import com.dhl.wanandroid.R
+import com.dhl.wanandroid.fragment.KnowledgeTabFragment
+import com.dhl.wanandroid.fragment.KnowledgeTabFragment.Companion.newInstance
+import com.dhl.wanandroid.model.KnowledgeTreeData
+import com.google.android.material.tabs.TabLayout
+import java.util.*
 
 /**
  * 知识体系 详情
  * @author dhl
  * @date 2022 12-28
  */
-public class KnowledgeInfoActivity extends AppCompatActivity {
+class KnowledgeInfoActivity : AppCompatActivity() {
 
+    private val toolbar: Toolbar by lazy {
+        findViewById(R.id.tool_bar)
+    }
+    private val tabLayout: TabLayout by lazy {
+        findViewById(R.id.tab_layout)
+    }
 
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-
-    private ViewPager viewPager;
+    private val viewPager: ViewPager by lazy {
+        findViewById(R.id.content_vp)
+    }
 
     /**
      * TabLayout title
      */
-    private List<String> indicators;
+    private var indicators: MutableList<String> = mutableListOf()
 
-    private List<KnowledgeTabFragment> fragmentList;
+    private var fragmentList: MutableList<KnowledgeTabFragment> = mutableListOf()
 
-    private KnowledgeTreeData knowledgeTreeData;
+    private lateinit var knowledgeTreeData: KnowledgeTreeData
 
-    public static void startActivity(Activity activity, KnowledgeTreeData knowledgeTreeData) {
-        Intent intent = new Intent(activity, KnowledgeInfoActivity.class);
-        intent.putExtra("KnowledgeTreeData", knowledgeTreeData);
-        activity.startActivity(intent);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_knowledge_info)
+        initView()
+        initData()
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_knowledge_info);
-        initView();
-        initData();
+    private fun initView() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
     }
 
-    private void initView() {
-        toolbar = findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        tabLayout = findViewById(R.id.tab_layout);
-        viewPager = findViewById(R.id.content_vp);
-    }
-
-    private void initData() {
-        indicators = new ArrayList<>();
-        fragmentList = new ArrayList<>();
-        Intent intent = getIntent();
-        if (intent != null) {
-            knowledgeTreeData = (KnowledgeTreeData) intent.getSerializableExtra("KnowledgeTreeData");
-            getSupportActionBar().setTitle(knowledgeTreeData.getName());
-            for (Knowledge knowledge : knowledgeTreeData.getChildren()) {
-                indicators.add(knowledge.getName());
-                fragmentList.add(KnowledgeTabFragment.newInstance(knowledge.getName(), knowledge.getId() + ""));
+    /**
+     * 初始化数据
+     */
+    private fun initData() {
+        intent.let {
+            knowledgeTreeData = it.getSerializableExtra("KnowledgeTreeData") as KnowledgeTreeData
+            supportActionBar?.title = knowledgeTreeData.name
+            for ((_, _, _, _, id, _, _, name) in knowledgeTreeData.children) {
+                indicators.add(name)
+                fragmentList.add(newInstance(name, id.toString() + ""))
             }
-            viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-                @Override
-                public Fragment getItem(int i) {
-                    return fragmentList.get(i);
+            viewPager!!.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
+                override fun getItem(i: Int): Fragment {
+                    return fragmentList[i]
                 }
 
-                @Override
-                public int getCount() {
-                    return fragmentList.size();
+                override fun getCount(): Int {
+                    return fragmentList.size
                 }
 
-                @Nullable
-                @Override
-                public CharSequence getPageTitle(int position) {
-                    return indicators.get(position);
+                override fun getPageTitle(position: Int): CharSequence? {
+                    return indicators.get(position)
                 }
-            });
-            tabLayout.setupWithViewPager(viewPager);
-            viewPager.setOffscreenPageLimit(fragmentList.size());
+            }
+            tabLayout.setupWithViewPager(viewPager)
+            viewPager.offscreenPageLimit = fragmentList.size
         }
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * 启动传参
+     */
+    companion object {
+        fun startActivity(activity: Activity, knowledgeTreeData: KnowledgeTreeData?) {
+            val intent = Intent(activity, KnowledgeInfoActivity::class.java)
+            intent.putExtra("KnowledgeTreeData", knowledgeTreeData)
+            activity.startActivity(intent)
+        }
     }
 }

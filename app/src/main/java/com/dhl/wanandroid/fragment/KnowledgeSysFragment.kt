@@ -86,7 +86,7 @@ class KnowledgeSysFragment : BaseFragment() {
             knowledgeAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
                     val knowledgeTreeData = knowledgeTreeDataList[position]
-                    KnowledgeInfoActivity.startActivity(activity, knowledgeTreeData)
+                    KnowledgeInfoActivity.startActivity(requireActivity(), knowledgeTreeData)
                 }
 
                 override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
