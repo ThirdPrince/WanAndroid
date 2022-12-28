@@ -11,28 +11,20 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 /**
- * @Title: MainViewModel
+ * @Title: KnowledgeTabViewModel
  * @Package com.dhl.wanandroid.vm
- * @Description:主页的ViewModel
+ * @Description:指示体系的Tab
  * @author dhl
- * @date 2022 12 21
+ * @date 2022 12 28
  * @version V1.0
  * LiveData的postValue和setValue方法是protected，而MutableLiveData这两个方法则是public，
  * 也就是说Livedata只允许调用observe方法被动监听数据变化，而MutableLiveData除了监听变化外，还可以用postValue和setValue方法发射数据。
  */
-class MainViewModel : ViewModel() {
+class KnowledgeTabViewModel : ViewModel() {
 
     val  tag = "MainViewModel"
 
     private val api by lazy { RetrofitManager.apiService }
-
-    /**
-     * banner LiveData
-     */
-    private val _resultBanner = MutableLiveData<RepoResult<MutableList<BannerBean>>>()
-
-    private val resultBanner :LiveData<RepoResult<MutableList<BannerBean>>>
-        get() = _resultBanner
 
 
     /**
@@ -43,41 +35,19 @@ class MainViewModel : ViewModel() {
         get() = _resultArticle
 
 
-    /**
-     * 获取Banner
-     */
-    fun getBanner():LiveData<RepoResult<MutableList<BannerBean>>>{
 
-        val exception = CoroutineExceptionHandler { _, throwable ->
-            _resultBanner.value = throwable.message?.let { RepoResult(it) }
-            Log.e("CoroutinesViewModel", throwable.message!!)
-        }
-
-        viewModelScope.launch(exception) {
-            val response = api.getBanner()
-            Log.i(tag, " response=${response}")
-            var data = response.body()?.data
-            if(data != null){
-                _resultBanner.value = RepoResult(data!!,"")
-            }else{
-                _resultBanner.value = RepoResult(response.message())
-            }
-
-        }
-        return resultBanner
-    }
 
     /**
      * 获取文章
      */
-    fun getArticle(pageNum: Int):LiveData<RepoResult<MutableList<Article>>> {
+    fun getArticle(pageNum: Int,cid:Int):LiveData<RepoResult<MutableList<Article>>> {
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultArticle.value = throwable.message?.let { RepoResult(it) }
             Log.e(tag, throwable.message!!)
         }
 
         viewModelScope.launch(exception) {
-            val response = api.getArticleList(pageNum)
+            val response = api.getKnowledgeArticleList(pageNum,cid)
             Log.i(tag, " response=${response}")
             val data = response.body()?.data
             if (data !=null){

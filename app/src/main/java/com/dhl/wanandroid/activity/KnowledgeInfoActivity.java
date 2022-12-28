@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
+import com.dhl.wanandroid.model.Knowledge;
 import com.dhl.wanandroid.model.KnowledgeTreeData;
 import com.google.android.material.tabs.TabLayout;
 
@@ -46,11 +47,11 @@ public class KnowledgeInfoActivity extends AppCompatActivity {
 
     private List<KnowledgeTabFragment> fragmentList;
 
-    private KnowledgeInfo knowledgeInfo;
+    private KnowledgeTreeData knowledgeTreeData;
 
     public static void startActivity(Activity activity, KnowledgeTreeData knowledgeTreeData) {
         Intent intent = new Intent(activity, KnowledgeInfoActivity.class);
-        intent.putExtra("knowledgeInfo", knowledgeTreeData);
+        intent.putExtra("KnowledgeTreeData", knowledgeTreeData);
         activity.startActivity(intent);
     }
 
@@ -77,11 +78,11 @@ public class KnowledgeInfoActivity extends AppCompatActivity {
         fragmentList = new ArrayList<>();
         Intent intent = getIntent();
         if (intent != null) {
-            knowledgeInfo = (KnowledgeInfo) intent.getSerializableExtra("knowledgeInfo");
-            toolbar.setTitle(knowledgeInfo.getName());
-            for (KnowledgeInfochild knowledgeInfochild : knowledgeInfo.getChildren()) {
+            knowledgeTreeData = (KnowledgeTreeData) intent.getSerializableExtra("KnowledgeTreeData");
+            toolbar.setTitle(knowledgeTreeData.getName());
+            for (Knowledge knowledgeInfochild : knowledgeTreeData.getChildren()) {
                 indicators.add(knowledgeInfochild.getName());
-                fragmentList.add(KnowledgeTabFragment.newInstance(knowledgeInfochild.getName(), knowledgeInfochild.getCid() + ""));
+                fragmentList.add(KnowledgeTabFragment.newInstance(knowledgeInfochild.getName(), knowledgeInfochild.getId() + ""));
             }
             viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
                 @Override

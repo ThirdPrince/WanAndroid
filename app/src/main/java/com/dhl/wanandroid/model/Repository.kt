@@ -92,7 +92,7 @@ data class KnowledgeTreeData(
         @Json(name = "order") val order: Int,
         @Json(name = "parentChapterId") val parentChapterId: Int,
         @Json(name = "visible") val visible: Int
-):Serializable
+) : Serializable
 
 data class Knowledge(
         @Json(name = "children") val children: List<Any>,
@@ -106,8 +106,7 @@ data class Knowledge(
         @Json(name = "order") val order: Int,
         @Json(name = "parentChapterId") val parentChapterId: Int,
         @Json(name = "visible") val visible: Int
-
-)
+) : Serializable
 
 
 data class Tag(

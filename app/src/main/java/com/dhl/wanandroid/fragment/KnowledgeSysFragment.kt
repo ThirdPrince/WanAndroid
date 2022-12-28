@@ -42,13 +42,10 @@ class KnowledgeSysFragment : BaseFragment() {
         ViewModelProvider(this).get(KnowledgeSysViewModel::class.java)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_knowledge_sys, container, false)
     }
 
@@ -56,7 +53,6 @@ class KnowledgeSysFragment : BaseFragment() {
         initToolbar(view)
         toolbar.title = "知识体系"
         initRcy(view)
-        //refreshLayout.finishRefresh()
         recyclerView.adapter = knowledgeAdapter
         refreshLayout.autoRefresh()
         refreshLayout.setEnableLoadMore(false)
