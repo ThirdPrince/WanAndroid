@@ -314,7 +314,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val jsonObject = jsonElement.asJsonObject
                     val jsonArray = jsonObject.getAsJsonArray("images")
                     imageInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<ImageBean?>?>() {}.type)
-                    myHandler!!.sendEmptyMessage(DOWNLOAD_IMAGE)
+                    //myHandler!!.sendEmptyMessage(DOWNLOAD_IMAGE)
                 }
             }]
         }

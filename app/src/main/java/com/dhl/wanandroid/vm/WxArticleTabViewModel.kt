@@ -35,8 +35,6 @@ class WxArticleTabViewModel : ViewModel() {
         get() = _resultArticle
 
 
-
-
     /**
      * 获取文章
      */
@@ -51,7 +49,7 @@ class WxArticleTabViewModel : ViewModel() {
             Log.i(tag, " response=${response}")
             val data = response.body()?.data
             if (data !=null){
-                _resultArticle.value = RepoResult(response.body()?.data?.datas!!,"")
+                _resultArticle.value = RepoResult(data?.datas!!,"")
             }else{
                 _resultArticle.value = RepoResult(response.message())
             }

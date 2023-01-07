@@ -29,7 +29,8 @@ import org.litepal.LitePal.where
 import java.io.IOException
 
 /**
- *
+ * 微信公众号TAb Fragment
+ * @author dhl
  */
 class WxArticleTabFragment : BaseFragment() {
     // TODO: Rename and change types of parameters
@@ -58,7 +59,6 @@ class WxArticleTabFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_wx_article_tab, container, false)
     }
 
@@ -72,9 +72,10 @@ class WxArticleTabFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.e(TAG, "onActivityCreated ::isViewCreate ==$isViewCreate::getUserVisibleHint()==$userVisibleHint")
-        if (isViewCreate && userVisibleHint) {
+        if (isViewCreate && userVisibleHint && !isDataInited) {
             onLoadData()
         }
+
     }
 
     /**
@@ -114,20 +115,12 @@ class WxArticleTabFragment : BaseFragment() {
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser && isViewCreate) {
+        if (isVisibleToUser && isViewCreate && !isDataInited) {
             onLoadData()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //Log.e(TAG,"onDestroy");
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //Log.e(TAG,"onDestroyView");
-    }
 
     companion object {
         private const val TAG = "WxArticleTabFragment"
