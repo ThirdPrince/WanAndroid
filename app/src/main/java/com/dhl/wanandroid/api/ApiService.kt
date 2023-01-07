@@ -26,6 +26,7 @@ interface ApiService {
 
     /**
      * 主页文章
+     *  https://wanandroid.com/article/list/1/json
      */
     @GET("article/list/{pageNum}/json")
     suspend fun getArticleList(@Path("pageNum")pageNum:Int):Response<HttpData<ArticleData>>
@@ -50,5 +51,13 @@ interface ApiService {
      */
     @GET("wxarticle/list/{id}/{pageNum}/json")
     suspend fun getWxArticleList(@Path("id")id:Int,@Path("pageNum")pageNum:Int):Response<HttpData<ArticleData>>
+
+
+    /**
+     * Nav 导航
+     * https://wanandroid.com/navi/json
+     */
+    @GET("navi/json")
+    suspend fun getNav():Response<HttpData<MutableList<NavBean>>>
 
 }

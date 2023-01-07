@@ -8,7 +8,9 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.dhl.wanandroid.R;
+import com.dhl.wanandroid.model.Article;
 import com.dhl.wanandroid.model.ArticlesBean;
+import com.dhl.wanandroid.model.NavBean;
 import com.dhl.wanandroid.model.NavInfo;
 import com.dhl.wanandroid.util.CommonUtils;
 import com.zhy.adapter.recyclerview.CommonAdapter;
@@ -19,21 +21,24 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.List;
 
-public class NavInfoAdapter extends CommonAdapter<NavInfo> {
+/**
+ * 导航Adapter
+ */
+public class NavInfoAdapter extends CommonAdapter<NavBean> {
 
-    public NavInfoAdapter(Context context, int layoutId, List<NavInfo> datas) {
+    public NavInfoAdapter(Context context, int layoutId, List<NavBean> datas) {
         super(context, layoutId, datas);
     }
 
     @Override
-    protected void convert(ViewHolder holder, NavInfo navInfo, int position) {
+    protected void convert(ViewHolder holder, NavBean navInfo, int position) {
 
-        holder.setText(R.id.item_nav_tv,navInfo.getName());
+        holder.setText(R.id.item_nav_tv, navInfo.getName());
         final TagFlowLayout mTagFlowLayout = holder.getView(R.id.item_nav_flow_layout);
-        List<ArticlesBean> mArticles = navInfo.getArticles();
-        mTagFlowLayout.setAdapter(new TagAdapter<ArticlesBean>(mArticles) {
+        List<Article> mArticles = navInfo.getArticles();
+        mTagFlowLayout.setAdapter(new TagAdapter<Article>(mArticles) {
             @Override
-            public View getView(FlowLayout parent, int position, ArticlesBean feedArticleData) {
+            public View getView(FlowLayout parent, int position, Article feedArticleData) {
                 TextView tv = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.flow_layout_tv,
                         mTagFlowLayout, false);
                 if (feedArticleData == null) {

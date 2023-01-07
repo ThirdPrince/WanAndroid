@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import java.io.Serializable
 
 /**
- * @Title: $
+ * @Title: 基本数据类
  * @Package $
  * @Description: 基本Bean
  * @author dhl
@@ -108,6 +108,12 @@ data class Knowledge(
         @Json(name = "visible") val visible: Int
 ) : Serializable
 
+/**
+ * 导航 Bean
+ */
+data class NavBean(@Json(name = "articles")val articles: MutableList<Article>,
+                   @Json(name = "cid") val cid:Int,
+                   @Json(name = "name")val name:String)
 
 data class Tag(
         @Json(name = "name") val name: String,
