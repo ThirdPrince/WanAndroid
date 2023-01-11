@@ -121,6 +121,16 @@ class WxArticleTabFragment : BaseFragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e(TAG,"onDestroy")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.e(TAG,"onDestroyView")
+    }
+
 
 
     companion object {

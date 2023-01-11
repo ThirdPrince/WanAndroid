@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.dhl.wanandroid.R
@@ -92,7 +93,7 @@ class WxArticleFragment : BaseFragment() {
                 tabIndicator.add(baseData.name)
                 wxArticleTabFragmentList.add(WxArticleTabFragment.newInstance(baseData.name, baseData.id.toString() + ""))
             }
-            viewPager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
+            viewPager.adapter = object : FragmentStatePagerAdapter(childFragmentManager) {
                 override fun getItem(i: Int): Fragment {
                     return wxArticleTabFragmentList[i]
                 }
@@ -105,6 +106,7 @@ class WxArticleFragment : BaseFragment() {
                     return tabIndicator[position]
                 }
             }
+            viewPager.offscreenPageLimit = wxArticleTabFragmentList.size
             tabLayout.setupWithViewPager(viewPager)
         })
     }
