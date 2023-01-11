@@ -26,9 +26,8 @@ import java.io.IOException
 import java.util.*
 
 /**
- * A simple [Fragment] subclass.
- * Use the [WxArticleFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * 公众号 Fragment
+ * dhl
  */
 class WxArticleFragment : BaseFragment() {
 
@@ -49,12 +48,16 @@ class WxArticleFragment : BaseFragment() {
         view!!.findViewById(R.id.content_vp)
     }
     private var wxArticleTabFragmentList: MutableList<WxArticleTabFragment> = mutableListOf()
+
+
+    /**
+     * viewPage title
+     */
     private var tabIndicator: MutableList<String> = mutableListOf()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_wx_article, container, false)
     }
 
@@ -63,6 +66,13 @@ class WxArticleFragment : BaseFragment() {
         initToolbar(view)
         toolbar.title = "公众号"
         wxArticleInfo
+    }
+
+    /**
+     * 获取data
+     */
+    private fun getData(){
+
     }
 
 

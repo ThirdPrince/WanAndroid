@@ -17,20 +17,7 @@ public class Constants {
      */
     public static final String HOME_PAGE= "https://www.wanandroid.com" ;
            // "/article/list/0/json";
-    /**
-     * banner
-     */
-    public static final String BANNER_URL= "https://www.wanandroid.com/banner/json";
 
-    /**
-     * 知识体系
-     */
-    public static final String KNOWLEDGE_URL= "https://www.wanandroid.com/tree/json";
-
-    /**
-     * 知识体系下的文章
-     */
-    public static final String KNOWLEDGE_URL_LIST = "https://www.wanandroid.com/article/list/0/json?cid=";
 
     public static final String WX_ARTICLE = "https://wanandroid.com/wxarticle";
     /**

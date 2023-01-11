@@ -94,7 +94,7 @@ data class KnowledgeTreeData(
         @Json(name = "visible") val visible: Int
 ) : Serializable
 
-data class Knowledge(
+ data class Knowledge(
         @Json(name = "children") val children: List<Any>,
         @Json(name = "courseId") val courseId: Int,
         @Json(name = "cover") val cover: String,
@@ -114,6 +114,23 @@ data class Knowledge(
 data class NavBean(@Json(name = "articles")val articles: MutableList<Article>,
                    @Json(name = "cid") val cid:Int,
                    @Json(name = "name")val name:String)
+
+/**
+ * 项目
+ */
+data class Project(
+        @Json(name = "children") val children: List<Any>,
+        @Json(name = "courseId") val courseId: Int,
+        @Json(name = "cover") val cover: String,
+        @Json(name = "desc") val desc: String,
+        @Json(name = "id") val id: Int,
+        @Json(name = "lisense") val lisense: String,
+        @Json(name = "lisenseLink") val lisenseLink: String,
+        @Json(name = "name") val name: String,
+        @Json(name = "order") val order: Int,
+        @Json(name = "parentChapterId") val parentChapterId: Int,
+        @Json(name = "visible") val visible: Int
+)
 
 data class Tag(
         @Json(name = "name") val name: String,

@@ -64,14 +64,12 @@ class WxArticleTabFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.e(TAG, "onViewCreated")
         initRcy(view)
         isViewCreate = true
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.e(TAG, "onActivityCreated ::isViewCreate ==$isViewCreate::getUserVisibleHint()==$userVisibleHint")
         if (isViewCreate && userVisibleHint && !isDataInited) {
             onLoadData()
         }
@@ -88,6 +86,9 @@ class WxArticleTabFragment : BaseFragment() {
         isDataInited = true
     }
 
+    /**
+     * 获取数据
+     */
     private fun getData(){
         wxArticleTabViewModel.getArticle(0,articleId!!.toInt()).observe(this,{
             if(it.isSuccess){

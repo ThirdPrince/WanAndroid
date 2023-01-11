@@ -60,4 +60,10 @@ interface ApiService {
     @GET("navi/json")
     suspend fun getNav():Response<HttpData<MutableList<NavBean>>>
 
+    /**
+     * 项目
+     */
+    @GET("project/tree/json")
+    suspend fun getProject():Response<HttpData<MutableList<Project>>>
+
 }
