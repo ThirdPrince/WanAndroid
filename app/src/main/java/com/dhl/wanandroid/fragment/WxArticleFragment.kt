@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.WxArticleInfo
+import com.dhl.wanandroid.vm.WxArticleTabViewModel
+import com.dhl.wanandroid.vm.WxArticleViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.JsonParser
@@ -28,10 +31,11 @@ import java.util.*
 /**
  * 公众号 Fragment
  * dhl
+ * @Date 2013 1.11
  */
 class WxArticleFragment : BaseFragment() {
 
-    private var wxArticleInfoList: MutableList<WxArticleInfo> = mutableListOf()
+
 
 
     /**
@@ -56,6 +60,15 @@ class WxArticleFragment : BaseFragment() {
     private var tabIndicator: MutableList<String> = mutableListOf()
 
 
+    /**
+     * viewModel
+     */
+
+    private val wxArticleViewModel: WxArticleViewModel by lazy {
+        ViewModelProvider(this).get(WxArticleViewModel::class.java)
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_wx_article, container, false)
@@ -65,80 +78,36 @@ class WxArticleFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initToolbar(view)
         toolbar.title = "公众号"
-        wxArticleInfo
+        getData()
     }
 
     /**
      * 获取data
      */
-    private fun getData(){
-
-    }
-
-
-    private val wxArticleInfo: Unit
-        private get() {
-            wxArticleTabFragmentList = ArrayList()
-            tabIndicator = ArrayList()
-            wxArticleInfoList = findAll(WxArticleInfo::class.java)
-            if (wxArticleInfoList.size > 0) {
-                setViewPageTab()
+    private fun getData() {
+        wxArticleViewModel.getWxArticleChapters().observe(this, {
+            wxArticleTabFragmentList.clear()
+            tabIndicator.clear()
+            for (baseData in it.result!!) {
+                tabIndicator.add(baseData.name)
+                wxArticleTabFragmentList.add(WxArticleTabFragment.newInstance(baseData.name, baseData.id.toString() + ""))
             }
-            OkHttpManager.getInstance()[Constants.WX_ARTICLE_URL, object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    e.printStackTrace()
+            viewPager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
+                override fun getItem(i: Int): Fragment {
+                    return wxArticleTabFragmentList[i]
                 }
 
-                @Throws(IOException::class)
-                override fun onResponse(call: Call, response: Response) {
-                    val jsonElement = JsonParser().parse(response.body!!.string())
-                    val jsonObject = jsonElement.asJsonObject
-                    val jsonArray = jsonObject.getAsJsonArray("data")
-                    if (wxArticleInfoList.size == 0) {
-                        wxArticleInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<WxArticleInfo?>?>() {}.type)
-                        activity!!.runOnUiThread { setViewPageTab() }
-                    } else {
-                        wxArticleInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<WxArticleInfo?>?>() {}.type)
-                        // Log.e(TAG,"list=="+knowledgeInfo.toString());
-                        activity!!.runOnUiThread {
-                            //tabLayout.removeAllTabs();
-                            //refreshLayout.finishRefresh();
-                            wxArticleTabFragmentList.clear()
-                            for (wxArticleInfo in wxArticleInfoList) {
-                                // tabLayout.addTab(tabLayout.newTab().setText(wxArticleInfo.getName()));
-                                wxArticleTabFragmentList.add(WxArticleTabFragment.newInstance(wxArticleInfo.name, wxArticleInfo.id.toString() + ""))
-                            }
-                        }
-                    }
-                    deleteAll(WxArticleInfo::class.java)
-                    saveAll(wxArticleInfoList)
+                override fun getCount(): Int {
+                    return wxArticleTabFragmentList.size
                 }
-            }]
-        }
 
-    private fun setViewPageTab() {
-        wxArticleTabFragmentList.clear()
-        for (wxArticleInfo in wxArticleInfoList!!) {
-            tabIndicator!!.add(wxArticleInfo.name)
-            wxArticleTabFragmentList!!.add(WxArticleTabFragment.newInstance(wxArticleInfo.name, wxArticleInfo.id.toString() + ""))
-        }
-        viewPager!!.adapter = object : FragmentPagerAdapter(childFragmentManager) {
-            override fun getItem(i: Int): Fragment {
-                return wxArticleTabFragmentList!![i]
+                override fun getPageTitle(position: Int): CharSequence? {
+                    return tabIndicator[position]
+                }
             }
-
-            override fun getCount(): Int {
-                return wxArticleTabFragmentList!!.size
-            }
-
-            override fun getPageTitle(position: Int): CharSequence? {
-                return tabIndicator!![position]
-            }
-        }
-        viewPager!!.offscreenPageLimit = wxArticleTabFragmentList!!.size
-        tabLayout!!.setupWithViewPager(viewPager)
+            tabLayout.setupWithViewPager(viewPager)
+        })
     }
-
 
 
     companion object {

@@ -17,6 +17,22 @@ data class HttpData<T>(
 )
 
 /**
+ *
+ */
+data class BaseData(
+        @Json(name = "children") val children: List<Any>,
+        @Json(name = "courseId") val courseId: Int,
+        @Json(name = "cover") val cover: String,
+        @Json(name = "desc") val desc: String,
+        @Json(name = "id") val id: Int,
+        @Json(name = "lisense") val lisense: String,
+        @Json(name = "lisenseLink") val lisenseLink: String,
+        @Json(name = "name") val name: String,
+        @Json(name = "order") val order: Int,
+        @Json(name = "parentChapterId") val parentChapterId: Int,
+        @Json(name = "visible") val visible: Int
+)
+/**
  * 首页的Banner
  */
 data class BannerBean(@Json(name = "desc") val desc: String,
@@ -118,7 +134,7 @@ data class NavBean(@Json(name = "articles")val articles: MutableList<Article>,
 /**
  * 项目
  */
-data class Project(
+data class Project (
         @Json(name = "children") val children: List<Any>,
         @Json(name = "courseId") val courseId: Int,
         @Json(name = "cover") val cover: String,

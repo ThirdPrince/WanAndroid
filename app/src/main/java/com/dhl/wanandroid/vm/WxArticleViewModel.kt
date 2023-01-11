@@ -11,16 +11,14 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 /**
- * @Title: KnowledgeTabViewModel
+ * @Title: WxArticleViewModel
  * @Package com.dhl.wanandroid.vm
  * @Description:指示体系的Tab
  * @author dhl
- * @date 2022 12 28
- * @version V1.0
- * LiveData的postValue和setValue方法是protected，而MutableLiveData这两个方法则是public，
- * 也就是说Livedata只允许调用observe方法被动监听数据变化，而MutableLiveData除了监听变化外，还可以用postValue和setValue方法发射数据。
+ * @date 2023 1 11
+ * @version V2.0
  */
-class WxArticleTabViewModel : ViewModel() {
+class WxArticleViewModel : ViewModel() {
 
     val  tag = "WxArticleTabViewModel"
 
@@ -30,25 +28,25 @@ class WxArticleTabViewModel : ViewModel() {
     /**
      * 文章LiveData
      */
-    private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
-    private val resultArticle :LiveData<RepoResult<MutableList<Article>>>
+    private val _resultArticle = MutableLiveData<RepoResult<MutableList<BaseData>>>()
+    private val resultArticle :LiveData<RepoResult<MutableList<BaseData>>>
         get() = _resultArticle
 
 
     /**
      * 获取文章
      */
-    fun getArticle(pageNum: Int,id:Int):LiveData<RepoResult<MutableList<Article>>> {
+    fun getWxArticleChapters():LiveData<RepoResult<MutableList<BaseData>>> {
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultArticle.value = throwable.message?.let { RepoResult(it) }
             Log.e(tag, throwable.message!!)
         }
 
         viewModelScope.launch(exception) {
-            val response = api.getWxArticleList(id,pageNum)
+            val response = api.getWxArticleChapters()
             val data = response.body()?.data
             if (data !=null){
-                _resultArticle.value = RepoResult(data?.datas!!,"")
+                _resultArticle.value = RepoResult(data,"")
             }else{
                 _resultArticle.value = RepoResult(response.message())
             }

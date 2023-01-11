@@ -21,15 +21,14 @@ import kotlinx.coroutines.launch
  * @date 2023 1 11
  * @version V2.0
  */
-class ProjectViewModel:ViewModel() {
+class ProjectViewModel : ViewModel() {
 
     private val TAG = "ProjectViewModel"
 
     private val _resultLiveData = MutableLiveData<RepoResult<MutableList<Project>>>()
 
-    private val resultLiveData :LiveData<RepoResult<MutableList<Project>>>
+    private val resultLiveData: LiveData<RepoResult<MutableList<Project>>>
         get() = _resultLiveData
-
 
 
     /**
@@ -41,12 +40,12 @@ class ProjectViewModel:ViewModel() {
             _resultLiveData.value = throwable.message?.let { RepoResult(it) }
             Log.e("CoroutinesViewModel", throwable.message!!)
         }
-        viewModelScope.launch(exception){
+        viewModelScope.launch(exception) {
             var response = RetrofitManager.apiService.getProject()
             val data = response.body()?.data
-            if(data != null){
-                _resultLiveData.value = RepoResult(data,"")
-            }else{
+            if (data != null) {
+                _resultLiveData.value = RepoResult(data, "")
+            } else {
                 _resultLiveData.value = RepoResult(response.message())
             }
 
