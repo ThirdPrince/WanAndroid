@@ -71,6 +71,6 @@ interface ApiService {
      * 项目
      */
     @GET("project/tree/json")
-    suspend fun getProject():Response<HttpData<MutableList<Project>>>
+    suspend fun getProject():Response<HttpData<MutableList<BaseData>>>
 
 }

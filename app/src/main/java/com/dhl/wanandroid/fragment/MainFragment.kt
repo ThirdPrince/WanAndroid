@@ -111,6 +111,13 @@ class MainFragment : BaseFragment() {
     private fun initView(view: View) {
         initToolbar(view)
         initRcy(view)
+        initData()
+
+    }
+
+    private fun initData(){
+        recyclerView.adapter = headerAndFooterWrapper
+        headerAndFooterWrapper.addHeaderView(mHeaderGroup)
         toolbar.title = "首页"
         refreshLayout.autoRefresh()
         refreshLayout.setOnRefreshListener {
@@ -121,6 +128,7 @@ class MainFragment : BaseFragment() {
             pageCount++
             getData(pageCount)
         }
+
     }
 
     /**
@@ -176,9 +184,6 @@ class MainFragment : BaseFragment() {
      * setAdapter
      */
     private fun setHomePageAdapter() {
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        headerAndFooterWrapper?.addHeaderView(mHeaderGroup)
-        recyclerView.adapter = headerAndFooterWrapper
         setListOnClick()
     }
 

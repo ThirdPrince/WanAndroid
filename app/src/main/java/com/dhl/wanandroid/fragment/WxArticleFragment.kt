@@ -32,11 +32,9 @@ import java.util.*
 /**
  * 公众号 Fragment
  * dhl
- * @Date 2013 1.11
+ * @Date 2023 1.11
  */
 class WxArticleFragment : BaseFragment() {
-
-
 
 
     /**

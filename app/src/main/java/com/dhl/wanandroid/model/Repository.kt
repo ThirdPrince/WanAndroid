@@ -32,6 +32,7 @@ data class BaseData(
         @Json(name = "parentChapterId") val parentChapterId: Int,
         @Json(name = "visible") val visible: Int
 )
+
 /**
  * 首页的Banner
  */
@@ -110,7 +111,7 @@ data class KnowledgeTreeData(
         @Json(name = "visible") val visible: Int
 ) : Serializable
 
- data class Knowledge(
+data class Knowledge(
         @Json(name = "children") val children: List<Any>,
         @Json(name = "courseId") val courseId: Int,
         @Json(name = "cover") val cover: String,
@@ -127,14 +128,14 @@ data class KnowledgeTreeData(
 /**
  * 导航 Bean
  */
-data class NavBean(@Json(name = "articles")val articles: MutableList<Article>,
-                   @Json(name = "cid") val cid:Int,
-                   @Json(name = "name")val name:String)
+data class NavBean(@Json(name = "articles") val articles: MutableList<Article>,
+                   @Json(name = "cid") val cid: Int,
+                   @Json(name = "name") val name: String)
 
 /**
  * 项目
  */
-data class Project (
+data class Project(
         @Json(name = "children") val children: List<Any>,
         @Json(name = "courseId") val courseId: Int,
         @Json(name = "cover") val cover: String,

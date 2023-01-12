@@ -20,20 +20,7 @@ public class Constants {
 
 
     public static final String WX_ARTICLE = "https://wanandroid.com/wxarticle";
-    /**
-     * 公众号
-     */
-    public static final String WX_ARTICLE_URL= WX_ARTICLE+"/chapters/json";
 
-    /**
-     * 导航
-     */
-    public static final String NAV_URL = "https://www.wanandroid.com/navi/json";
-
-    /**
-     * 项目
-     */
-    public static final String PROJECT_URL = "https://www.wanandroid.com/project/tree/json";
     /**
      * 启动页 Images Url
      */

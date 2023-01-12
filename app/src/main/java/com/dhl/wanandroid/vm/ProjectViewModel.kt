@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dhl.wanandroid.http.RetrofitManager
-import com.dhl.wanandroid.model.BannerBean
-import com.dhl.wanandroid.model.KnowledgeTreeData
-import com.dhl.wanandroid.model.Project
-import com.dhl.wanandroid.model.RepoResult
+import com.dhl.wanandroid.model.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
@@ -25,16 +22,16 @@ class ProjectViewModel : ViewModel() {
 
     private val TAG = "ProjectViewModel"
 
-    private val _resultLiveData = MutableLiveData<RepoResult<MutableList<Project>>>()
+    private val _resultLiveData = MutableLiveData<RepoResult<MutableList<BaseData>>>()
 
-    private val resultLiveData: LiveData<RepoResult<MutableList<Project>>>
+    private val resultLiveData: LiveData<RepoResult<MutableList<BaseData>>>
         get() = _resultLiveData
 
 
     /**
      * 获取知识体系
      */
-    fun getProject(): LiveData<RepoResult<MutableList<Project>>> {
+    fun getProject(): LiveData<RepoResult<MutableList<BaseData>>> {
 
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultLiveData.value = throwable.message?.let { RepoResult(it) }

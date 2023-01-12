@@ -93,6 +93,7 @@ class ProjectFragment : BaseFragment() {
                     return tabIndicator[position]
                 }
             }
+            viewPager.offscreenPageLimit = wxArticleTabFragments.size
             tabLayout.setupWithViewPager(viewPager)
         })
     }
