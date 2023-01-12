@@ -3,8 +3,13 @@ package com.dhl.wanandroid.service
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.ImageBean
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -23,19 +28,57 @@ class SplashImageService : IntentService("SplashImageService") {
      */
     private var imagePath: String? = null
 
+
+    private var imageInfoList: MutableList<ImageBean>? = mutableListOf()
+
     /**
      * 图片格式
      */
-    private var simpleDateFormat: SimpleDateFormat? = null
+    private val simpleDateFormat: SimpleDateFormat by lazy {
+        SimpleDateFormat("yyyy-MM-dd")
+    }
     override fun onHandleIntent(intent: Intent) {
         if (intent != null) {
-            val action = intent.action
-            if (ACTION == action) {
-                val imageUrl = intent.getStringExtra(IMAGE_URL)
-                val imageBean = intent.getSerializableExtra(IMAGE_BEAN) as ImageBean
-                handleActionFoo(imageUrl, imageBean)
-            }
+            getImageUrl()
         }
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun getImageUrl() {
+        Log.e("TAG", "getImageUrl =")
+        val imageFile = getExternalFilesDir("image")
+        val files = imageFile.listFiles()
+        var isDownLoadImage = false
+        for (f in files) {
+            isDownLoadImage = !f.startsWith(simpleDateFormat!!.format(Date()))
+
+        }
+        if (!isDownLoadImage) {
+            return
+        }
+        OkHttpManager.getInstance()[Constants.IMAGES_URL,
+                object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {}
+
+                    @Throws(IOException::class)
+                    override fun onResponse(call: Call, response: Response) {
+                        Log.e("TAG", "response =$response")
+                        val jsonElement = JsonParser().parse(response.body?.string())
+                        val jsonObject = jsonElement.asJsonObject
+                        val jsonArray = jsonObject.getAsJsonArray("images")
+                        imageInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<ImageBean?>?>() {}.type)
+                        imageInfoList.let {
+                            val imageInfo = it?.get(0)
+                            val image = "http://s.cn.bing.net" + imageInfo?.url
+
+                            handleActionFoo(image, imageInfo!!)
+                        }
+
+                    }
+                }]
     }
 
     /**
@@ -44,7 +87,7 @@ class SplashImageService : IntentService("SplashImageService") {
      */
     private fun handleActionFoo(imageUrl: String, imageBean: ImageBean) {
         // TODO: Handle action Foo
-        simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+
         OkHttpManager.getInstance()[imageUrl, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
@@ -54,6 +97,7 @@ class SplashImageService : IntentService("SplashImageService") {
             override fun onResponse(call: Call, response: Response) {
                 val inputStream = response.body?.byteStream()
                 imagePath = getExternalFilesDir("image").toString() + "/" + simpleDateFormat!!.format(Date()) + "_splash.jpg"
+                Log.e("imagePath", "imagePath=$imagePath")
                 val fileOutputStream = FileOutputStream(imagePath)
                 val bytes = ByteArray(1024)
                 var len = 0
@@ -67,35 +111,21 @@ class SplashImageService : IntentService("SplashImageService") {
                 fileOutputStream.flush()
                 fileOutputStream.close()
                 inputStream?.close()
-                //LitePal.deleteAll(ImageBean.class);
                 imageBean.imagePath = imagePath
                 imageBean.save()
+
             }
         }]
     }
 
     companion object {
-        // TODO: Rename actions, choose action names that describe tasks that this
-        // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
+
         private const val ACTION = "Download_image"
 
-        // TODO: Rename parameters
-        private const val IMAGE_URL = "image_url"
-        private const val IMAGE_BEAN = "image_bean"
-
-        /**
-         * Starts this service to perform action Foo with the given parameters. If
-         * the service is already performing a task this action will be queued.
-         *
-         * @see IntentService
-         */
-        // TODO: Customize helper method
         @JvmStatic
-        fun startAction(context: Context, imageUrl: String?, imageBean: ImageBean?) {
+        fun startDownLoadAction(context: Context) {
             val intent = Intent(context, SplashImageService::class.java)
             intent.action = ACTION
-            intent.putExtra(IMAGE_URL, imageUrl)
-            intent.putExtra(IMAGE_BEAN, imageBean)
             context.startService(intent)
         }
     }

@@ -28,7 +28,8 @@
 
         <service
             android:name=".service.SplashImageService"
-            android:exported="false" />
+            android:exported="false"
+            android:process=":tools"/>
 
         <activity
             android:name=".activity.LoginActivity"
@@ -51,7 +52,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/ActivityTheme"
-            android:process=":remote"
+            android:process=":tools"
             />
         <activity
             android:name=".activity.KnowledgeInfoActivity"

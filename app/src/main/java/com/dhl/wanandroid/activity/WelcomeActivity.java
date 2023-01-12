@@ -67,11 +67,11 @@ public class WelcomeActivity extends AppCompatActivity implements EasyPermission
         splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
         imageView = findViewById(R.id.image);
         splash_tv = findViewById(R.id.splash_tv);
-        EasyPermissions.requestPermissions(
-                this,
-                getString(R.string.rationale_sd),
-                RC_SD_PERM,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        EasyPermissions.requestPermissions(
+//                this,
+//                getString(R.string.rationale_sd),
+//                RC_SD_PERM,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE);
         splashViewModel.getImage().observe(this, new Observer<ImageBean>() {
             @Override
             public void onChanged(ImageBean imageBean) {

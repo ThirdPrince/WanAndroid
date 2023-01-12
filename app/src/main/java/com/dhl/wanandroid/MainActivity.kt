@@ -3,6 +3,7 @@ package com.dhl.wanandroid
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import android.util.Log
@@ -25,7 +26,7 @@ import com.dhl.wanandroid.fragment.*
 import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.ImageBean
 import com.dhl.wanandroid.model.LoginBean
-import com.dhl.wanandroid.service.SplashImageService.Companion.startAction
+import com.dhl.wanandroid.service.SplashImageService.Companion.startDownLoadAction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
@@ -63,9 +64,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     /**
      * 底部Bottom
      */
-    private var bottomNav: BottomNavigationView? = null
-    private var drawerLayout: DrawerLayout? = null
-    private var toolbar: Toolbar? = null
+    private val bottomNav: BottomNavigationView by  lazy {
+        findViewById(R.id.bottom_navigation)
+    }
+    private val drawerLayout: DrawerLayout by lazy {
+        findViewById(R.id.drawerLayout)
+    }
+    private val toolbar: Toolbar by lazy {
+        findViewById(R.id.tool_bar)
+    }
     private var navView: NavigationView? = null
     private var tv_login: TextView? = null
 
@@ -145,12 +152,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             navFragment = fm.findFragmentByTag(NavFragment::class.java.simpleName) as NavFragment?
         }
         initEvent()
-        images
+        downLoadImage()
     }
 
     private fun initView() {
-        bottomNav = findViewById(R.id.bottom_navigation)
-        drawerLayout = findViewById(R.id.drawerLayout)
+
         navView = findViewById(R.id.nav_view)
         navView?.setNavigationItemSelectedListener(this)
         val headerView = navView?.getHeaderView(0)
@@ -159,8 +165,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (!TextUtils.isEmpty(userName)) {
             tv_login?.text = userName
         }
-        toolbar = findViewById(R.id.tool_bar)
-        toolbar?.title = ("首页")
+        toolbar.title = ("首页")
         val toggle = ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.app_name, R.string.app_name)
         drawerLayout?.addDrawerListener(toggle)
@@ -244,7 +249,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 } else {
                     fragmentTransaction.show(navFragment!!)
                 }
-                toolbar!!.title = "导航"
+                toolbar.title = "导航"
             }
             PROJECT_INDEX -> {
                 if (projectFragment == null) {
@@ -253,7 +258,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 } else {
                     fragmentTransaction.show(projectFragment!!)
                 }
-                toolbar!!.title = "项目"
+                toolbar.title = "项目"
             }
 
         }
@@ -302,31 +307,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    //@AfterPermissionGranted(RC_SD_PERM)
-    private val images: Unit
-        private get() {
-            OkHttpManager.getInstance()[Constants.IMAGES_URL, object : Callback {
-                override fun onFailure(call: Call, e: IOException) {}
 
-                @Throws(IOException::class)
-                override fun onResponse(call: Call, response: Response) {
-                    val jsonElement = JsonParser().parse(response.body?.string())
-                    val jsonObject = jsonElement.asJsonObject
-                    val jsonArray = jsonObject.getAsJsonArray("images")
-                    imageInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<ImageBean?>?>() {}.type)
-                    //myHandler!!.sendEmptyMessage(DOWNLOAD_IMAGE)
-                }
-            }]
-        }
-
+    /**
+     * 开启下载图片的service
+     */
     private fun downLoadImage() {
-        val imageBean = findFirst(ImageBean::class.java)
-        if (imageBean != null) {
-            val imagePath = imageBean.url
-            if (imagePath == imageInfoList!![0].url) return
-        }
-        val image = "http://s.cn.bing.net" + imageInfoList!![0].url
-        startAction(this, image, imageInfoList!![0])
+        startDownLoadAction(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
