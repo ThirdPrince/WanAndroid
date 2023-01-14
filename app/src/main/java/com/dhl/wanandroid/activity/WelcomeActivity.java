@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,12 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dhl.wanandroid.MainActivity;
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.model.ImageBean;
+import com.dhl.wanandroid.util.SystemBar;
 import com.dhl.wanandroid.viewmodel.SplashViewModel;
 
 import org.litepal.LitePal;
@@ -64,6 +67,9 @@ public class WelcomeActivity extends AppCompatActivity implements EasyPermission
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        SystemBar.invasionStatusBar(this);
+        SystemBar.invasionNavigationBar(this);
+        SystemBar.setStatusBarColor(this, Color.TRANSPARENT);
         splashViewModel = new ViewModelProvider(this).get(SplashViewModel.class);
         imageView = findViewById(R.id.image);
         splash_tv = findViewById(R.id.splash_tv);
