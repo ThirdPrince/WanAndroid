@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.blankj.utilcode.util.CacheDiskUtils
 import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.ImageBean
@@ -50,15 +51,15 @@ class SplashImageService : IntentService("SplashImageService") {
     private fun getImageUrl() {
         Log.e("TAG", "getImageUrl =")
         val imageFile = getExternalFilesDir("image")
-        val files = imageFile.listFiles()
-        var isDownLoadImage = false
-        for (f in files) {
-            isDownLoadImage = !f.startsWith(simpleDateFormat!!.format(Date()))
-
-        }
-        if (!isDownLoadImage) {
-            return
-        }
+//        val files = imageFile.listFiles()
+//        var isDownLoadImage = false
+//        for (f in files) {
+//            isDownLoadImage = !f.startsWith(simpleDateFormat!!.format(Date()))
+//
+//        }
+//        if (!isDownLoadImage) {
+//            return
+//        }
         OkHttpManager.getInstance()[Constants.IMAGES_URL,
                 object : Callback {
                     override fun onFailure(call: Call, e: IOException) {}
@@ -73,7 +74,6 @@ class SplashImageService : IntentService("SplashImageService") {
                         imageInfoList.let {
                             val imageInfo = it?.get(0)
                             val image = "http://s.cn.bing.net" + imageInfo?.url
-
                             handleActionFoo(image, imageInfo!!)
                         }
 
@@ -112,7 +112,8 @@ class SplashImageService : IntentService("SplashImageService") {
                 fileOutputStream.close()
                 inputStream?.close()
                 imageBean.imagePath = imagePath
-                imageBean.save()
+                CacheDiskUtils.getInstance().put("SplashImage",imageBean)
+               // imageBean.save()
 
             }
         }]

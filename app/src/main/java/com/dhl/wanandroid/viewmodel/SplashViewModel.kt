@@ -1,9 +1,12 @@
 package com.dhl.wanandroid.viewmodel
 
+import android.graphics.ImageDecoder
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.CacheDiskUtils
 import com.dhl.wanandroid.model.ImageBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,8 +37,9 @@ class SplashViewModel:ViewModel() {
     private fun fetchImage(){
        viewModelScope.launch {
            withContext(Dispatchers.IO){
-               val imageBean = findLast(ImageBean::class.java)
-               imageBeanLiveData.postValue(imageBean)
+               val imageBean = CacheDiskUtils.getInstance().getSerializable("SplashImage")
+               Log.e("tag","image=$imageBean")
+               imageBeanLiveData.postValue(imageBean as ImageBean?)
            }
        }
 
