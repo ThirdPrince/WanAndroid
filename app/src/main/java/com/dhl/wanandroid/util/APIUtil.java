@@ -8,13 +8,7 @@ import com.dhl.wanandroid.app.Constants;
  */
 public class APIUtil {
 
-    public static String getHomePageUrl(int page) {
-        return Constants.HOME_PAGE + "/article/list/" + page + "/json";
-    }
 
-    public static String getWxArticle(int id, int page) {
-        return Constants.WX_ARTICLE + "/list/" + id + "/" + page + "/json";
-    }
 
     /**
      * 获取收藏列表

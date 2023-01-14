@@ -15,7 +15,7 @@ import org.litepal.LitePal.findLast
  * @Package $
  * @Description: 获取要展示的图片
  * @author dhl
- * @date $
+ * @date 2023 1.11
  * @version V1.0
  */
 class SplashViewModel:ViewModel() {

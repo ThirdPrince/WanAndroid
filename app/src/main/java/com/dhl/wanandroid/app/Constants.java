@@ -22,7 +22,7 @@ public class Constants {
     public static final String WX_ARTICLE = "https://wanandroid.com/wxarticle";
 
     /**
-     * 启动页 Images Url
+     * 必应图片下载地址
      */
 
     public static final String IMAGES_URL = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:foreground="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
-    android:paddingTop="8dp"
+    android:padding="5dp"
+    android:layout_marginLeft="@dimen/dp_10"
+    android:layout_marginRight="@dimen/dp_10"
+    android:orientation="vertical"
     tools:context=".fragment.KnowledgeSysFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -17,6 +17,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/list_item_bg"
         android:orientation="vertical"
        android:padding="10dp"
         >
@@ -36,4 +37,4 @@
         android:textSize="16sp"
         android:layout_height="wrap_content" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</LinearLayout>
