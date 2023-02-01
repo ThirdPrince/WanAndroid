@@ -7,10 +7,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.CacheDiskUtils
+import com.dhl.wanandroid.dao.AppDataBase
+import com.dhl.wanandroid.dao.ImageSplashDao
 import com.dhl.wanandroid.model.ImageBean
+import com.dhl.wanandroid.model.ImageSplash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.litepal.LitePal
 import org.litepal.LitePal.findLast
 
 /**
@@ -23,13 +27,14 @@ import org.litepal.LitePal.findLast
  */
 class SplashViewModel:ViewModel() {
 
-    private val imageBeanLiveData :MutableLiveData<ImageBean>  by lazy {
-        MutableLiveData<ImageBean>().also {
+    private  val TAG = "SplashViewModel"
+    private val imageBeanLiveData :MutableLiveData<ImageSplash>  by lazy {
+        MutableLiveData<ImageSplash>().also {
             fetchImage()
         }
     }
 
-    fun getImage():LiveData<ImageBean>{
+    fun getImage():LiveData<ImageSplash>{
         return  imageBeanLiveData
     }
 
@@ -37,9 +42,10 @@ class SplashViewModel:ViewModel() {
     private fun fetchImage(){
        viewModelScope.launch {
            withContext(Dispatchers.IO){
-               val imageBean = CacheDiskUtils.getInstance().getSerializable("SplashImage")
-               Log.e("tag","image=$imageBean")
-               imageBeanLiveData.postValue(imageBean as ImageBean?)
+               val imageDao: ImageSplashDao = AppDataBase.instance.getImageDao()
+               var imageSplash = imageDao.getLatestImage()
+               Log.e(TAG,"imageSplash=$imageSplash")
+               imageBeanLiveData.postValue(imageSplash)
            }
        }
 

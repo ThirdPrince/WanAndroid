@@ -6,8 +6,11 @@ import android.content.Intent
 import android.util.Log
 import com.blankj.utilcode.util.CacheDiskUtils
 import com.dhl.wanandroid.app.Constants
+import com.dhl.wanandroid.dao.AppDataBase
+import com.dhl.wanandroid.dao.ImageSplashDao
 import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.ImageBean
+import com.dhl.wanandroid.model.ImageSplash
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
@@ -24,13 +27,15 @@ import java.util.*
  * 负责下载 Splash 展示的图片(图片从必应上下载)
  */
 class SplashImageService : IntentService("SplashImageService") {
+
+    private  val TAG = "SplashImageService"
     /**
      * 图片下载 的路径
      */
     private var imagePath: String? = null
 
 
-    private var imageInfoList: MutableList<ImageBean>? = mutableListOf()
+    private var imageInfoList: MutableList<ImageSplash> = mutableListOf()
 
     /**
      * 图片格式
@@ -70,11 +75,13 @@ class SplashImageService : IntentService("SplashImageService") {
                         val jsonElement = JsonParser().parse(response.body?.string())
                         val jsonObject = jsonElement.asJsonObject
                         val jsonArray = jsonObject.getAsJsonArray("images")
-                        imageInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<ImageBean?>?>() {}.type)
+                        imageInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<ImageSplash?>?>() {}.type)
+                        Log.e(TAG,"imageInfoList = $imageInfoList")
                         imageInfoList.let {
                             val imageInfo = it?.get(0)
+                            Log.e(TAG,"imageInfo = $imageInfo")
                             val image = "http://s.cn.bing.net" + imageInfo?.url
-                            handleActionFoo(image, imageInfo!!)
+                            handleActionFoo(image, imageInfo)
                         }
 
                     }
@@ -85,7 +92,7 @@ class SplashImageService : IntentService("SplashImageService") {
      * Handle action Foo in the provided background thread with the provided
      * parameters.
      */
-    private fun handleActionFoo(imageUrl: String, imageBean: ImageBean) {
+    private fun handleActionFoo(imageUrl: String, imageSplash: ImageSplash) {
         // TODO: Handle action Foo
 
         OkHttpManager.getInstance()[imageUrl, object : Callback {
@@ -96,7 +103,7 @@ class SplashImageService : IntentService("SplashImageService") {
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 val inputStream = response.body?.byteStream()
-                imagePath = getExternalFilesDir("image").toString() + "/" + simpleDateFormat!!.format(Date()) + "_splash.jpg"
+                imagePath = getExternalFilesDir("image").toString() + "/" + simpleDateFormat.format(Date()) + "_splash.jpg"
                 Log.e("imagePath", "imagePath=$imagePath")
                 val fileOutputStream = FileOutputStream(imagePath)
                 val bytes = ByteArray(1024)
@@ -111,8 +118,12 @@ class SplashImageService : IntentService("SplashImageService") {
                 fileOutputStream.flush()
                 fileOutputStream.close()
                 inputStream?.close()
-                imageBean.imagePath = imagePath
-                CacheDiskUtils.getInstance().put("SplashImage",imageBean)
+                imageSplash.imagePath = imagePath as String
+                Log.e(TAG,"imageSplash = $imageSplash")
+                val imageDao: ImageSplashDao = AppDataBase.instance.getImageDao()
+                imageDao.insert(imageSplash)
+
+               // CacheDiskUtils.getInstance().put("SplashImage",imageBean)
                // imageBean.save()
 
             }

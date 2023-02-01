@@ -1,23 +1,32 @@
 package com.dhl.wanandroid.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import java.io.Serializable
 
 /**
  * @Title: 基本数据类
- * @Package $
+ * @Package com.dhl.wanandroid.model
  * @Description: 基本Bean
  * @author dhl
  * @date 2022 12 21
  * @version V2.0
  */
 
+/**
+ * 启动页
+ */
+@Entity
+data class ImageSplash(@PrimaryKey val id: Int, var url: String,
+                       val copyright: String, var imagePath: String)
+
 data class HttpData<T>(
         @Json(name = "data") val data: T
 )
 
 /**
- *
+ * 玩android 基本数据
  */
 data class BaseData(
         @Json(name = "children") val children: List<Any>,

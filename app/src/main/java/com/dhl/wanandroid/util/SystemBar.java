@@ -28,7 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * Created by YanZhenjie on 2018/4/10.
+ * for splash
  */
 public class SystemBar {
 
