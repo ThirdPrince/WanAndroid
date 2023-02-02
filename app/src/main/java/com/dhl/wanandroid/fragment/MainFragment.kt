@@ -14,27 +14,19 @@ import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.HomePageAdapter
-import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.model.BannerBean
-import com.dhl.wanandroid.model.BannerInfo
-import com.dhl.wanandroid.model.HomePageData
 import com.dhl.wanandroid.module.GlideImageLoader
 import com.dhl.wanandroid.util.APIUtil
 import com.dhl.wanandroid.vm.MainViewModel
-import com.google.gson.Gson
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import com.youth.banner.Banner
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
-import org.litepal.LitePal.deleteAll
-import org.litepal.LitePal.findAll
-import org.litepal.LitePal.saveAll
+
 import java.io.IOException
 import java.util.*
 

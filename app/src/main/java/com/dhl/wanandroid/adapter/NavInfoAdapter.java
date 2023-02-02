@@ -5,13 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.ConvertUtils;
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.model.Article;
-import com.dhl.wanandroid.model.ArticlesBean;
 import com.dhl.wanandroid.model.NavBean;
-import com.dhl.wanandroid.model.NavInfo;
 import com.dhl.wanandroid.util.CommonUtils;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;

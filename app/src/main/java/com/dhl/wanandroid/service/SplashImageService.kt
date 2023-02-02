@@ -4,12 +4,10 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.blankj.utilcode.util.CacheDiskUtils
 import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.dao.AppDataBase
 import com.dhl.wanandroid.dao.ImageSplashDao
 import com.dhl.wanandroid.http.OkHttpManager
-import com.dhl.wanandroid.model.ImageBean
 import com.dhl.wanandroid.model.ImageSplash
 import com.google.gson.Gson
 import com.google.gson.JsonParser

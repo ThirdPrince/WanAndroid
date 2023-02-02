@@ -22,12 +22,7 @@ import com.dhl.wanandroid.app.Constants;
 import com.dhl.wanandroid.http.OkHttpManager;
 import com.dhl.wanandroid.model.RegisterBean;
 import com.google.gson.Gson;
-
 import java.io.IOException;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -41,28 +36,28 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
 
-    @InjectView(R.id.fab)
+
     FloatingActionButton fab;
-    @InjectView(R.id.cv_add)
+
     CardView cvAdd;
 
-    @InjectView(R.id.et_username)
+
     EditText et_username;
 
-    @InjectView(R.id.et_password)
+
     EditText et_password;
 
-    @InjectView(R.id.et_repeatpassword)
+
     EditText et_repeatpassword;
 
-    @InjectView(R.id.bt_register)
+
     Button bt_register ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        ButterKnife.inject(this);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ShowEnterAnimation();
@@ -70,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.bt_register,R.id.fab})
+
     public void onClick(View view)
     {
         switch (view.getId())

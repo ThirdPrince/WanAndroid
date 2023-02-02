@@ -3,17 +3,13 @@ package com.dhl.wanandroid.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.litepal.annotation.Column;
-import org.litepal.crud.LitePalSupport;
-
 import java.util.List;
 
 /**
  * 项目
  * @author dhl
  */
-public class ProjectBean extends LitePalSupport {
+public class ProjectBean  {
 
 
     /**
@@ -43,7 +39,6 @@ public class ProjectBean extends LitePalSupport {
     private boolean userControlSetTop;
     @Expose
     private int visible;
-    @Column(ignore = true)
     private List<?> children;
 
     public int getCid() {

@@ -1,12 +1,12 @@
 package com.dhl.wanandroid.model;
 
 
-import org.litepal.crud.LitePalSupport;
+
 
 /**
  * 首页banner 信息
  */
-public class BannerInfo extends LitePalSupport {
+public class BannerInfo  {
 
 
     /**

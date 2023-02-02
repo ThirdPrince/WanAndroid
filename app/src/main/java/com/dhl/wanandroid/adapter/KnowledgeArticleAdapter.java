@@ -3,16 +3,10 @@ package com.dhl.wanandroid.adapter;
 import android.content.Context;
 import android.text.Html;
 import android.widget.TextView;
-
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.model.Article;
-import com.dhl.wanandroid.model.Knowledge;
-import com.dhl.wanandroid.model.KnowledgeInfo;
-import com.dhl.wanandroid.model.KnowledgeInfochild;
-import com.dhl.wanandroid.model.KnowledgeInfochildBean;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
-
 import java.util.List;
 
 

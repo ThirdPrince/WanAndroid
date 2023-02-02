@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dhl.wanandroid.MainActivity;
 import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.model.ImageBean;
 import com.dhl.wanandroid.model.ImageSplash;
 import com.dhl.wanandroid.util.SystemBar;
 import com.dhl.wanandroid.viewmodel.SplashViewModel;

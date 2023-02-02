@@ -17,7 +17,7 @@ import com.dhl.wanandroid.model.ImageSplash
  */
 
 
-@Database(entities = [ImageSplash::class], version = 1)
+@Database(entities = [ImageSplash::class], version = 1,exportSchema = false)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun getImageDao(): ImageSplashDao

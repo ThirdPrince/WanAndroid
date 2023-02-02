@@ -3,12 +3,10 @@ package com.dhl.wanandroid
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -24,19 +22,15 @@ import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.app.LoginInfo
 import com.dhl.wanandroid.fragment.*
 import com.dhl.wanandroid.http.OkHttpManager
-import com.dhl.wanandroid.model.ImageBean
 import com.dhl.wanandroid.model.LoginBean
 import com.dhl.wanandroid.service.SplashImageService.Companion.startDownLoadAction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
-import org.litepal.LitePal.findFirst
 import java.io.IOException
 import java.lang.ref.WeakReference
 
@@ -379,9 +373,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
          */
         private const val EXIT_APP = 1025
 
-        /**
-         * 必应图片
-         */
-        private var imageInfoList: List<ImageBean>? = null
+
     }
 }

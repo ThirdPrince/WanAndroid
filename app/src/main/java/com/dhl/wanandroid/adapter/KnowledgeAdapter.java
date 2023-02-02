@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.model.Knowledge;
-import com.dhl.wanandroid.model.KnowledgeInfo;
-import com.dhl.wanandroid.model.KnowledgeInfochild;
 import com.dhl.wanandroid.model.KnowledgeTreeData;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;

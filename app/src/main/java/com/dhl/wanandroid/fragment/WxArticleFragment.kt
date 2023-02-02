@@ -11,23 +11,9 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.dhl.wanandroid.R
-import com.dhl.wanandroid.app.Constants
-import com.dhl.wanandroid.http.OkHttpManager
-import com.dhl.wanandroid.model.WxArticleInfo
-import com.dhl.wanandroid.vm.WxArticleTabViewModel
 import com.dhl.wanandroid.vm.WxArticleViewModel
 import com.google.android.material.tabs.TabLayout
-import com.google.gson.Gson
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
-import org.litepal.LitePal.deleteAll
-import org.litepal.LitePal.findAll
-import org.litepal.LitePal.saveAll
-import java.io.IOException
-import java.util.*
+
 
 /**
  * 公众号 Fragment

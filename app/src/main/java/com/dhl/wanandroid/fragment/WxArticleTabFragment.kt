@@ -11,22 +11,10 @@ import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.WxArticleAdapter
-import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.Article
-import com.dhl.wanandroid.model.WxArticleBean
-import com.dhl.wanandroid.util.APIUtil
 import com.dhl.wanandroid.vm.WxArticleTabViewModel
-import com.google.gson.Gson
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
-import org.litepal.LitePal.deleteAll
-import org.litepal.LitePal.saveAll
-import org.litepal.LitePal.where
-import java.io.IOException
+
 
 /**
  * 微信公众号TAb Fragment

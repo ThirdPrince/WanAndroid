@@ -4,10 +4,15 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -28,15 +33,11 @@ import com.google.gson.JsonPrimitive;
 import java.io.IOException;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;
 import okhttp3.Response;
 
-import static com.dhl.wanandroid.app.Constants.LOGIN_URL;
 
 
 /**
@@ -46,48 +47,38 @@ public class MaterialLoginActivity extends AppCompatActivity {
 
     private static final String TAG = "MaterialLoginActivity";
 
-    @InjectView(R.id.login_bg)
-    RelativeLayout login_bg ;
 
-    @InjectView(R.id.tool_bar)
-    Toolbar toolbar ;
-    @InjectView(R.id.et_username)
+    RelativeLayout login_bg;
+
+
+    Toolbar toolbar;
+
     EditText userName;
 
-    @InjectView(R.id.et_password)
+
     EditText passwordEt;
 
-    @InjectView(R.id.fab)
+
     FloatingActionButton fab;
     /**
      * 登录信息
      */
-    private LoginBean loginBean ;
+    private LoginBean loginBean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_material_login);
-        ButterKnife.inject(this);
         toolbar.setTitle("登录");
-       /* ImageBean imageBean = LitePal.findLast(ImageBean.class);
-        if (imageBean != null) {
-            String imagePath = imageBean.getImagePath();
-            if (new File(imagePath).exists()) {
-                Drawable drawable = new BitmapDrawable(BitmapFactory.decodeFile(imageBean.getImagePath()));
-                login_bg.setBackground(drawable);
-            }
-        }*/
     }
 
-    @OnClick({R.id.bt_go,R.id.fab})
-    public  void onClick(View view)
-    {
-        switch (view.getId())
-        {
+
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.bt_go:
                 String name = userName.getText().toString();
                 String password = passwordEt.getEditableText().toString();
-                login(name,password);
+                login(name, password);
                 break;
             case R.id.fab:
                 getWindow().setExitTransition(null);
@@ -104,23 +95,20 @@ public class MaterialLoginActivity extends AppCompatActivity {
         }
 
     }
-    
-    private void login(String userName,String password)
-    {
+
+    private void login(String userName, String password) {
 
         //ToastUtils.setMsgColor(getResources().getColor(R.color.blue));
-        if(TextUtils.isEmpty(userName))
-        {
+        if (TextUtils.isEmpty(userName)) {
             ToastUtils.showLong("请输入账号");
-            return ;
+            return;
         }
 
-        if(TextUtils.isEmpty(password))
-        {
+        if (TextUtils.isEmpty(password)) {
             ToastUtils.showLong("密码");
-            return ;
+            return;
         }
-        OkHttpManager.getInstance().login(LOGIN_URL,  userName, password, new Callback() {
+        OkHttpManager.getInstance().login("LOGIN_URL", userName, password, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -133,13 +121,12 @@ public class MaterialLoginActivity extends AppCompatActivity {
                 String json = response.body().string();
                 Log.e(TAG, "response::" + json);
                 Gson gson = new Gson();
-                JsonPrimitive jsonPrimitive =  gson.fromJson(json, JsonObject.class).getAsJsonPrimitive("errorCode");
+                JsonPrimitive jsonPrimitive = gson.fromJson(json, JsonObject.class).getAsJsonPrimitive("errorCode");
                 int errorCode = jsonPrimitive.getAsInt();
 
-                if(errorCode == 0)
-                {
-                    JsonObject jsonObject = gson.fromJson(json,JsonObject.class);
-                    JsonObject data =  jsonObject.getAsJsonObject("data");
+                if (errorCode == 0) {
+                    JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+                    JsonObject data = jsonObject.getAsJsonObject("data");
                     loginBean = gson.fromJson(data.toString(), LoginBean.class);
                     loginBean.setErrorCode(0);
                 }
@@ -151,10 +138,10 @@ public class MaterialLoginActivity extends AppCompatActivity {
                     if (cookies.size() > 0) {
                         String session = cookies.get(0);
                         String result = session.substring(0, session.indexOf(";"));
-                        String JSESSIONID = result.substring(result.indexOf("=")+1);
+                        String JSESSIONID = result.substring(result.indexOf("=") + 1);
                         Log.e(TAG, "session::" + session);
                         Log.e(TAG, "JSESSIONID::" + JSESSIONID);
-                        SPUtils.getInstance().put("JSESSIONID",JSESSIONID);
+                        SPUtils.getInstance().put("JSESSIONID", JSESSIONID);
                     }
 
                 }
@@ -163,17 +150,15 @@ public class MaterialLoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        if(loginBean != null && (loginBean.getErrorCode() == 0))
-                        {
+                        if (loginBean != null && (loginBean.getErrorCode() == 0)) {
 
-                            SPUtils.getInstance().put("userName",userName);
-                            SPUtils.getInstance().put("password",password);
+                            SPUtils.getInstance().put("userName", userName);
+                            SPUtils.getInstance().put("password", password);
                             Intent intent = new Intent();
-                            intent.putExtra("loginResult",loginBean);
-                            setResult(RESULT_OK,intent);
+                            intent.putExtra("loginResult", loginBean);
+                            setResult(RESULT_OK, intent);
                             finish();
-                        }else
-                        {
+                        } else {
                             //ToastUtils.setMsgColor(getResources().getColor(R.color.light_red,null));
                             ToastUtils.showLong(loginBean.getErrorMsg());
                         }
@@ -200,6 +185,7 @@ public class MaterialLoginActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+
     private boolean isShouldHideKeyboard(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
             int[] l = {0, 0};

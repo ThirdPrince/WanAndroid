@@ -1,11 +1,11 @@
 package com.dhl.wanandroid.model;
 
-import org.litepal.crud.LitePalSupport;
+
 
 import java.io.Serializable;
 import java.util.List;
 
-public class LoginBean extends LitePalSupport implements Serializable {
+public class LoginBean  implements Serializable {
 
 
     /**

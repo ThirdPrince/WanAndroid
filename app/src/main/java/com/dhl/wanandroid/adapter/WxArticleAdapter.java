@@ -9,10 +9,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.model.Article;
-import com.dhl.wanandroid.model.ArticleData;
-import com.dhl.wanandroid.model.ArticlesBean;
-import com.dhl.wanandroid.model.HomePageData;
-import com.dhl.wanandroid.model.WxArticleBean;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 

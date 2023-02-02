@@ -7,10 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.app.LoginInfo;
 import com.dhl.wanandroid.model.Article;
-import com.dhl.wanandroid.model.HomePageData;
-import com.dhl.wanandroid.model.LoginBean;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 

@@ -1,13 +1,13 @@
 package com.dhl.wanandroid.model;
 
-import org.litepal.crud.LitePalSupport;
+
 
 import java.util.List;
 
 /**
  * 公众号内容
  */
-public class WxArticleBean extends LitePalSupport {
+public class WxArticleBean  {
 
 
     /**
