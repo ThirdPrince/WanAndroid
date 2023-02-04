@@ -160,7 +160,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (!TextUtils.isEmpty(userName)) {
             tv_login?.text = userName
         }
-        toolbar.title = ("首页")
+        toolbar.run {
+            title = "首页"
+            setSupportActionBar(this)
+        }
         val toggle = ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.app_name, R.string.app_name)
         drawerLayout?.addDrawerListener(toggle)
