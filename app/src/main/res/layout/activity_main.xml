@@ -5,22 +5,20 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:openDrawer="start"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:openDrawer="start">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <include
-            layout="@layout/fragment_toolbar"/>
+        android:orientation="vertical">
+        <include layout="@layout/fragment_toolbar" />
         <FrameLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_weight="1"></FrameLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
@@ -29,7 +27,7 @@
             android:background="?android:attr/windowBackground"
             app:itemHorizontalTranslationEnabled="false"
             app:labelVisibilityMode="labeled"
-            app:menu="@menu/main_bottom"/>
+            app:menu="@menu/main_bottom" />
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

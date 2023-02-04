@@ -2,9 +2,13 @@ package com.dhl.wanandroid.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,34 +19,39 @@ import android.widget.TextView;
 import com.dhl.wanandroid.R;
 import com.just.agentweb.AgentWeb;
 
+/**
+ * H5 页面
+ * @author dhl
+ */
 public class WebActivity extends AppCompatActivity {
 
 
     private static final String TAG = "WebActivity";
-    private AgentWeb mAgentWeb ;
-    private LinearLayout linearLayout ;
+    private AgentWeb mAgentWeb;
+    private LinearLayout linearLayout;
 
     /**
      * 返回Lay
      */
 
-    private RelativeLayout back_lay ;
-    private Toolbar toolbar ;
+    private RelativeLayout back_lay;
+    private Toolbar toolbar;
 
-    private TextView toolbar_title ;
+    private TextView toolbar_title;
 
-    private String title ;
+    private String title;
 
-    private String url ;
+    private String url;
 
-    private ImageView iv_back ;
-    public static void startActivity(Activity activity, String title,String url)
-    {
-        Intent  intent = new Intent(activity,WebActivity.class);
-        intent.putExtra("title",title);
-        intent.putExtra("webUrl",url);
+    private ImageView iv_back;
+
+    public static void startActivity(Activity activity, String title, String url) {
+        Intent intent = new Intent(activity, WebActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("webUrl", url);
         activity.startActivity(intent);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +61,7 @@ public class WebActivity extends AppCompatActivity {
         setWebView();
     }
 
-    private void initView()
-    {
+    private void initView() {
         back_lay = findViewById(R.id.back_lay);
         linearLayout = findViewById(R.id.container);
         toolbar = findViewById(R.id.tool_bar);
@@ -69,11 +77,10 @@ public class WebActivity extends AppCompatActivity {
         });
         back_lay.setVisibility(View.VISIBLE);
     }
-    private void getIntentData()
-    {
+
+    private void getIntentData() {
         Intent intent = getIntent();
-        if(intent != null)
-        {
+        if (intent != null) {
             title = intent.getStringExtra("title");
             url = intent.getStringExtra("webUrl");
             toolbar_title.setText(title);
@@ -82,10 +89,9 @@ public class WebActivity extends AppCompatActivity {
 
     }
 
-    private void setWebView()
-    {
+    private void setWebView() {
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent( linearLayout, new LinearLayout.LayoutParams(-1, -1))
+                .setAgentWebParent(linearLayout, new LinearLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .createAgentWeb()
                 .ready()

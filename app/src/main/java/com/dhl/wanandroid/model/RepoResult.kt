@@ -4,7 +4,7 @@ import android.text.TextUtils
 
 /**
  * @Title: RepoResult
- * @Package $
+ * @Package com.dhl.wanandroid.model
  * @Description: 包装网络请求成功与失败的情况
  * @author dhl
  * @date 2022 12 23

@@ -34,4 +34,9 @@
     <string name="repeat_password">Repeat Password</string>
     <string name="next">NEXT</string>
     <string name="register">注册</string>
+
+
+    <!-- Menu Action -->
+    <string name="action_search">搜索</string>
+
 </resources>

@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tool_bar"
+    android:id="@+id/app_bar_layout"
     android:layout_width="match_parent"
-    android:layout_height="55dp"
-    app:titleTextColor="@color/colorTitle"
-    app:popupTheme="@style/AppTheme"
-    android:theme="@style/AppTheme.Toolbar"
-    app:layout_scrollFlags="scroll|enterAlways"
-    android:background="@color/colorPrimary">
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    app:elevation="0dp">
 
-</androidx.appcompat.widget.Toolbar>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme.Toolbar"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/AppTheme"
+        app:titleTextColor="@color/colorTitle">
+    </androidx.appcompat.widget.Toolbar>
 
-
+</com.google.android.material.appbar.AppBarLayout>
