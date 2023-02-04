@@ -8,6 +8,8 @@ import com.blankj.utilcode.util.Utils;
 
 /**
  * 程序入口
+ * @author dhl
+ *
  */
 public class MyApplication extends Application {
 

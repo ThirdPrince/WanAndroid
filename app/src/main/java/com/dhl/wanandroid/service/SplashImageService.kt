@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -26,7 +27,8 @@ import java.util.*
  */
 class SplashImageService : IntentService("SplashImageService") {
 
-    private  val TAG = "SplashImageService"
+    private val TAG = "SplashImageService"
+
     /**
      * 图片下载 的路径
      */
@@ -41,6 +43,15 @@ class SplashImageService : IntentService("SplashImageService") {
     private val simpleDateFormat: SimpleDateFormat by lazy {
         SimpleDateFormat("yyyy-MM-dd")
     }
+
+
+    /**
+     *
+     */
+    val imageDao: ImageSplashDao by lazy {
+        AppDataBase.instance.getImageDao()
+    }
+
     override fun onHandleIntent(intent: Intent) {
         if (intent != null) {
             getImageUrl()
@@ -52,32 +63,29 @@ class SplashImageService : IntentService("SplashImageService") {
     }
 
     private fun getImageUrl() {
-        Log.e("TAG", "getImageUrl =")
-        val imageFile = getExternalFilesDir("image")
-//        val files = imageFile.listFiles()
-//        var isDownLoadImage = false
-//        for (f in files) {
-//            isDownLoadImage = !f.startsWith(simpleDateFormat!!.format(Date()))
-//
-//        }
-//        if (!isDownLoadImage) {
-//            return
-//        }
+        val imageSplash = imageDao.getLatestImage()
+        imageSplash.let {
+            Log.e(TAG, "imagePath =${it.imagePath}")
+            if ( File(it.imagePath).name.startsWith(simpleDateFormat.format(Date()))) {
+                Log.e(TAG, "今天的图片已经下载过")
+                return@getImageUrl
+            }
+
+        }
         OkHttpManager.getInstance()[Constants.IMAGES_URL,
                 object : Callback {
                     override fun onFailure(call: Call, e: IOException) {}
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
-                        Log.e("TAG", "response =$response")
+                        Log.e(TAG, "response =$response")
                         val jsonElement = JsonParser().parse(response.body?.string())
                         val jsonObject = jsonElement.asJsonObject
                         val jsonArray = jsonObject.getAsJsonArray("images")
                         imageInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<ImageSplash?>?>() {}.type)
-                        Log.e(TAG,"imageInfoList = $imageInfoList")
                         imageInfoList.let {
                             val imageInfo = it?.get(0)
-                            Log.e(TAG,"imageInfo = $imageInfo")
+                            Log.e(TAG, "imageInfo = $imageInfo")
                             val image = "http://s.cn.bing.net" + imageInfo?.url
                             handleActionFoo(image, imageInfo)
                         }
@@ -102,7 +110,7 @@ class SplashImageService : IntentService("SplashImageService") {
             override fun onResponse(call: Call, response: Response) {
                 val inputStream = response.body?.byteStream()
                 imagePath = getExternalFilesDir("image").toString() + "/" + simpleDateFormat.format(Date()) + "_splash.jpg"
-                Log.e("imagePath", "imagePath=$imagePath")
+                Log.e(TAG, "imagePath=$imagePath")
                 val fileOutputStream = FileOutputStream(imagePath)
                 val bytes = ByteArray(1024)
                 var len = 0
@@ -117,12 +125,8 @@ class SplashImageService : IntentService("SplashImageService") {
                 fileOutputStream.close()
                 inputStream?.close()
                 imageSplash.imagePath = imagePath as String
-                Log.e(TAG,"imageSplash = $imageSplash")
-                val imageDao: ImageSplashDao = AppDataBase.instance.getImageDao()
+                Log.e(TAG, "imageSplash = $imageSplash")
                 imageDao.insert(imageSplash)
-
-               // CacheDiskUtils.getInstance().put("SplashImage",imageBean)
-               // imageBean.save()
 
             }
         }]

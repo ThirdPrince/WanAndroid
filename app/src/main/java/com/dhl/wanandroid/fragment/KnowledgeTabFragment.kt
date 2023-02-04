@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
+import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.KnowledgeArticleAdapter
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.vm.KnowledgeTabViewModel
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
 
 /**
  * @author dhl
@@ -78,6 +81,16 @@ class KnowledgeTabFragment : BaseFragment() {
             if(it.isSuccess){
                 knowledgeList.addAll(it.result!!)
                 knowledgeChildBeanAdapter.notifyDataSetChanged()
+                knowledgeChildBeanAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
+                    override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
+                        val article = knowledgeList[position]
+                        WebActivity.startActivity(activity, article.title, article.link)
+                    }
+
+                    override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
+                        return false
+                    }
+                })
             }else{
                 ToastUtils.showLong(it.errorMessage)
             }
@@ -93,13 +106,6 @@ class KnowledgeTabFragment : BaseFragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
 
     companion object {
         private const val TAG = "KnowledgeTabFragment"
