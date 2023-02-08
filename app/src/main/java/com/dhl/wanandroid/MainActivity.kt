@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
@@ -68,7 +69,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val toolbar: Toolbar by lazy {
         findViewById(R.id.tool_bar)
     }
-    private var navView: NavigationView? = null
+
+    private val navView: NavigationView by lazy {
+        findViewById(R.id.nav_view)
+    }
     private var tv_login: TextView? = null
 
     /**
@@ -152,8 +156,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun initView() {
 
-        navView = findViewById(R.id.nav_view)
-        navView?.setNavigationItemSelectedListener(this)
+        navView.setNavigationItemSelectedListener(this)
         val headerView = navView?.getHeaderView(0)
         tv_login = headerView?.findViewById(R.id.tv_login)
         val userName = SPUtils.getInstance().getString("userName")
@@ -292,6 +295,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent = Intent(this@MainActivity, CollectionActivity::class.java)
                 startActivity(intent)
             }
+            R.id.nav_night_mode ->{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
+                recreate()
+            }
         }
         return true
     }
@@ -380,8 +388,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     companion object {
         private const val TAG = "MainActivity"
-        private const val RC_SD_PERM = 1024
-
         /**
          * 下载
          */

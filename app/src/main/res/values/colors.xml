@@ -81,4 +81,7 @@
     <color name="indicator_color">#115E56</color>
     <color name="navigation_selected">#FF36BC9B</color>
     <color name="navigation_normal">#FF757575</color>
+
+    <color name="Cyan">#00bcd4</color>
+
 </resources>
