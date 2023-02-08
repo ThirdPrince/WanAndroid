@@ -1,9 +1,14 @@
 package com.dhl.wanandroid.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -24,10 +29,12 @@ public class WxArticleAdapter extends CommonAdapter<Article> {
         this.mContext = context;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void convert(ViewHolder holder, Article article, int position) {
         holder.setText(R.id.name, article.getAuthor());
-        holder.setText(R.id.content, article.getTitle());
+        TextView title = holder.getView(R.id.content);
+        title.setText(Html.fromHtml(article.getTitle(),0));
         if (!TextUtils.isEmpty(article.getEnvelopePic())) {
             ImageView imageView = holder.getView(R.id.image);
             imageView.setVisibility(View.VISIBLE);

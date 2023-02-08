@@ -18,11 +18,21 @@ import retrofit2.http.Query
 interface ApiService {
 
 
+
+
     /**
      * 主页Banner
      */
     @GET("banner/json")
     suspend fun getBanner():Response<HttpData<MutableList<BannerBean>>>
+
+
+    /**
+     * top 置顶
+     * /top/json
+     */
+    @GET("article/top/json")
+    suspend fun getTopArticle():Response<HttpData<MutableList<Article>>>
 
     /**
      * 主页文章

@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.dhl.wanandroid.http.RetrofitManager
 import com.dhl.wanandroid.model.*
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 /**
@@ -77,19 +79,29 @@ class MainViewModel : ViewModel() {
         }
 
         viewModelScope.launch(exception) {
-            val response = api.getArticleList(pageNum)
-            Log.i(tag, " response=${response}")
-            val data = response.body()?.data
-            if (data !=null){
-                _resultArticle.value = RepoResult(response.body()?.data?.datas!!,"")
-            }else{
-                _resultArticle.value = RepoResult(response.message())
+            val deferredTop =  async { api.getTopArticle() }
+            val deferredArticle = async { api.getArticleList(pageNum) }
+            var awaitTop = deferredTop.await()
+            var awaitArticle = deferredArticle.await()
+            val articleList = mutableListOf<Article>()
+            articleList.addAll(awaitTop.body()!!.data)
+            articleList.addAll(awaitArticle.body()?.data!!.datas)
+            articleList.let {
+                _resultArticle.value = RepoResult(articleList,"")
             }
+            if (!awaitArticle.isSuccessful){
+                _resultArticle.value = RepoResult(awaitArticle.message())
+            }
+
+
+
+
 
 
         }
         return resultArticle
     }
+
 
 
 
