@@ -2,10 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <com.youth.banner.Banner
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:padding="10dp" />
+        android:background="@drawable/list_item_bg"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_5"
+        android:padding="5dp" />
 </LinearLayout>

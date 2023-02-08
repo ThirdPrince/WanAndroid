@@ -93,11 +93,6 @@ class MainViewModel : ViewModel() {
                 _resultArticle.value = RepoResult(awaitArticle.message())
             }
 
-
-
-
-
-
         }
         return resultArticle
     }
