@@ -1,5 +1,6 @@
 package com.dhl.wanandroid
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +14,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.preferencesKey
+import androidx.datastore.preferences.createDataStore
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -30,6 +36,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import kotlinx.coroutines.flow.first
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -112,6 +119,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var ft: FragmentTransaction? = null
 
     private var loginBean: LoginBean? = null
+
+
+    /**
+     * sp
+     */
+    private val dataStore: DataStore<Preferences> by lazy {
+        createDataStore(name = "settings")
+    }
 
     private class MyHandler(context: MainActivity) : Handler() {
         private val mActivity: WeakReference<MainActivity> = WeakReference(context)
@@ -295,7 +310,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent = Intent(this@MainActivity, CollectionActivity::class.java)
                 startActivity(intent)
             }
-            R.id.nav_night_mode ->{
+            R.id.nav_night_mode -> {
+
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
                 recreate()
@@ -304,12 +320,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+//    private suspend fun save(key: String, value: String) {
+//        val dataStoreKey = preferencesKey<String>(key)
+//        dataStore.edit { settings ->
+//            Log.e("tag", Thread.currentThread().name)
+//            settings[dataStoreKey] = value
+//        }
+//    }
+//
+//    private suspend fun read(key: String): String? {
+//        val dataStoreKey = preferencesKey<String>(key)
+//        Log.e("tag", Thread.currentThread().name)
+//        val preferences = dataStore.data.first()
+//        return preferences[dataStoreKey]
+//    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_activity_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.action_search -> {
                 Log.e(TAG, "------")
@@ -386,8 +418,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
+
     companion object {
         private const val TAG = "MainActivity"
+
         /**
          * 下载
          */
@@ -398,6 +432,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
          */
         private const val EXIT_APP = 1025
 
-
     }
+
 }

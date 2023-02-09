@@ -1,10 +1,11 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id  'kotlin-kapt'
+}
 //apply plugin: 'com.tencent.tinker.patch'
 android {
-    compileSdkVersion 28
+    compileSdkVersion 31
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -26,7 +27,7 @@ android {
     defaultConfig {
         applicationId "com.dhl.wanandroid"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -63,8 +64,15 @@ android {
         }
     }
 
-    dexOptions {
-        javaMaxHeapSize "4g"
+//    dexOptions {
+//        javaMaxHeapSize "4g"
+//    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
 
@@ -73,7 +81,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-     implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
     implementation 'com.google.code.gson:gson:2.7'
@@ -107,9 +115,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
     def room_version = "2.4.1"
     implementation "androidx.room:room-runtime:$room_version"
-    //annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha04"
 }
 repositories {
     mavenCentral()

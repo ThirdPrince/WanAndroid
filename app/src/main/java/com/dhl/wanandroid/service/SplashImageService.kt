@@ -52,14 +52,11 @@ class SplashImageService : IntentService("SplashImageService") {
         AppDataBase.instance.getImageDao()
     }
 
-    override fun onHandleIntent(intent: Intent) {
+
+    override fun onHandleIntent(intent: Intent?) {
         if (intent != null) {
             getImageUrl()
         }
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
     }
 
     private fun getImageUrl() {
