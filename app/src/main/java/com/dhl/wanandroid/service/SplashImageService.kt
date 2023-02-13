@@ -61,17 +61,20 @@ class SplashImageService : IntentService("SplashImageService") {
 
     private fun getImageUrl() {
         val imageSplash = imageDao.getLatestImage()
-        imageSplash.let {
-            Log.e(TAG, "imagePath =${it.imagePath}")
-            if ( File(it.imagePath).name.startsWith(simpleDateFormat.format(Date()))) {
-                Log.e(TAG, "今天的图片已经下载过")
-                return@getImageUrl
+        imageSplash?.let { imageSplash ->
+            imageSplash.imagePath?.let {
+                if (File(it).name.startsWith(simpleDateFormat.format(Date()))) {
+                    Log.e(TAG, "今天的图片已经下载过")
+                    return@getImageUrl
+                }
             }
 
         }
         OkHttpManager.getInstance()[Constants.IMAGES_URL,
                 object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {}
+                    override fun onFailure(call: Call, e: IOException) {
+                        Log.e(TAG, "response =${e.message}")
+                    }
 
                     @Throws(IOException::class)
                     override fun onResponse(call: Call, response: Response) {
@@ -79,7 +82,10 @@ class SplashImageService : IntentService("SplashImageService") {
                         val jsonElement = JsonParser().parse(response.body?.string())
                         val jsonObject = jsonElement.asJsonObject
                         val jsonArray = jsonObject.getAsJsonArray("images")
-                        imageInfoList = Gson().fromJson(jsonArray.toString(), object : TypeToken<List<ImageSplash?>?>() {}.type)
+                        imageInfoList = Gson().fromJson(
+                            jsonArray.toString(),
+                            object : TypeToken<List<ImageSplash?>?>() {}.type
+                        )
                         imageInfoList.let {
                             val imageInfo = it?.get(0)
                             Log.e(TAG, "imageInfo = $imageInfo")
@@ -106,16 +112,17 @@ class SplashImageService : IntentService("SplashImageService") {
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 val inputStream = response.body?.byteStream()
-                imagePath = getExternalFilesDir("image").toString() + "/" + simpleDateFormat.format(Date()) + "_splash.jpg"
+                imagePath =
+                    getExternalFilesDir("image").toString() + "/" + simpleDateFormat.format(Date()) + "_splash.jpg"
                 Log.e(TAG, "imagePath=$imagePath")
                 val fileOutputStream = FileOutputStream(imagePath)
                 val bytes = ByteArray(1024)
                 var len = 0
                 while (inputStream?.read(bytes).also {
-                            if (it != null) {
-                                len = it
-                            }
-                        } != -1) {
+                        if (it != null) {
+                            len = it
+                        }
+                    } != -1) {
                     fileOutputStream.write(bytes, 0, len)
                 }
                 fileOutputStream.flush()

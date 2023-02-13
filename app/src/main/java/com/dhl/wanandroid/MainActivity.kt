@@ -1,6 +1,6 @@
 package com.dhl.wanandroid
 
-import android.content.Context
+
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -22,6 +22,7 @@ import androidx.datastore.preferences.createDataStore
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.activity.CollectionActivity
@@ -37,6 +38,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -312,28 +314,39 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_night_mode -> {
 
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
-                recreate()
+                lifecycleScope.launch {
+                   val isNight =  read("isNight")
+                    if(isNight == true){
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                        save("isNight",false)
+                    }else{
+                        save("isNight",true)
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+                    }
+                    window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
+                    recreate()
+                }
+
             }
         }
         return true
     }
 
-//    private suspend fun save(key: String, value: String) {
-//        val dataStoreKey = preferencesKey<String>(key)
-//        dataStore.edit { settings ->
-//            Log.e("tag", Thread.currentThread().name)
-//            settings[dataStoreKey] = value
-//        }
-//    }
-//
-//    private suspend fun read(key: String): String? {
-//        val dataStoreKey = preferencesKey<String>(key)
-//        Log.e("tag", Thread.currentThread().name)
-//        val preferences = dataStore.data.first()
-//        return preferences[dataStoreKey]
-//    }
+    private suspend fun save(key: String, boolean: Boolean) {
+        val dataStoreKey = preferencesKey<Boolean>(key)
+        dataStore.edit { settings ->
+            Log.e("tag", Thread.currentThread().name)
+            settings[dataStoreKey] = boolean
+        }
+    }
+
+    private suspend fun read(key: String): Boolean? {
+        val dataStoreKey = preferencesKey<Boolean>(key)
+        Log.e("tag", Thread.currentThread().name)
+        val preferences = dataStore.data.first()
+        return preferences[dataStoreKey]
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_activity_main, menu)
