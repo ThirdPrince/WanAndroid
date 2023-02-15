@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -83,8 +85,8 @@ public class WebActivity extends AppCompatActivity {
         if (intent != null) {
             title = intent.getStringExtra("title");
             url = intent.getStringExtra("webUrl");
-            toolbar_title.setText(title);
-            //toolbar.setTitle(title);
+            toolbar_title.setText(Html.fromHtml(title));
+
         }
 
     }

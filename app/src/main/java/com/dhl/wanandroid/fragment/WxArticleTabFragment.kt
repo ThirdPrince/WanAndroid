@@ -37,6 +37,7 @@ class WxArticleTabFragment : BaseFragment() {
     private val wxArticleTabViewModel by lazy {
         ViewModelProvider(this).get(WxArticleTabViewModel::class.java)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -45,8 +46,10 @@ class WxArticleTabFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_wx_article_tab, container, false)
     }
 
@@ -77,29 +80,37 @@ class WxArticleTabFragment : BaseFragment() {
     /**
      * 获取数据
      */
-    private fun getData(){
-        wxArticleTabViewModel.getArticle(0,articleId!!.toInt()).observe(this,{
-            if(it.isSuccess){
+    private fun getData() {
+        wxArticleTabViewModel.getArticle(0, articleId!!.toInt()).observe(this, {
+            if (it.isSuccess) {
                 wxArticleBeanList.addAll(it.result!!)
                 wxArticleAdapter.notifyDataSetChanged()
-                wxArticleAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
-                    override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
+                wxArticleAdapter.setOnItemClickListener(object :
+                    MultiItemTypeAdapter.OnItemClickListener {
+                    override fun onItemClick(
+                        view: View,
+                        holder: RecyclerView.ViewHolder,
+                        position: Int
+                    ) {
                         val wxArticleBean = wxArticleBeanList!![position]
                         WebActivity.startActivity(activity, wxArticleBean.title, wxArticleBean.link)
                     }
 
-                    override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
+                    override fun onItemLongClick(
+                        view: View,
+                        holder: RecyclerView.ViewHolder,
+                        position: Int
+                    ): Boolean {
                         return false
                     }
                 })
-            }else{
+            } else {
                 ToastUtils.showLong(it.errorMessage)
             }
             refreshLayout.finishRefresh()
 
         })
     }
-
 
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -109,22 +120,12 @@ class WxArticleTabFragment : BaseFragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.e(TAG,"onDestroy")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.e(TAG,"onDestroyView")
-    }
-
-
 
     companion object {
         private const val TAG = "WxArticleTabFragment"
         private const val ARG_PARAM1 = "param1"
         private const val ARG_PARAM2 = "param2"
+
         @JvmStatic
         fun newInstance(param1: String?, param2: String?): WxArticleTabFragment {
             val fragment = WxArticleTabFragment()

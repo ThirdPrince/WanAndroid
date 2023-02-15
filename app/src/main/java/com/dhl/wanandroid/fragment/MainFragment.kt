@@ -137,7 +137,7 @@ class MainFragment : BaseFragment() {
         mainViewModel.getArticle(pageNo).observe(this,{
             if(it.isSuccess){
                 if(pageNo == 0){
-                    homePageDataList?.clear()
+                    homePageDataList.clear()
                 }
                 homePageDataList.addAll(it.result!!)
                 headerAndFooterWrapper.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
@@ -181,7 +181,7 @@ class MainFragment : BaseFragment() {
     private fun setListOnClick() {
             homePageAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
-                    val homePageData = homePageDataList!![position - 1]
+                    val homePageData = homePageDataList[position - 1]
                     WebActivity.startActivity(activity, homePageData.title, homePageData.link)
                 }
 
@@ -190,7 +190,7 @@ class MainFragment : BaseFragment() {
                 }
             })
             homePageAdapter.setOnCollectionListener { view, position ->
-                val homePageData = homePageDataList!![position - 1]
+                val homePageData = homePageDataList[position - 1]
                 OkHttpManager.getInstance().postCollectionOut(APIUtil.collectionArticleOut(), homePageData.title, homePageData.author, homePageData.link, object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         e.printStackTrace()

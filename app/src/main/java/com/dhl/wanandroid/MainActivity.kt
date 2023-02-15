@@ -333,6 +333,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    /**
+     * 保存 暗黑模式
+     */
     private suspend fun save(key: String, boolean: Boolean) {
         val dataStoreKey = preferencesKey<Boolean>(key)
         dataStore.edit { settings ->
@@ -341,6 +344,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * 读取暗黑模式
+     */
     private suspend fun read(key: String): Boolean? {
         val dataStoreKey = preferencesKey<Boolean>(key)
         Log.e("tag", Thread.currentThread().name)
