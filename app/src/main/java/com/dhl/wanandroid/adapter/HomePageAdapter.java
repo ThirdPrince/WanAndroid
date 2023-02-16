@@ -44,6 +44,7 @@ public class HomePageAdapter extends CommonAdapter<Article> {
         ImageView headerImg = (ImageView) holder.getView(R.id.header_image);
         TextView nameTv = holder.getView(R.id.name);
         holder.setText(R.id.desc, article.getSuperChapterName() + " / " + article.getChapterName());
+        holder.setText(R.id.time_tv, article.getNiceDate());
         TextView title = (TextView) holder.getView(R.id.content);
         title.setText(Html.fromHtml(article.getTitle()));
 //        final ImageView collection = holder.getView(R.id.collection);
@@ -72,7 +73,7 @@ public class HomePageAdapter extends CommonAdapter<Article> {
         if(article.isTop()){
             topTv.setVisibility(View.VISIBLE);
         }else {
-            topTv.setVisibility(View.INVISIBLE);
+            topTv.setVisibility(View.GONE);
         }
 
 

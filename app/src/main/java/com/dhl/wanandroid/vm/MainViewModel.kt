@@ -71,6 +71,7 @@ class MainViewModel : ViewModel() {
 
     /**
      * 获取文章
+     * 包括置顶文章
      */
     fun getArticle(pageNum: Int): LiveData<RepoResult<MutableList<Article>>> {
         val exception = CoroutineExceptionHandler { _, throwable ->
