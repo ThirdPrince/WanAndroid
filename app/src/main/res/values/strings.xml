@@ -35,6 +35,8 @@
     <string name="next">NEXT</string>
     <string name="register">注册</string>
 
+    <string name="top_article">置顶</string>
+
 
     <!-- Menu Action -->
     <string name="action_search">搜索</string>

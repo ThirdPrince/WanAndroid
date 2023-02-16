@@ -100,7 +100,7 @@ data class Article(
         @Json(name = "userId") val userId: Int,
         @Json(name = "visible") val visible: Int,
         @Json(name = "zan") val zan: Int,
-        @Json(name = "top") var top: String
+        @Json(name = "top") var isTop: Boolean
 )
 
 /**
@@ -142,21 +142,16 @@ data class NavBean(@Json(name = "articles") val articles: MutableList<Article>,
                    @Json(name = "name") val name: String)
 
 /**
- * 项目
+ * 搜索热词
  */
-data class Project(
-        @Json(name = "children") val children: List<Any>,
-        @Json(name = "courseId") val courseId: Int,
-        @Json(name = "cover") val cover: String,
-        @Json(name = "desc") val desc: String,
+data class HotSearchBean(
         @Json(name = "id") val id: Int,
-        @Json(name = "lisense") val lisense: String,
-        @Json(name = "lisenseLink") val lisenseLink: String,
-        @Json(name = "name") val name: String,
-        @Json(name = "order") val order: Int,
-        @Json(name = "parentChapterId") val parentChapterId: Int,
+        @Json(name = "link")val link: String,
+        @Json(name = "name")val name: String,
+        @Json(name = "order")val order: Int,
         @Json(name = "visible") val visible: Int
 )
+
 
 data class Tag(
         @Json(name = "name") val name: String,

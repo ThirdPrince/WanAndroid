@@ -3,21 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
-    android:padding="5dp"
     android:layout_marginLeft="@dimen/dp_10"
     android:layout_marginRight="@dimen/dp_10"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical"
-    >
+    android:padding="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/list_item_bg"
         android:foreground="?attr/selectableItemBackground"
-        android:padding="@dimen/dp_8"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_8">
 
         <ImageView
             android:id="@+id/image"
@@ -41,16 +40,15 @@
                     android:id="@+id/header_image"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_alignParentLeft="true"
-                    />
+                    android:layout_alignParentLeft="true" />
 
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/header_image"
                     android:layout_gravity="top|left"
                     android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/header_image"
                     android:clickable="false"
                     android:drawablePadding="2dp"
                     android:textColor="@color/colorTitle"
@@ -76,12 +74,24 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 
-            <ImageView
-                android:id="@+id/collection"
+<!--            <ImageView-->
+<!--                android:id="@+id/collection"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:focusable="true"-->
+<!--                android:src="@drawable/collection_selector" />-->
+
+            <TextView
+                android:id="@+id/top_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:src="@drawable/collection_selector" />
+                android:background="@drawable/top_red_bg"
+                android:gravity="center"
+                android:textSize="@dimen/sp_10"
+                android:textColor="@color/white"
+                android:text="@string/top_article"
+                android:visibility="invisible"
+                 />
         </LinearLayout>
 
     </LinearLayout>

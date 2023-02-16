@@ -5,10 +5,13 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +47,7 @@ import okhttp3.Response;
 
 /**
  * 我的收藏UI
+ *
  * @dhl
  */
 public class CollectionActivity extends AppCompatActivity {
@@ -53,18 +57,18 @@ public class CollectionActivity extends AppCompatActivity {
     /**
      * smartRefresh
      */
-    protected RefreshLayout refreshLayout ;
+    protected RefreshLayout refreshLayout;
     protected ClassicsHeader mClassicsHeader;
     protected Drawable mDrawableProgress;
     /**
      * rcy
      */
-    protected RecyclerView recyclerView ;
+    protected RecyclerView recyclerView;
 
-    private Toolbar toolbar ;
+    private Toolbar toolbar;
 
-    private CollectionAdapter  collectionAdapter ;
-    private List<CollectionBean> collectionBeanList ;
+    private CollectionAdapter collectionAdapter;
+    private List<CollectionBean> collectionBeanList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +78,7 @@ public class CollectionActivity extends AppCompatActivity {
 
     }
 
-    private void initRefresh()
-    {
+    private void initRefresh() {
         toolbar = findViewById(R.id.tool_bar);
         toolbar.setTitle("收藏");
         setSupportActionBar(toolbar);
@@ -83,12 +86,12 @@ public class CollectionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         recyclerView = findViewById(R.id.rcy_view);
         refreshLayout = findViewById(R.id.refreshLayout);
-        mClassicsHeader = (ClassicsHeader)refreshLayout.getRefreshHeader();
+        mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
         //mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis()-deta));
         mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         collectionBeanList = new ArrayList<>();
-        collectionAdapter = new CollectionAdapter(this,R.layout.fragment_homepage_item,collectionBeanList);
+        collectionAdapter = new CollectionAdapter(this, R.layout.fragment_homepage_item, collectionBeanList);
         recyclerView.setAdapter(collectionAdapter);
         refreshLayout.autoRefresh();
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -100,8 +103,7 @@ public class CollectionActivity extends AppCompatActivity {
 
     }
 
-    private void getData(String url )
-    {
+    private void getData(String url) {
         OkHttpManager.getInstance().getCollectionList(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -118,18 +120,18 @@ public class CollectionActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
 
                 String json = response.body().string();
-                Log.e(TAG,"json::"+json);
+                Log.e(TAG, "json::" + json);
 
                 JsonObject fromJson = new Gson().fromJson(json, JsonObject.class);
                 JsonPrimitive errorCode = fromJson.getAsJsonPrimitive("errorCode");
                 JsonElement jsonElement = new JsonParser().parse(json);
 
-                if(errorCode.getAsInt()== 0)
-                {
+                if (errorCode.getAsInt() == 0) {
                     JsonObject jsonObject = jsonElement.getAsJsonObject().getAsJsonObject("data");
                     JsonArray jsonArray = jsonObject.getAsJsonArray("datas");
                     Gson gson = new Gson();
-                    final List<CollectionBean> wxArticleBeans = gson.fromJson(jsonArray.toString(),new TypeToken<List<CollectionBean>>(){}.getType());
+                    final List<CollectionBean> wxArticleBeans = gson.fromJson(jsonArray.toString(), new TypeToken<List<CollectionBean>>() {
+                    }.getType());
                     collectionBeanList.clear();
                     collectionBeanList.addAll(wxArticleBeans);
                     runOnUiThread(new Runnable() {
@@ -137,18 +139,16 @@ public class CollectionActivity extends AppCompatActivity {
                         public void run() {
                            /* collectionAdapter = new CollectionAdapter(CollectionActivity.this,R.layout.fragment_homepage_item,wxArticleBeans);
                             recyclerView.setAdapter(collectionAdapter);*/
-                             collectionAdapter.notifyDataSetChanged();
+                            collectionAdapter.notifyDataSetChanged();
                             refreshLayout.finishRefresh();
-                            if(wxArticleBeans.size()<20)
-                            {
+                            if (wxArticleBeans.size() < 20) {
                                 refreshLayout.setEnableLoadMore(false);
                             }
                             setOnClickEvent();
                         }
                     });
-                }else
-                {
-                    final JsonPrimitive  errorMsg = fromJson.getAsJsonPrimitive("errorMsg");
+                } else {
+                    final JsonPrimitive errorMsg = fromJson.getAsJsonPrimitive("errorMsg");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -160,7 +160,6 @@ public class CollectionActivity extends AppCompatActivity {
                 }
 
 
-
             }
         });
     }
@@ -168,22 +167,20 @@ public class CollectionActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
         }
-        return true ;
+        return true;
     }
 
-    private void setOnClickEvent()
-    {
+    private void setOnClickEvent() {
         collectionAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder viewHolder, int position) {
                 CollectionBean collectionBean = collectionBeanList.get(position);
-                WebActivity.startActivity(CollectionActivity.this, collectionBean.getTitle(),collectionBean.getLink());
+                WebActivity.startActivity(CollectionActivity.this, collectionBean.getTitle(), collectionBean.getLink());
 
             }
 
@@ -196,7 +193,7 @@ public class CollectionActivity extends AppCompatActivity {
             @Override
             public void onCollectionClick(View view, int position) {
                 CollectionBean collectionBean = collectionBeanList.get(position);
-                OkHttpManager.getInstance().postUnCollection(APIUtil.unCollectionArticle(collectionBean.getId() + ""), collectionBean.getOriginId()+"", new Callback() {
+                OkHttpManager.getInstance().postUnCollection(APIUtil.unCollectionArticle(collectionBean.getId() + ""), collectionBean.getOriginId() + "", new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
 
@@ -207,10 +204,9 @@ public class CollectionActivity extends AppCompatActivity {
                     public void onResponse(Call call, Response response) throws IOException {
 
                         String rsp = response.body().string();
-                        JsonObject jsonObject = new Gson().fromJson(rsp,JsonObject.class);
+                        JsonObject jsonObject = new Gson().fromJson(rsp, JsonObject.class);
                         JsonPrimitive jsonPrimitive = jsonObject.getAsJsonPrimitive("errorCode");
-                        if(jsonPrimitive.getAsInt() == 0)
-                        {
+                        if (jsonPrimitive.getAsInt() == 0) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

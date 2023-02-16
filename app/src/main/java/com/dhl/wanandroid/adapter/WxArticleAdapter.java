@@ -51,7 +51,7 @@ public class WxArticleAdapter extends CommonAdapter<Article> {
             TextDrawable drawable = mDrawableBuilder.build(String.valueOf(article.getAuthor().charAt(0)), mColorGenerator.getColor(article.getAuthor()));
             headerImg.setImageDrawable(drawable);
         }else {
-            TextDrawable drawable = mDrawableBuilder.build("佚名", mColorGenerator.getColor("佚名"));
+            TextDrawable drawable = mDrawableBuilder.build("佚", mColorGenerator.getColor("佚"));
             headerImg.setImageDrawable(drawable);
         }
     }

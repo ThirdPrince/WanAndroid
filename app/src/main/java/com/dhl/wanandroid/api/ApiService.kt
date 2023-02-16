@@ -83,4 +83,14 @@ interface ApiService {
     @GET("project/tree/json")
     suspend fun getProject():Response<HttpData<MutableList<BaseData>>>
 
+    /**
+     * 搜索热词
+     */
+    @GET("hotkey/json")
+    suspend fun getHotSearch():Response<HttpData<MutableList<HotSearchBean>>>
+
+    /**
+     * 搜索
+     */
+
 }

@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
  */
 class MainViewModel : ViewModel() {
 
-    val  tag = "MainViewModel"
+    val tag = "MainViewModel"
 
     private val api by lazy { RetrofitManager.apiService }
 
@@ -33,7 +33,7 @@ class MainViewModel : ViewModel() {
      */
     private val _resultBanner = MutableLiveData<RepoResult<MutableList<BannerBean>>>()
 
-    private val resultBanner :LiveData<RepoResult<MutableList<BannerBean>>>
+    private val resultBanner: LiveData<RepoResult<MutableList<BannerBean>>>
         get() = _resultBanner
 
 
@@ -41,14 +41,14 @@ class MainViewModel : ViewModel() {
      * 文章LiveData
      */
     private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
-    private val resultArticle :LiveData<RepoResult<MutableList<Article>>>
+    private val resultArticle: LiveData<RepoResult<MutableList<Article>>>
         get() = _resultArticle
 
 
     /**
      * 获取Banner
      */
-    fun getBanner():LiveData<RepoResult<MutableList<BannerBean>>>{
+    fun getBanner(): LiveData<RepoResult<MutableList<BannerBean>>> {
 
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultBanner.value = throwable.message?.let { RepoResult(it) }
@@ -59,9 +59,9 @@ class MainViewModel : ViewModel() {
             val response = api.getBanner()
             Log.i(tag, " response=${response}")
             var data = response.body()?.data
-            if(data != null){
-                _resultBanner.value = RepoResult(data!!,"")
-            }else{
+            if (data != null) {
+                _resultBanner.value = RepoResult(data!!, "")
+            } else {
                 _resultBanner.value = RepoResult(response.message())
             }
 
@@ -72,33 +72,34 @@ class MainViewModel : ViewModel() {
     /**
      * 获取文章
      */
-    fun getArticle(pageNum: Int):LiveData<RepoResult<MutableList<Article>>> {
+    fun getArticle(pageNum: Int): LiveData<RepoResult<MutableList<Article>>> {
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultArticle.value = throwable.message?.let { RepoResult(it) }
             Log.e(tag, throwable.message!!)
         }
 
         viewModelScope.launch(exception) {
-            val deferredTop =  async { api.getTopArticle() }
-            val deferredArticle = async { api.getArticleList(pageNum) }
-            var awaitTop = deferredTop.await()
-            var awaitArticle = deferredArticle.await()
             val articleList = mutableListOf<Article>()
-            articleList.addAll(awaitTop.body()!!.data)
+            val deferredArticle = async { api.getArticleList(pageNum) }
+            if (pageNum == 0) {
+                val deferredTop = async { api.getTopArticle() }
+                var awaitTop = deferredTop.await()
+                awaitTop.body()!!.data.forEach {
+                    it.isTop = true
+                    articleList.add(it)
+                }
+            }
+            var awaitArticle = deferredArticle.await()
             articleList.addAll(awaitArticle.body()?.data!!.datas)
             articleList.let {
-                _resultArticle.value = RepoResult(articleList,"")
+                _resultArticle.value = RepoResult(articleList, "")
             }
-            if (!awaitArticle.isSuccessful){
+            if (!awaitArticle.isSuccessful) {
                 _resultArticle.value = RepoResult(awaitArticle.message())
             }
-
         }
         return resultArticle
     }
-
-
-
 
 
 }
