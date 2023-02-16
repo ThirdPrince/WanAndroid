@@ -78,11 +78,13 @@ class MainFragment : BaseFragment() {
         mHeaderGroup.findViewById(R.id.banner)
     }
 
+    private var pageCount = 0
+
     /**
      * viewModel
      */
     private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -108,12 +110,13 @@ class MainFragment : BaseFragment() {
         toolbar.title = "首页"
         refreshLayout.autoRefresh()
         refreshLayout.setOnRefreshListener {
+            Log.e(TAG,"setOnRefreshListener")
             pageCount = 0
-            getData(0)
+            getData()
         }
         refreshLayout.setOnLoadMoreListener {
             pageCount++
-            getData(pageCount)
+            getData()
         }
 
     }
@@ -121,35 +124,45 @@ class MainFragment : BaseFragment() {
     /**
      * 初始化数据
      */
-    private fun getData(pageNo:Int){
-        mainViewModel.getBanner().observe(this,{
-            if(it.isSuccess){
-                bannerList = it.result!!
-                setBanner()
-                setHomePageAdapter()
-            }else{
-                ToastUtils.showLong(it.errorMessage)
-            }
-            refreshLayout.finishRefresh()
-            refreshLayout.finishLoadMore()
-        })
+    private fun getData(){
+       if(mainViewModel.resultBanner.hasObservers()){
+           mainViewModel.getBanner()
+        }else{
+           mainViewModel.getBanner().observe(this,{
+               if(it.isSuccess){
+                   bannerList = it.result!!
+                   setBanner()
+                   setHomePageAdapter()
+               }else{
+                   ToastUtils.showLong(it.errorMessage)
+               }
+               refreshLayout.finishRefresh()
+               refreshLayout.finishLoadMore()
+           })
+       }
 
-        mainViewModel.getArticle(pageNo).observe(this,{
-            if(it.isSuccess){
-                if(pageNo == 0){
-                    homePageDataList.clear()
+
+        if(mainViewModel.resultArticle.hasObservers()){
+            mainViewModel.getArticle(pageCount)
+        }else{
+            mainViewModel.getArticle(pageCount).observe(this,{
+                Log.e(TAG,"pageNo = $pageCount"+"-->"+it.result?.size)
+                if(it.isSuccess){
+                    if(pageCount == 0){
+                        homePageDataList.clear()
+                    }
+                    homePageDataList.addAll(it.result!!)
+                    headerAndFooterWrapper.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
+                    setListOnClick()
+                }else{
+                    ToastUtils.showLong(it.errorMessage)
                 }
-                homePageDataList.addAll(it.result!!)
-                headerAndFooterWrapper.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
+                refreshLayout.finishRefresh()
+                refreshLayout.finishLoadMore()
 
-                setListOnClick()
-            }else{
-                ToastUtils.showLong(it.errorMessage)
-            }
-            refreshLayout.finishRefresh()
-            refreshLayout.finishLoadMore()
+            })
+        }
 
-        })
     }
 
     /**
@@ -213,7 +226,6 @@ class MainFragment : BaseFragment() {
         /**
          *
          */
-        private var pageCount = 0
         fun newInstance(param1: String?, param2: String?): MainFragment {
             val fragment = MainFragment()
             val args = Bundle()

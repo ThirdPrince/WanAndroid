@@ -33,7 +33,7 @@ class MainViewModel : ViewModel() {
      */
     private val _resultBanner = MutableLiveData<RepoResult<MutableList<BannerBean>>>()
 
-    private val resultBanner: LiveData<RepoResult<MutableList<BannerBean>>>
+     val resultBanner: LiveData<RepoResult<MutableList<BannerBean>>>
         get() = _resultBanner
 
 
@@ -41,7 +41,7 @@ class MainViewModel : ViewModel() {
      * 文章LiveData
      */
     private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
-    private val resultArticle: LiveData<RepoResult<MutableList<Article>>>
+     val resultArticle: LiveData<RepoResult<MutableList<Article>>>
         get() = _resultArticle
 
 
@@ -49,7 +49,6 @@ class MainViewModel : ViewModel() {
      * 获取Banner
      */
     fun getBanner(): LiveData<RepoResult<MutableList<BannerBean>>> {
-
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultBanner.value = throwable.message?.let { RepoResult(it) }
             Log.e("CoroutinesViewModel", throwable.message!!)
@@ -74,6 +73,7 @@ class MainViewModel : ViewModel() {
      * 包括置顶文章
      */
     fun getArticle(pageNum: Int): LiveData<RepoResult<MutableList<Article>>> {
+        Log.e(tag,"getArticle")
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultArticle.value = throwable.message?.let { RepoResult(it) }
             Log.e(tag, throwable.message!!)
