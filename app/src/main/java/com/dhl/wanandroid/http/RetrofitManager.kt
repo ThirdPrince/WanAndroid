@@ -35,7 +35,7 @@ object RetrofitManager {
         buildRetrofit(Constants.BASE_URL, buildHttpClient())
     }
 
-    private val cacheFile = File(MyApplication.context.externalCacheDir, "cache")
+    private val cacheFile = File(MyApplication.context!!.externalCacheDir, "cache")
     private val cache = Cache(cacheFile, 5 * 1024 * 1024)
 
 

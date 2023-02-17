@@ -33,6 +33,7 @@ import com.dhl.wanandroid.fragment.*
 import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.LoginBean
 import com.dhl.wanandroid.service.SplashImageService.Companion.startDownLoadAction
+import com.dhl.wanandroid.util.Settings
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
@@ -315,12 +316,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_night_mode -> {
 
                 lifecycleScope.launch {
-                   val isNight =  read("isNight")
+                   val isNight =  read(Settings.NightMode)
                     if(isNight == true){
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        save("isNight",false)
+                        save(Settings.NightMode,false)
                     }else{
-                        save("isNight",true)
+                        save(Settings.NightMode,true)
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
                     }

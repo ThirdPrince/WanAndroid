@@ -29,6 +29,6 @@
         android:layout_marginLeft="@dimen/dp_2"
         android:layout_marginRight="@dimen/dp_2"
         android:padding="5dp"
-        android:text="玩转Android" />
+        android:text="玩转 Android " />
 
 </LinearLayout>

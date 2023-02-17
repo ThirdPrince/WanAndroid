@@ -33,7 +33,7 @@ abstract class AppDataBase : RoomDatabase() {
     private object Single {
 
         val sin: AppDataBase = Room.databaseBuilder(
-                MyApplication.context,
+                MyApplication.context!!,
                 AppDataBase::class.java,
                 "WanAndroid.db")
                 .allowMainThreadQueries()
