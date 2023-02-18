@@ -80,7 +80,7 @@
                     android:textSize="@dimen/sp_15" />
                 <ImageView
                     android:id="@+id/image"
-                    android:layout_width="@dimen/dp_50"
+                    android:layout_width="@dimen/dp_80"
                     android:layout_height="@dimen/dp_50"
                     android:layout_gravity="right|center"
                     android:visibility="gone" />

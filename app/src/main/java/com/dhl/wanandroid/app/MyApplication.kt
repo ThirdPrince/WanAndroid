@@ -42,9 +42,9 @@ class MyApplication : Application() {
         mainScope.launch {
             val isNight =  read(Settings.NightMode)
             if(isNight == true){
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
             }
             mainScope.cancel()

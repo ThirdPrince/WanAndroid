@@ -43,8 +43,10 @@ class ProjectFragment : BaseFragment() {
         ViewModelProvider(this).get(ProjectViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_project, container, false)
     }
 
@@ -58,33 +60,36 @@ class ProjectFragment : BaseFragment() {
      * 获取数据
      */
     private fun getData() {
-        if(projectViewModel.getProject().hasObservers()){
-            projectViewModel.getProject()
-        }else{
-            projectViewModel.getProject().observe(this, {
-                wxArticleTabFragments.clear()
-                tabIndicator.clear()
-                for (projectBean in it.result!!) {
-                    tabIndicator.add(projectBean.name)
-                    wxArticleTabFragments.add(WxArticleTabFragment.newInstance(projectBean.name, projectBean.id.toString() + ""))
-                }
-                viewPager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
-                    override fun getItem(i: Int): Fragment {
-                        return wxArticleTabFragments[i]
-                    }
 
-                    override fun getCount(): Int {
-                        return wxArticleTabFragments.size
-                    }
-
-                    override fun getPageTitle(position: Int): CharSequence? {
-                        return tabIndicator[position]
-                    }
+        projectViewModel.getProject().observe(this, {
+            wxArticleTabFragments.clear()
+            tabIndicator.clear()
+            for (projectBean in it.result!!) {
+                tabIndicator.add(projectBean.name)
+                wxArticleTabFragments.add(
+                    WxArticleTabFragment.newInstance(
+                        projectBean.name,
+                        projectBean.id.toString() + ""
+                    )
+                )
+            }
+            viewPager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
+                override fun getItem(i: Int): Fragment {
+                    return wxArticleTabFragments[i]
                 }
-                viewPager.offscreenPageLimit = wxArticleTabFragments.size
-                tabLayout.setupWithViewPager(viewPager)
-            })
-        }
+
+                override fun getCount(): Int {
+                    return wxArticleTabFragments.size
+                }
+
+                override fun getPageTitle(position: Int): CharSequence? {
+                    return tabIndicator[position]
+                }
+            }
+            viewPager.offscreenPageLimit = wxArticleTabFragments.size
+            tabLayout.setupWithViewPager(viewPager)
+        })
+
 
     }
 

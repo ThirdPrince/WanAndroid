@@ -8,22 +8,22 @@
 
     <item
         android:id="@+id/navigation_knowledge"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/apps_48px"
         android:title="@string/title_knowledge" />
 
     <item
         android:id="@+id/nav_wx_article"
-        android:icon="@drawable/ic_comment_black_24dp"
+        android:icon="@drawable/wechat_48px"
         android:title="@string/title_notifications" />
 
     <item
         android:id="@+id/navigation_nav"
-        android:icon="@drawable/ic_nav_black_24dp"
+        android:icon="@drawable/nav_48px"
         android:title="@string/title_nav" />
 
     <item
         android:id="@+id/navigation_project"
-        android:icon="@drawable/ic_project_black_24dp"
+        android:icon="@drawable/project_48px"
         android:title="@string/title_project" />
 
 </menu>
