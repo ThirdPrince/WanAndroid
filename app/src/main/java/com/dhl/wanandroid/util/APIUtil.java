@@ -9,7 +9,6 @@ import com.dhl.wanandroid.app.Constants;
 public class APIUtil {
 
 
-
     /**
      * 获取收藏列表
      *

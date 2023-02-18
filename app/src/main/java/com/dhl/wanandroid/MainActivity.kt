@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -23,27 +24,18 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
-import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.activity.CollectionActivity
+import com.dhl.wanandroid.activity.HotActivity
 import com.dhl.wanandroid.activity.MaterialLoginActivity
-import com.dhl.wanandroid.app.Constants
-import com.dhl.wanandroid.app.LoginInfo
 import com.dhl.wanandroid.fragment.*
-import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.LoginBean
 import com.dhl.wanandroid.service.SplashImageService.Companion.startDownLoadAction
 import com.dhl.wanandroid.util.Settings
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
-import java.io.IOException
 import java.lang.ref.WeakReference
 
 /**
@@ -121,7 +113,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     var ft: FragmentTransaction? = null
 
-    private var loginBean: LoginBean? = null
+
 
 
     /**
@@ -158,7 +150,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
-        login()
         mainFragment = MainFragment.newInstance("", "")
         if (savedInstanceState == null) {
             fragmentTransaction.add(R.id.content, mainFragment!!, MainFragment::class.java.simpleName).commit()
@@ -177,10 +168,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navView.setNavigationItemSelectedListener(this)
         val headerView = navView?.getHeaderView(0)
         tv_login = headerView?.findViewById(R.id.tv_login)
-        val userName = SPUtils.getInstance().getString("userName")
-        if (!TextUtils.isEmpty(userName)) {
-            tv_login?.text = userName
-        }
         toolbar.run {
             title = "首页"
             setSupportActionBar(this)
@@ -364,7 +351,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.action_search -> {
-                Log.e(TAG, "------")
+                val intent = Intent(this,HotActivity::class.java)
+                startActivity(intent)
                 return true
             }
         }
@@ -398,45 +386,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun login() {
-        val userName = SPUtils.getInstance().getString("userName")
-        val password = SPUtils.getInstance().getString("password")
-        if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(password)) {
-            return
-        }
-        OkHttpManager.getInstance().login(Constants.LOGIN_URL, userName, password, object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
 
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                val json = response.body?.string()
-                Log.e(TAG, "response::$json")
-                val gson = Gson()
-                val jsonPrimitive = gson.fromJson(json, JsonObject::class.java).getAsJsonPrimitive("errorCode")
-                val errorCode = jsonPrimitive.asInt
-                if (errorCode == 0) {
-                    val jsonObject = gson.fromJson(json, JsonObject::class.java)
-                    val data = jsonObject.getAsJsonObject("data")
-                    loginBean = gson.fromJson(data.toString(), LoginBean::class.java)
-                    LoginInfo.getInstance().setLoginInfo(loginBean)
-                    loginBean?.setErrorCode(0)
-                }
-                if (response.isSuccessful) { //response 请求成功
-                    val headers = response.headers
-                    val cookies = headers.values("Set-Cookie")
-                    if (cookies.size > 0) {
-                        val session = cookies[0]
-                        val result = session.substring(0, session.indexOf(";"))
-                        val JSESSIONID = result.substring(result.indexOf("=") + 1)
-                        Log.e(TAG, "JSESSIONID::$JSESSIONID")
-                        SPUtils.getInstance().put("JSESSIONID", JSESSIONID)
-                    }
-                }
-            }
-        })
-    }
 
 
     companion object {
