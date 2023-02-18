@@ -83,7 +83,7 @@ class SplashActivity : AppCompatActivity() {
             }
             handler.sendEmptyMessageDelayed(WHAT, 2500)
         } else {
-            handler.sendEmptyMessageDelayed(WHAT, 500)
+            handler.sendEmptyMessageDelayed(WHAT, 1500)
         }
     }
 

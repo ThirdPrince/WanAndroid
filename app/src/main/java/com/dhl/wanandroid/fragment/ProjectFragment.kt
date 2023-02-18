@@ -58,29 +58,34 @@ class ProjectFragment : BaseFragment() {
      * 获取数据
      */
     private fun getData() {
-        projectViewModel.getProject().observe(this, {
-            wxArticleTabFragments.clear()
-            tabIndicator.clear()
-            for (projectBean in it.result!!) {
-                tabIndicator.add(projectBean.name)
-                wxArticleTabFragments.add(WxArticleTabFragment.newInstance(projectBean.name, projectBean.id.toString() + ""))
-            }
-            viewPager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
-                override fun getItem(i: Int): Fragment {
-                    return wxArticleTabFragments[i]
+        if(projectViewModel.getProject().hasObservers()){
+            projectViewModel.getProject()
+        }else{
+            projectViewModel.getProject().observe(this, {
+                wxArticleTabFragments.clear()
+                tabIndicator.clear()
+                for (projectBean in it.result!!) {
+                    tabIndicator.add(projectBean.name)
+                    wxArticleTabFragments.add(WxArticleTabFragment.newInstance(projectBean.name, projectBean.id.toString() + ""))
                 }
+                viewPager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
+                    override fun getItem(i: Int): Fragment {
+                        return wxArticleTabFragments[i]
+                    }
 
-                override fun getCount(): Int {
-                    return wxArticleTabFragments.size
-                }
+                    override fun getCount(): Int {
+                        return wxArticleTabFragments.size
+                    }
 
-                override fun getPageTitle(position: Int): CharSequence? {
-                    return tabIndicator[position]
+                    override fun getPageTitle(position: Int): CharSequence? {
+                        return tabIndicator[position]
+                    }
                 }
-            }
-            viewPager.offscreenPageLimit = wxArticleTabFragments.size
-            tabLayout.setupWithViewPager(viewPager)
-        })
+                viewPager.offscreenPageLimit = wxArticleTabFragments.size
+                tabLayout.setupWithViewPager(viewPager)
+            })
+        }
+
     }
 
 

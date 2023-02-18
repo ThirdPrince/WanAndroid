@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val intent = Intent(this@MainActivity, MaterialLoginActivity::class.java)
             startActivityForResult(intent, 0)
         }
-        bottomNav!!.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+        bottomNav.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
             ft = fm!!.beginTransaction()
             hideFragments(ft!!)
             when (menuItem.itemId) {
