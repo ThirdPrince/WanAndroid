@@ -5,10 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/viewBackground"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <include layout="@layout/fragment_toolbar" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_result_rcy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        ></androidx.recyclerview.widget.RecyclerView>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/search_scroll_view"
@@ -56,18 +63,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/search_history_clear_all_tv"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/search_history_clear_all_tv"
+                    android:layout_toLeftOf="@+id/search_history_clear_all_tv"
                     android:text="@string/history_search"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/sp_16" />
             </RelativeLayout>
 
-           <androidx.recyclerview.widget.RecyclerView
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_history_rcy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
 
 
         </LinearLayout>

@@ -3,9 +3,7 @@ package com.dhl.wanandroid.api
 import com.dhl.wanandroid.model.*
 import com.youth.banner.Banner
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * @Title: ApiService
@@ -92,5 +90,12 @@ interface ApiService {
     /**
      * 搜索
      */
+
+    @POST("article/query/{page}/json")
+    @FormUrlEncoded
+    suspend fun getSearchKey(@Path("page")page:Int,@Field("k")key:String):Response<HttpData<ArticleData>>
+
+
+
 
 }

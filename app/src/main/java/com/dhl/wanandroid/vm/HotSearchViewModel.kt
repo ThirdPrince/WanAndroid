@@ -3,6 +3,7 @@ package com.dhl.wanandroid.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.dhl.wanandroid.model.ArticleData
 import com.dhl.wanandroid.model.HotSearchBean
 import com.dhl.wanandroid.model.NavBean
 import com.dhl.wanandroid.model.RepoResult
@@ -25,11 +26,29 @@ class HotSearchViewModel : BaseViewModel() {
     /**
      * 获取搜索热词
      */
-    public fun getSearchHot(): LiveData<RepoResult<MutableList<HotSearchBean>>>{
+     fun getSearchHot(): LiveData<RepoResult<MutableList<HotSearchBean>>>{
          val result = MutableLiveData<RepoResult<MutableList<HotSearchBean>>>()
         viewModelScope.launch {
            val response =  api.getHotSearch()
             val data = response.body()?.data
+            if (data !=null){
+                result.value = RepoResult(data,"")
+            }else{
+                result.value = RepoResult(response.message())
+            }
+        }
+        return result
+    }
+
+
+    /**
+     * 搜索 page key
+     */
+    fun getSearchResult(page:Int,key:String):LiveData<RepoResult<ArticleData>>{
+        val result = MutableLiveData<RepoResult<ArticleData>>()
+        viewModelScope.launch {
+            val response =  api.getSearchKey(page,key)
+            val data = response.body()!!.data
             if (data !=null){
                 result.value = RepoResult(data,"")
             }else{

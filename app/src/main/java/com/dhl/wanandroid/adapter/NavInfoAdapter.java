@@ -50,6 +50,12 @@ public class NavInfoAdapter extends CommonAdapter<NavBean> {
                 return tv;
             }
         });
+        mTagFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+            @Override
+            public boolean onTagClick(View view, int position, FlowLayout parent) {
+                return false;
+            }
+        });
 
     }
 }
