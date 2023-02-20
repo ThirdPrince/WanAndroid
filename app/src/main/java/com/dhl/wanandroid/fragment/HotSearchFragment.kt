@@ -57,18 +57,18 @@ class HotSearchFragment : BaseFragment() {
 
     }
 
-  private fun initData(){
-      toolbar.title = getString(R.string.action_search)
-      setHasOptionsMenu(true)
-      toolbar.run {
-          //设置menu 关键代码
-          (activity as AppCompatActivity).setSupportActionBar(this)
-          setNavigationIcon(R.mipmap.back)
-          setNavigationOnClickListener {
-              activity?.finish()
-          }
-      }
-  }
+    private fun initData() {
+        toolbar.title = getString(R.string.action_search)
+        setHasOptionsMenu(true)
+        toolbar.run {
+            //设置menu 关键代码
+            (activity as AppCompatActivity).setSupportActionBar(this)
+            setNavigationIcon(R.mipmap.back)
+            setNavigationOnClickListener {
+                activity?.finish()
+            }
+        }
+    }
 
     /**
      * getData

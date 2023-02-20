@@ -35,7 +35,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:background">?attr/colorPrimary</item>
-        <item name="colorControlNormal">@color/colorTitle</item>
+        <item name="colorControlNormal">@color/white</item>
         <!-- color of the menu overflow icon -->
         <item name="android:textColorSecondary">@color/colorTitle</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>

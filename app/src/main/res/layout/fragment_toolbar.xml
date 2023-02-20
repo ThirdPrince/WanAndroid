@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme.Toolbar"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/AppTheme"
-        app:titleTextColor="@color/colorTitle">
+        app:titleTextColor="@color/white">
     </androidx.appcompat.widget.Toolbar>
 
 </com.google.android.material.appbar.AppBarLayout>

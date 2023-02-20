@@ -7,7 +7,7 @@
     android:layout_height="50dp"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp"
-    app:titleTextColor="@color/colorTitle"
+    app:titleTextColor="@color/white"
     app:popupTheme="@style/AppTheme"
     android:background="@color/colorPrimary">
 
