@@ -37,6 +37,8 @@ class HotSearchFragment : BaseFragment() {
 
     val TAG = "HotSearchFragment"
 
+    private lateinit var  searchView :SearchView
+
     /**
      * ViewModel
      */
@@ -128,7 +130,7 @@ class HotSearchFragment : BaseFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_menu, menu)
-        val searchView = menu.findItem(R.id.action_search)?.actionView as SearchView
+        searchView = menu.findItem(R.id.action_search)?.actionView as SearchView
         searchView.run {
             maxWidth = Integer.MAX_VALUE
             onActionViewExpanded()
@@ -214,6 +216,7 @@ class HotSearchFragment : BaseFragment() {
             hotSearchFlowLayout.setOnTagClickListener(OnTagClickListener { view, position, parent ->
                 val hotBean = it.result!![position]
                 getSearchKey(hotBean.name)
+                searchView.setQuery(hotBean.name,false)
                 false
             })
 
