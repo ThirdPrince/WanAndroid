@@ -33,6 +33,9 @@ import kotlin.math.abs
  * @author dhl
  * @date 2023 2.18
  */
+
+private const val SEARCH_WHAT = 1024
+
 class HotSearchFragment : BaseFragment() {
 
     val TAG = "HotSearchFragment"
@@ -79,7 +82,7 @@ class HotSearchFragment : BaseFragment() {
 
     }
 
-    private val SEARCH_WHAT = 1024
+
 
     private val handlerUI: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
@@ -119,8 +122,11 @@ class HotSearchFragment : BaseFragment() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     Log.e(TAG,"dy -->$dy")
-                    if(abs(dy) > 30){
-                        KeyboardUtils.hideSoftInput(searchResultRcy)
+                    if(abs(dy) >= 15){
+                        if (KeyboardUtils.isSoftInputVisible(activity!!)){
+                            KeyboardUtils.hideSoftInput(searchResultRcy)
+                        }
+
                     }
 
                 }
