@@ -92,4 +92,6 @@
     <color name="Cyan">#00bcd4</color>
     <color name="Grey400">#bdbdbd</color>
 
+
+    <color name="test">#ffa1887f</color>
 </resources>

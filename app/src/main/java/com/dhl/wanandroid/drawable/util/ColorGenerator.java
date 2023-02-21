@@ -41,10 +41,10 @@ public class ColorGenerator {
                 0xffff8a65,
                 0xffd4e157,
                 0xffffd54f,
-                0xffffb74d,
-                0xffa1887f,
-                0xff90a4ae
+                0xffffb74d
         ));
+        //0xffa1887f,
+        // 0xff90a4aeß
     }
 
     private final List<Integer> mColors;
