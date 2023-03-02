@@ -4,6 +4,7 @@ import android.os.*
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -16,11 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.dhl.wanandroid.R
+import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.HomePageAdapter
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.model.HotSearchBean
 import com.dhl.wanandroid.util.CommonUtils
 import com.dhl.wanandroid.vm.HotSearchViewModel
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
 import com.zhy.view.flowlayout.FlowLayout
 import com.zhy.view.flowlayout.TagAdapter
 import com.zhy.view.flowlayout.TagFlowLayout
@@ -40,7 +43,7 @@ class HotSearchFragment : BaseFragment() {
 
     val TAG = "HotSearchFragment"
 
-    private lateinit var  searchView :SearchView
+    private lateinit var searchView: SearchView
 
     /**
      * ViewModel
@@ -83,7 +86,6 @@ class HotSearchFragment : BaseFragment() {
     }
 
 
-
     private val handlerUI: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
@@ -92,7 +94,6 @@ class HotSearchFragment : BaseFragment() {
                     Log.e(TAG, "you search -->${msg.obj}")
                     val key = msg.obj.toString()
                     getSearchKey(key)
-
 
                 }
             }
@@ -121,9 +122,9 @@ class HotSearchFragment : BaseFragment() {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    Log.e(TAG,"dy -->$dy")
-                    if(abs(dy) >= 15){
-                        if (KeyboardUtils.isSoftInputVisible(activity!!)){
+                    Log.e(TAG, "dy -->$dy")
+                    if (abs(dy) >= 15) {
+                        if (KeyboardUtils.isSoftInputVisible(activity!!)) {
                             KeyboardUtils.hideSoftInput(searchResultRcy)
                         }
 
@@ -132,6 +133,22 @@ class HotSearchFragment : BaseFragment() {
                 }
             })
         }
+        searchAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
+
+            override fun onItemClick(p0: View?, p1: RecyclerView.ViewHolder?, position: Int) {
+                val data = searchDataList[position]
+                WebActivity.startActivity(activity, data.title, data.link)
+            }
+
+            override fun onItemLongClick(
+                p0: View?,
+                p1: RecyclerView.ViewHolder?,
+                p2: Int
+            ): Boolean {
+                return false
+            }
+
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -153,11 +170,11 @@ class HotSearchFragment : BaseFragment() {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
+                    handlerUI.removeMessages(SEARCH_WHAT)
                     if (TextUtils.isEmpty(newText)) {
                         searchResultRcy.visibility = View.GONE
                         searchScrollView.visibility = View.VISIBLE
                     } else {
-                        handlerUI.removeMessages(SEARCH_WHAT)
                         val message = Message.obtain()
                         message.obj = newText
                         message.what = SEARCH_WHAT
@@ -222,7 +239,7 @@ class HotSearchFragment : BaseFragment() {
             hotSearchFlowLayout.setOnTagClickListener(OnTagClickListener { view, position, parent ->
                 val hotBean = it.result!![position]
                 getSearchKey(hotBean.name)
-                searchView.setQuery(hotBean.name,false)
+                searchView.setQuery(hotBean.name, false)
                 false
             })
 
@@ -234,6 +251,7 @@ class HotSearchFragment : BaseFragment() {
      */
     private fun getSearchKey(key: String) {
         if (!TextUtils.isEmpty(key)) {
+            searchDataList.clear()
             searchViewModel.getSearchResult(0, key).observe(this, Observer {
                 Log.e(TAG, "it -->${it.result?.datas.toString()}")
                 if (it.result != null) {

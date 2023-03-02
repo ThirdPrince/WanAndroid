@@ -20,9 +20,6 @@ import kotlinx.coroutines.launch
  */
 open abstract class BaseViewModel : ViewModel() {
 
-
-
-     val api by lazy { RetrofitManager.apiService }
-
+    val api by lazy { RetrofitManager.apiService }
 
 }

@@ -1,5 +1,6 @@
 package com.dhl.wanandroid.vm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -7,6 +8,7 @@ import com.dhl.wanandroid.model.ArticleData
 import com.dhl.wanandroid.model.HotSearchBean
 import com.dhl.wanandroid.model.NavBean
 import com.dhl.wanandroid.model.RepoResult
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 
@@ -21,7 +23,6 @@ import kotlinx.coroutines.launch
 class HotSearchViewModel : BaseViewModel() {
 
     val  tag = "SearchViewModel"
-
 
     /**
      * 获取搜索热词
@@ -46,14 +47,23 @@ class HotSearchViewModel : BaseViewModel() {
      */
     fun getSearchResult(page:Int,key:String):LiveData<RepoResult<ArticleData>>{
         val result = MutableLiveData<RepoResult<ArticleData>>()
-        viewModelScope.launch {
+        val exception = CoroutineExceptionHandler { _, throwable ->
+            result.value = throwable.message?.let { RepoResult(it) }
+            Log.e("CoroutinesViewModel", throwable.message!!)
+        }
+        viewModelScope.launch(exception) {
             val response =  api.getSearchKey(page,key)
-            val data = response.body()!!.data
-            if (data !=null){
-                result.value = RepoResult(data,"")
+            if(response.isSuccessful){
+                val data = response.body()!!.data
+                if (data !=null){
+                    result.value = RepoResult(data,"")
+                }else{
+                    result.value = RepoResult(response.message())
+                }
             }else{
                 result.value = RepoResult(response.message())
             }
+
         }
         return result
     }
