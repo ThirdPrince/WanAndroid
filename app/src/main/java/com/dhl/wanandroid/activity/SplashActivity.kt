@@ -17,7 +17,7 @@ import com.dhl.wanandroid.MainActivity
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.model.ImageSplash
 import com.dhl.wanandroid.util.SystemBar
-import com.dhl.wanandroid.viewmodel.SplashViewModel
+import com.dhl.wanandroid.vm.SplashViewModel
 import java.io.File
 
 /**

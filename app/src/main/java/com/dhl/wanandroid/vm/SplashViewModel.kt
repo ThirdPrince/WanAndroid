@@ -1,4 +1,4 @@
-package com.dhl.wanandroid.viewmodel
+package com.dhl.wanandroid.vm
 
 import android.util.Log
 import androidx.lifecycle.LiveData

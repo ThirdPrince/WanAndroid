@@ -56,14 +56,14 @@ class HotSearchFragment : BaseFragment() {
      * 热词
      */
     private val hotSearchFlowLayout: TagFlowLayout by lazy {
-        view!!.findViewById(R.id.hot_search_flow_layout)
+        requireView().findViewById(R.id.hot_search_flow_layout)
     }
 
     /**
      * 搜索结果
      */
     private val searchResultRcy: RecyclerView by lazy {
-        view!!.findViewById(R.id.search_result_rcy)
+        requireView().findViewById(R.id.search_result_rcy)
 
 
     }
@@ -80,7 +80,7 @@ class HotSearchFragment : BaseFragment() {
     private val searchDataList: MutableList<Article> = mutableListOf()
 
     private val searchScrollView: NestedScrollView by lazy {
-        view!!.findViewById(R.id.search_scroll_view)
+        requireView().findViewById(R.id.search_scroll_view)
 
 
     }
@@ -212,7 +212,7 @@ class HotSearchFragment : BaseFragment() {
      * getData
      */
     private fun getHotData() {
-        searchViewModel.getSearchHot().observe(this, Observer {
+        searchViewModel.getSearchHot().observe(viewLifecycleOwner, Observer {
             hotSearchFlowLayout.adapter =
                 (object : TagAdapter<HotSearchBean?>(it.result!! as List<HotSearchBean?>?) {
                     override fun getView(
@@ -252,7 +252,7 @@ class HotSearchFragment : BaseFragment() {
     private fun getSearchKey(key: String) {
         if (!TextUtils.isEmpty(key)) {
             searchDataList.clear()
-            searchViewModel.getSearchResult(0, key).observe(this, Observer {
+            searchViewModel.getSearchResult(0, key).observe(viewLifecycleOwner, Observer {
                 Log.e(TAG, "it -->${it.result?.datas.toString()}")
                 if (it.result != null) {
                     if (it.result!!.datas != null && it.result!!.datas.size > 0) {

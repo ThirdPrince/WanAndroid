@@ -28,6 +28,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.activity.CollectionActivity
 import com.dhl.wanandroid.activity.HotActivity
 import com.dhl.wanandroid.activity.MaterialLoginActivity
+import com.dhl.wanandroid.activity.SettingsActivity
 import com.dhl.wanandroid.fragment.*
 import com.dhl.wanandroid.model.LoginBean
 import com.dhl.wanandroid.service.SplashImageService.Companion.startDownLoadAction
@@ -316,6 +317,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     recreate()
                 }
 
+            }
+
+            R.id.nav_setting -> {
+                val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+                startActivity(intent)
             }
         }
         return true

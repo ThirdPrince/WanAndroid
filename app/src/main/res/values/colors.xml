@@ -91,7 +91,10 @@
 
     <color name="Cyan">#00bcd4</color>
     <color name="Grey400">#bdbdbd</color>
-
+    <color name="Grey700">#616161</color>
 
     <color name="test">#ffa1887f</color>
+
+    <color name="item_title">#19191B</color>
+    <color name="item_desc">@color/Grey700</color>
 </resources>

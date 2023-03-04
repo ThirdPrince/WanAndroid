@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/ActivityTheme">
         <activity android:name=".activity.HotActivity"></activity>
+        <activity android:name=".activity.SettingsActivity"></activity>
         <activity
             android:name=".activity.CollectionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -46,7 +47,6 @@
         <activity
             android:name=".activity.WebActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:process=":tools"
             android:screenOrientation="portrait"
             android:theme="@style/ActivityTheme" />
         <activity
