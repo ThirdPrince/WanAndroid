@@ -8,8 +8,7 @@
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp"
     app:titleTextColor="@color/white"
-    app:popupTheme="@style/AppTheme"
-    android:background="@color/colorPrimary">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"

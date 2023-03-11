@@ -82,7 +82,6 @@ class HotSearchFragment : BaseFragment() {
     private val searchScrollView: NestedScrollView by lazy {
         requireView().findViewById(R.id.search_scroll_view)
 
-
     }
 
 

@@ -9,7 +9,7 @@ import com.dhl.wanandroid.fragment.HotSearchFragment
  * 热门搜索
  * SearchFragment 复用
  */
-class HotActivity : AppCompatActivity() {
+class HotActivity : BasicActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hot)

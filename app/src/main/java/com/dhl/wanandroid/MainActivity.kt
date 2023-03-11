@@ -2,6 +2,8 @@ package com.dhl.wanandroid
 
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -25,14 +27,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
-import com.dhl.wanandroid.activity.CollectionActivity
-import com.dhl.wanandroid.activity.HotActivity
-import com.dhl.wanandroid.activity.MaterialLoginActivity
-import com.dhl.wanandroid.activity.SettingsActivity
+import com.dhl.wanandroid.activity.*
 import com.dhl.wanandroid.fragment.*
 import com.dhl.wanandroid.model.LoginBean
 import com.dhl.wanandroid.service.SplashImageService.Companion.startDownLoadAction
+import com.dhl.wanandroid.util.SettingUtil
 import com.dhl.wanandroid.util.Settings
+import com.dhl.wanandroid.util.SystemBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.flow.first
@@ -59,7 +60,11 @@ private const val PROJECT_INDEX = 0x005
  * 主页面
  * 包括五个tab ,首页，知识体系，公众号，导航，项目
  */
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    val toolbar: Toolbar by lazy {
+        findViewById(R.id.tool_bar)
+    }
     /**
      * 底部Bottom
      */
@@ -69,9 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val drawerLayout: DrawerLayout by lazy {
         findViewById(R.id.drawerLayout)
     }
-    private val toolbar: Toolbar by lazy {
-        findViewById(R.id.tool_bar)
-    }
+
 
     private val navView: NavigationView by lazy {
         findViewById(R.id.nav_view)
@@ -172,7 +175,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toolbar.run {
             title = "首页"
             setSupportActionBar(this)
+            //supportActionBar?.setBackgroundDrawable(ColorDrawable(SettingUtil.getColor()))
         }
+
+
         val toggle = ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.app_name, R.string.app_name)
         drawerLayout?.addDrawerListener(toggle)
@@ -247,7 +253,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 } else {
                     fragmentTransaction.show(wxArticleFragment!!)
                 }
-                toolbar!!.title = "公众号"
+                toolbar.title = "公众号"
             }
             NAV_INDEX -> {
                 if (navFragment == null) {

@@ -9,6 +9,6 @@
     android:id="@+id/container">
 
     <include
-        layout="@layout/web_toolbar"
+        layout="@layout/fragment_toolbar"
         />
 </LinearLayout>

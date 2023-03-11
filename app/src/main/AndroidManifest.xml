@@ -16,8 +16,12 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/ActivityTheme">
-        <activity android:name=".activity.HotActivity"></activity>
-        <activity android:name=".activity.SettingsActivity"></activity>
+        <activity
+            android:name=".activity.BasicActivity"
+            android:label="@string/title_activity_basic"
+            android:theme="@style/ActivityTheme.NoActionBar"></activity>
+        <activity android:name=".activity.HotActivity" />
+        <activity android:name=".activity.SettingsActivity" />
         <activity
             android:name=".activity.CollectionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

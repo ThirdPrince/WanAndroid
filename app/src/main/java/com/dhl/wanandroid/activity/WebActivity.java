@@ -25,27 +25,28 @@ import com.just.agentweb.AgentWeb;
  * H5 页面
  * @author dhl
  */
-public class WebActivity extends AppCompatActivity {
+public class WebActivity extends BasicActivity {
 
 
     private static final String TAG = "WebActivity";
     private AgentWeb mAgentWeb;
     private LinearLayout linearLayout;
 
-    /**
-     * 返回Lay
-     */
-
-    private RelativeLayout back_lay;
-    private Toolbar toolbar;
-
-    private TextView toolbar_title;
 
     private String title;
 
     private String url;
+    /**
+     * 返回Lay
+     */
 
-    private ImageView iv_back;
+   // private RelativeLayout back_lay;
+    private Toolbar toolbar;
+//
+//    private TextView toolbar_title;
+//
+//
+//    private ImageView iv_back;
 
     public static void startActivity(Activity activity, String title, String url) {
         Intent intent = new Intent(activity, WebActivity.class);
@@ -64,20 +65,20 @@ public class WebActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        back_lay = findViewById(R.id.back_lay);
+     //   back_lay = findViewById(R.id.back_lay);
         linearLayout = findViewById(R.id.container);
         toolbar = findViewById(R.id.tool_bar);
-        toolbar_title = findViewById(R.id.toolbar_title);
-        iv_back = findViewById(R.id.iv_back);
-        iv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mAgentWeb.back()) {
-                    finish();
-                }
-            }
-        });
-        back_lay.setVisibility(View.VISIBLE);
+//        toolbar_title = findViewById(R.id.toolbar_title);
+//        iv_back = findViewById(R.id.iv_back);
+//        iv_back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (!mAgentWeb.back()) {
+//                    finish();
+//                }
+//            }
+//        });
+//        back_lay.setVisibility(View.VISIBLE);
     }
 
     private void getIntentData() {
@@ -85,9 +86,10 @@ public class WebActivity extends AppCompatActivity {
         if (intent != null) {
             title = intent.getStringExtra("title");
             url = intent.getStringExtra("webUrl");
-            toolbar_title.setText(Html.fromHtml(title));
-
+            toolbar.setTitle(Html.fromHtml(title));
         }
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.mipmap.back);
 
     }
 

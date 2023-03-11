@@ -8,7 +8,7 @@ import com.dhl.wanandroid.app.MyApplication
 
 
 /**
- * Created by chenxz on 2018/6/18.
+ *
  */
 object SettingUtil {
     private val setting = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)

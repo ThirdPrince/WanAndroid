@@ -2,6 +2,7 @@ package com.dhl.wanandroid.fragment;
 
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dhl.wanandroid.R;
+import com.dhl.wanandroid.util.SettingUtil;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
@@ -78,7 +80,7 @@ public abstract class BaseFragment extends Fragment {
 
     protected void initToolbar(View view) {
         toolbar = view.findViewById(R.id.tool_bar);
-
+        toolbar.setBackground(new ColorDrawable(SettingUtil.INSTANCE.getColor()));
     }
 
     protected void initRcy(View view) {
