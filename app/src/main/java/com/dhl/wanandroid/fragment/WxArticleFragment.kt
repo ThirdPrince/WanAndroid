@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.dhl.wanandroid.R
+import com.dhl.wanandroid.util.SettingUtil
 import com.dhl.wanandroid.vm.WxArticleViewModel
 import com.google.android.material.tabs.TabLayout
 
@@ -64,6 +65,12 @@ class WxArticleFragment : BaseFragment() {
         initToolbar(view)
         toolbar.title = "公众号"
         getData()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        tabLayout.setBackgroundColor(SettingUtil.getColor())
     }
 
     /**

@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.dhl.wanandroid.R
+import com.dhl.wanandroid.util.SettingUtil
 import com.dhl.wanandroid.vm.ProjectViewModel
 import com.google.android.material.tabs.TabLayout
 
@@ -54,6 +55,11 @@ class ProjectFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initToolbar(view)
         getData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        tabLayout.setBackgroundColor(SettingUtil.getColor())
     }
 
     /**
