@@ -93,7 +93,7 @@ class WxArticleTabFragment : BaseFragment() {
                         position: Int
                     ) {
                         val wxArticleBean = wxArticleBeanList!![position]
-                        WebActivity.startActivity(activity, wxArticleBean.title, wxArticleBean.link)
+                        WebActivity.startActivity(activity!!, wxArticleBean.title, wxArticleBean.link)
                     }
 
                     override fun onItemLongClick(

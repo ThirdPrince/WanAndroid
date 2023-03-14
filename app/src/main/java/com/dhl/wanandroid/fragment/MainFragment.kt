@@ -176,7 +176,7 @@ class MainFragment : BaseFragment() {
         banner.setImages(imageUrlList).setImageLoader(GlideImageLoader()).start()
         banner.setOnBannerListener { position ->
             val bannerBean = bannerList[position]
-            WebActivity.startActivity(activity, bannerBean.title, bannerBean.url)
+            WebActivity.startActivity(activity!!, bannerBean.title, bannerBean.url)
         }
     }
 
@@ -195,7 +195,7 @@ class MainFragment : BaseFragment() {
             homePageAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
                     val homePageData = homePageDataList[position - 1]
-                    WebActivity.startActivity(activity, homePageData.title, homePageData.link)
+                    WebActivity.startActivity(activity!!, homePageData.title, homePageData.link)
                 }
 
                 override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {

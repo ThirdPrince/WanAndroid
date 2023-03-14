@@ -1,113 +1,87 @@
-package com.dhl.wanandroid.activity;
+package com.dhl.wanandroid.activity
 
-import android.app.Activity;
-import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-
-import android.text.Html;
-import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.dhl.wanandroid.R;
-import com.just.agentweb.AgentWeb;
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.text.Html
+import android.view.KeyEvent
+import android.widget.LinearLayout
+import androidx.appcompat.widget.Toolbar
+import com.dhl.wanandroid.R
+import com.just.agentweb.AgentWeb
 
 /**
  * H5 页面
  * @author dhl
  */
-public class WebActivity extends BasicActivity {
+class WebActivity : BasicActivity() {
+    private var mAgentWeb: AgentWeb? = null
 
+    private var title: String? = null
+    private var url: String? = null
 
-    private static final String TAG = "WebActivity";
-    private AgentWeb mAgentWeb;
-    private LinearLayout linearLayout;
-
-
-    private String title;
-
-    private String url;
     /**
      * 返回Lay
      */
-
-   // private RelativeLayout back_lay;
-    private Toolbar toolbar;
-//
-//    private TextView toolbar_title;
-//
-//
-//    private ImageView iv_back;
-
-    public static void startActivity(Activity activity, String title, String url) {
-        Intent intent = new Intent(activity, WebActivity.class);
-        intent.putExtra("title", title);
-        intent.putExtra("webUrl", url);
-        activity.startActivity(intent);
+    private val toolbar: Toolbar by lazy {
+        findViewById(R.id.tool_bar)
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web);
-        initView();
-        getIntentData();
-        setWebView();
+    private val linearLayout: LinearLayout by lazy {
+        findViewById(R.id.container)
     }
 
-    private void initView() {
-     //   back_lay = findViewById(R.id.back_lay);
-        linearLayout = findViewById(R.id.container);
-        toolbar = findViewById(R.id.tool_bar);
-//        toolbar_title = findViewById(R.id.toolbar_title);
-//        iv_back = findViewById(R.id.iv_back);
-//        iv_back.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (!mAgentWeb.back()) {
-//                    finish();
-//                }
-//            }
-//        });
-//        back_lay.setVisibility(View.VISIBLE);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_web)
+        getIntentData()
+        setWebView()
     }
 
-    private void getIntentData() {
-        Intent intent = getIntent();
+
+    private fun getIntentData() {
+
         if (intent != null) {
-            title = intent.getStringExtra("title");
-            url = intent.getStringExtra("webUrl");
-            toolbar.setTitle(Html.fromHtml(title));
+            title = intent.getStringExtra("title")
+            url = intent.getStringExtra("webUrl")
+            toolbar!!.title = Html.fromHtml(title)
         }
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.mipmap.back);
+        setSupportActionBar(toolbar)
+        toolbar.run {
+            setNavigationIcon(R.mipmap.back)
+            setNavigationOnClickListener {
+                finish()
+            }
+        }
+
 
     }
 
-    private void setWebView() {
+
+    private fun setWebView() {
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(linearLayout, new LinearLayout.LayoutParams(-1, -1))
-                .useDefaultIndicator()
-                .createAgentWeb()
-                .ready()
-                .go(url);
+            .setAgentWebParent(linearLayout, LinearLayout.LayoutParams(-1, -1))
+            .useDefaultIndicator()
+            .createAgentWeb()
+            .ready()
+            .go(url)
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mAgentWeb != null && mAgentWeb.handleKeyEvent(keyCode, event)) {
-            return true;
-        }
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        return if (mAgentWeb != null && mAgentWeb!!.handleKeyEvent(keyCode, event)) {
+            true
+        } else super.onKeyDown(keyCode, event)
+    }
 
-        return super.onKeyDown(keyCode, event);
+    companion object {
+        private const val TAG = "WebActivity"
+
+        @JvmStatic
+        fun startActivity(activity: Activity, title: String?, url: String?) {
+            val intent = Intent(activity, WebActivity::class.java)
+            intent.putExtra("title", title)
+            intent.putExtra("webUrl", url)
+            activity.startActivity(intent)
+        }
     }
 }

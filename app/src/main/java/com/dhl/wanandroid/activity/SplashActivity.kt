@@ -95,8 +95,6 @@ class SplashActivity : AppCompatActivity() {
 
 
     companion object {
-        private const val TAG = "WelcomeActivity"
-        private const val RC_SD_PERM = 1000
         private const val WHAT = 1024
     }
 }

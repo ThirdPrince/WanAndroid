@@ -136,7 +136,7 @@ class HotSearchFragment : BaseFragment() {
 
             override fun onItemClick(p0: View?, p1: RecyclerView.ViewHolder?, position: Int) {
                 val data = searchDataList[position]
-                WebActivity.startActivity(activity, data.title, data.link)
+                WebActivity.startActivity(activity!!, data.title, data.link)
             }
 
             override fun onItemLongClick(

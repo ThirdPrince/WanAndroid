@@ -65,6 +65,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
     val toolbar: Toolbar by lazy {
         findViewById(R.id.tool_bar)
     }
+
     /**
      * 底部Bottom
      */
@@ -118,15 +119,6 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
     var ft: FragmentTransaction? = null
 
 
-
-
-    /**
-     * sp
-     */
-    private val dataStore: DataStore<Preferences> by lazy {
-        createDataStore(name = "settings")
-    }
-
     private class MyHandler(context: MainActivity) : Handler() {
         private val mActivity: WeakReference<MainActivity> = WeakReference(context)
         override fun handleMessage(msg: Message) {
@@ -156,11 +148,18 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         initView()
         mainFragment = MainFragment.newInstance("", "")
         if (savedInstanceState == null) {
-            fragmentTransaction.add(R.id.content, mainFragment!!, MainFragment::class.java.simpleName).commit()
+            fragmentTransaction.add(
+                R.id.content,
+                mainFragment!!,
+                MainFragment::class.java.simpleName
+            ).commit()
         } else {
-            mainFragment = (fm.findFragmentByTag(MainFragment::class.java.simpleName) as MainFragment?)!!
-            knowledgeSysFragment = fm.findFragmentByTag(KnowledgeSysFragment::class.java.simpleName) as KnowledgeSysFragment?
-            wxArticleFragment = fm.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
+            mainFragment =
+                (fm.findFragmentByTag(MainFragment::class.java.simpleName) as MainFragment?)!!
+            knowledgeSysFragment =
+                fm.findFragmentByTag(KnowledgeSysFragment::class.java.simpleName) as KnowledgeSysFragment?
+            wxArticleFragment =
+                fm.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
             navFragment = fm.findFragmentByTag(NavFragment::class.java.simpleName) as NavFragment?
         }
         initEvent()
@@ -180,7 +179,8 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
 
 
         val toggle = ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.app_name, R.string.app_name)
+            this, drawerLayout, toolbar, R.string.app_name, R.string.app_name
+        )
         drawerLayout?.addDrawerListener(toggle)
         toggle.syncState()
     }
@@ -231,7 +231,11 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             MAIN_INDEX -> {
                 if (mainFragment == null) {
                     mainFragment = MainFragment.newInstance("", "")
-                    fragmentTransaction.add(R.id.content, mainFragment, MainFragment::class.java.simpleName)
+                    fragmentTransaction.add(
+                        R.id.content,
+                        mainFragment,
+                        MainFragment::class.java.simpleName
+                    )
                 } else {
                     fragmentTransaction.show(mainFragment)
                 }
@@ -240,7 +244,11 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             KNOWLEDGE_INDEX -> {
                 if (knowledgeSysFragment == null) {
                     knowledgeSysFragment = KnowledgeSysFragment.newInstance("", "")
-                    fragmentTransaction.add(R.id.content, knowledgeSysFragment!!, KnowledgeSysFragment::class.java.simpleName)
+                    fragmentTransaction.add(
+                        R.id.content,
+                        knowledgeSysFragment!!,
+                        KnowledgeSysFragment::class.java.simpleName
+                    )
                 } else {
                     fragmentTransaction.show(knowledgeSysFragment!!)
                 }
@@ -249,7 +257,11 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             WX_ARTICLE_INDEX -> {
                 if (wxArticleFragment == null) {
                     wxArticleFragment = WxArticleFragment.newInstance("", "")
-                    fragmentTransaction.add(R.id.content, wxArticleFragment!!, WxArticleFragment::class.java.simpleName)
+                    fragmentTransaction.add(
+                        R.id.content,
+                        wxArticleFragment!!,
+                        WxArticleFragment::class.java.simpleName
+                    )
                 } else {
                     fragmentTransaction.show(wxArticleFragment!!)
                 }
@@ -258,7 +270,11 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             NAV_INDEX -> {
                 if (navFragment == null) {
                     navFragment = NavFragment.newInstance("", "")
-                    fragmentTransaction.add(R.id.content, navFragment!!, NavFragment::class.java.simpleName)
+                    fragmentTransaction.add(
+                        R.id.content,
+                        navFragment!!,
+                        NavFragment::class.java.simpleName
+                    )
                 } else {
                     fragmentTransaction.show(navFragment!!)
                 }
@@ -267,7 +283,11 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             PROJECT_INDEX -> {
                 if (projectFragment == null) {
                     projectFragment = ProjectFragment.newInstance("", "")
-                    fragmentTransaction.add(R.id.content, projectFragment!!, ProjectFragment::class.java.simpleName)
+                    fragmentTransaction.add(
+                        R.id.content,
+                        projectFragment!!,
+                        ProjectFragment::class.java.simpleName
+                    )
                 } else {
                     fragmentTransaction.show(projectFragment!!)
                 }
@@ -310,15 +330,15 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             R.id.nav_night_mode -> {
 
                 lifecycleScope.launch {
-                   val isNight =  read(Settings.NightMode)
-                    if(isNight == true){
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        save(Settings.NightMode,false)
-                    }else{
-                        save(Settings.NightMode,true)
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-
-                    }
+                    //val isNight =  read(Settings.NightMode)
+//                    if(isNight == true){
+//                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//                      //  save(Settings.NightMode,false)
+//                    }else{
+//                      //  save(Settings.NightMode,true)
+//                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//
+//                    }
                     window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
                     recreate()
                 }
@@ -333,26 +353,6 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         return true
     }
 
-    /**
-     * 保存 暗黑模式
-     */
-    private suspend fun save(key: String, boolean: Boolean) {
-        val dataStoreKey = preferencesKey<Boolean>(key)
-        dataStore.edit { settings ->
-            Log.e("tag", Thread.currentThread().name)
-            settings[dataStoreKey] = boolean
-        }
-    }
-
-    /**
-     * 读取暗黑模式
-     */
-    private suspend fun read(key: String): Boolean? {
-        val dataStoreKey = preferencesKey<Boolean>(key)
-        Log.e("tag", Thread.currentThread().name)
-        val preferences = dataStore.data.first()
-        return preferences[dataStoreKey]
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_activity_main, menu)
@@ -363,7 +363,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.action_search -> {
-                val intent = Intent(this,HotActivity::class.java)
+                val intent = Intent(this, HotActivity::class.java)
                 startActivity(intent)
                 return true
             }
@@ -397,8 +397,6 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             }
         }
     }
-
-
 
 
     companion object {

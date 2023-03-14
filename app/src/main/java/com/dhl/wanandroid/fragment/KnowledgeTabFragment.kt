@@ -84,7 +84,7 @@ class KnowledgeTabFragment : BaseFragment() {
                 knowledgeChildBeanAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
                     override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
                         val article = knowledgeList[position]
-                        WebActivity.startActivity(activity, article.title, article.link)
+                        WebActivity.startActivity(activity!!, article.title, article.link)
                     }
 
                     override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
