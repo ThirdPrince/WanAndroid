@@ -22,9 +22,7 @@ class MyApplication : Application() {
 
     private val mainScope = MainScope()
 
-    private val dataStore: DataStore<Preferences> by lazy {
-        createDataStore(name = "settings")
-    }
+
     override fun onCreate() {
         super.onCreate()
         Utils.init(this)
@@ -40,7 +38,7 @@ class MyApplication : Application() {
 
     private fun setNightMode(){
         mainScope.launch {
-            val isNight =  read(Settings.NightMode)
+            val isNight = false
             if(isNight == true){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }else{
@@ -51,10 +49,5 @@ class MyApplication : Application() {
         }
 
     }
-    private suspend fun read(key: String): Boolean? {
-        val dataStoreKey = preferencesKey<Boolean>(key)
-        Log.e("tag", Thread.currentThread().name)
-        val preferences = dataStore.data.first()
-        return preferences[dataStoreKey]
-    }
+
 }

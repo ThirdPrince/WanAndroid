@@ -25,6 +25,7 @@ import java.io.File
  * @author dhl
  */
 class SplashActivity : AppCompatActivity() {
+
     private val imageView: ImageView by lazy {
         findViewById(R.id.image)
     }

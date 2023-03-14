@@ -8,10 +8,22 @@ import com.dhl.wanandroid.app.MyApplication
 
 
 /**
- *
+ * APP 设置
  */
 object SettingUtil {
     private val setting = PreferenceManager.getDefaultSharedPreferences(MyApplication.context)
+
+    /**
+     * 颜值值 key
+     */
+    private const val COLOR_SETTING = "color"
+
+
+    /**
+     * 暗黑模式
+     */
+    private const val NIGHT_MODE = "nightMode"
+
 
     /**
      * 获取是否开启无图模式
@@ -33,7 +45,7 @@ object SettingUtil {
     fun getColor(): Int {
 
         val defaultColor =ContextCompat.getColor(MyApplication.context!!,R.color.colorPrimary)
-        val color = setting.getInt("color", defaultColor)
+        val color = setting.getInt(COLOR_SETTING, defaultColor)
         return if (color != 0 && Color.alpha(color) != 255) {
             defaultColor
         } else color
@@ -43,7 +55,7 @@ object SettingUtil {
      * 设置主题颜色
      */
     fun setColor(color: Int) {
-        setting.edit().putInt("color", color).apply()
+        setting.edit().putInt(COLOR_SETTING, color).apply()
     }
 
     /**
@@ -57,14 +69,14 @@ object SettingUtil {
      * 设置夜间模式
      */
     fun setIsNightMode(flag: Boolean) {
-        setting.edit().putBoolean("switch_nightMode", flag).apply()
+        setting.edit().putBoolean(NIGHT_MODE, flag).apply()
     }
 
     /**
      * 获取是否开启夜间模式
      */
     fun getIsNightMode(): Boolean {
-        return setting.getBoolean("switch_nightMode", false)
+        return setting.getBoolean(NIGHT_MODE, false)
     }
 
     /**
