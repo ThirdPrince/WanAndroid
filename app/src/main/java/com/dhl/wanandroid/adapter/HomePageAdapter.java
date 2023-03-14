@@ -73,6 +73,20 @@ public class HomePageAdapter extends CommonAdapter<Article> {
             topTv.setVisibility(View.GONE);
         }
 
+        if(article.getFresh()){
+            holder.getView(R.id.tv_article_fresh).setVisibility(View.VISIBLE);
+        }else {
+            holder.getView(R.id.tv_article_fresh).setVisibility(View.GONE);
+        }
+
+        if(article.getTags().size()> 0){
+            holder.getView(R.id.tv_article_tag).setVisibility(View.VISIBLE);
+            holder.setText(R.id.tv_article_tag,article.getTags().get(0).getName());
+        }else {
+            holder.getView(R.id.tv_article_tag).setVisibility(View.GONE);
+        }
+
+
 
 
     }
