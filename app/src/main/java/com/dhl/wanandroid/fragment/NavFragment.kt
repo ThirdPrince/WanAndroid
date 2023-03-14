@@ -54,7 +54,7 @@ class NavFragment : BaseFragment() {
     }
 
     private fun getData(){
-        navViewModel.getNav().observe(this,{
+        navViewModel.getNav().observe(viewLifecycleOwner,{
             navInfoList.clear()
             navInfoList.addAll(it.result!!)
             navInfoAdapter.notifyDataSetChanged()

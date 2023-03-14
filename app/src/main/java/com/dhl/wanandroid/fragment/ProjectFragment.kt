@@ -25,14 +25,14 @@ class ProjectFragment : BaseFragment() {
      * tabLayout
      */
     private val tabLayout: TabLayout by lazy {
-        view!!.findViewById(R.id.tab_layout)
+        requireView().findViewById(R.id.tab_layout)
     }
 
     /**
      * viewPager
      */
     private val viewPager: ViewPager by lazy {
-        view!!.findViewById(R.id.content_vp)
+        requireView().findViewById(R.id.content_vp)
     }
 
     private var wxArticleTabFragments: MutableList<WxArticleTabFragment> = mutableListOf()
@@ -67,7 +67,7 @@ class ProjectFragment : BaseFragment() {
      */
     private fun getData() {
 
-        projectViewModel.getProject().observe(this, {
+        projectViewModel.getProject().observe(viewLifecycleOwner, {
             wxArticleTabFragments.clear()
             tabIndicator.clear()
             for (projectBean in it.result!!) {

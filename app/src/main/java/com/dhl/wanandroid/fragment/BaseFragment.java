@@ -5,24 +5,16 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.util.SettingUtil;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 

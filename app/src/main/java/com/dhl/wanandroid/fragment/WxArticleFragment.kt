@@ -28,14 +28,14 @@ class WxArticleFragment : BaseFragment() {
      * tabLayout
      */
     private val tabLayout: TabLayout by lazy {
-        view!!.findViewById(R.id.tab_layout)
+        requireView().findViewById(R.id.tab_layout)
     }
 
     /**
      * viewPager
      */
     private val viewPager: ViewPager by lazy {
-        view!!.findViewById(R.id.content_vp)
+        requireView().findViewById(R.id.content_vp)
     }
     private var wxArticleTabFragmentList: MutableList<WxArticleTabFragment> = mutableListOf()
 
@@ -77,7 +77,7 @@ class WxArticleFragment : BaseFragment() {
      * 获取data
      */
     private fun getData() {
-        wxArticleViewModel.getWxArticleChapters().observe(this, {
+        wxArticleViewModel.getWxArticleChapters().observe(viewLifecycleOwner, {
             wxArticleTabFragmentList.clear()
             tabIndicator.clear()
             for (baseData in it.result!!) {
@@ -104,7 +104,6 @@ class WxArticleFragment : BaseFragment() {
 
 
     companion object {
-        private const val TAG = "WxArticleFragment"
         private const val ARG_PARAM1 = "param1"
         private const val ARG_PARAM2 = "param2"
         fun newInstance(param1: String?, param2: String?): WxArticleFragment {

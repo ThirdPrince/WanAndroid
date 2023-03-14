@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author amulya
- * @datetime 14 Oct 2014, 5:20 PM
+ * @author dhl
  */
 public class ColorGenerator {
 

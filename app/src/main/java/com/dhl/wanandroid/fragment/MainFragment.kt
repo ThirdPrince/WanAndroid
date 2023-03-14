@@ -128,7 +128,7 @@ class MainFragment : BaseFragment() {
        if(mainViewModel.resultBanner.hasObservers()){
            mainViewModel.getBanner()
         }else{
-           mainViewModel.getBanner().observe(this,{
+           mainViewModel.getBanner().observe(viewLifecycleOwner,{
                if(it.isSuccess){
                    bannerList = it.result!!
                    setBanner()
@@ -145,7 +145,7 @@ class MainFragment : BaseFragment() {
         if(mainViewModel.resultArticle.hasObservers()){
             mainViewModel.getArticle(pageCount)
         }else{
-            mainViewModel.getArticle(pageCount).observe(this,{
+            mainViewModel.getArticle(pageCount).observe(viewLifecycleOwner,{
                 Log.e(TAG,"pageNo = $pageCount"+"-->"+it.result?.size)
                 if(it.isSuccess){
                     if(pageCount == 0){
@@ -176,7 +176,7 @@ class MainFragment : BaseFragment() {
         banner.setImages(imageUrlList).setImageLoader(GlideImageLoader()).start()
         banner.setOnBannerListener { position ->
             val bannerBean = bannerList[position]
-            WebActivity.startActivity(activity!!, bannerBean.title, bannerBean.url)
+            WebActivity.startActivity(requireActivity(), bannerBean.title, bannerBean.url)
         }
     }
 

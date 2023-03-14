@@ -40,8 +40,8 @@ class KnowledgeTabFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            title = arguments!!.getString(TITLE)
-            articleId = arguments!!.getString(ID)
+            title = requireArguments().getString(TITLE)
+            articleId = requireArguments().getString(ID)
         }
     }
 
@@ -77,7 +77,7 @@ class KnowledgeTabFragment : BaseFragment() {
      * 获取数据
      */
     private fun getData() {
-        knowledgeTabViewModel.getArticle(0, articleId!!.toInt()).observe(this, {
+        knowledgeTabViewModel.getArticle(0, articleId!!.toInt()).observe(viewLifecycleOwner, {
             if(it.isSuccess){
                 knowledgeList.addAll(it.result!!)
                 knowledgeChildBeanAdapter.notifyDataSetChanged()
