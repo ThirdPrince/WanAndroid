@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.adapter.NavInfoAdapter
 import com.dhl.wanandroid.model.NavBean
 import com.dhl.wanandroid.vm.KnowledgeTabViewModel
 import com.dhl.wanandroid.vm.NavViewModel
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
 
 /**
  * NavFragment
@@ -60,6 +63,8 @@ class NavFragment : BaseFragment() {
             navInfoAdapter.notifyDataSetChanged()
             refreshLayout.finishRefresh()
         })
+
+
 
     }
 

@@ -1,5 +1,6 @@
 package com.dhl.wanandroid.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ConvertUtils;
 import com.dhl.wanandroid.R;
+import com.dhl.wanandroid.activity.WebActivity;
 import com.dhl.wanandroid.model.Article;
 import com.dhl.wanandroid.model.NavBean;
 import com.dhl.wanandroid.util.CommonUtils;
@@ -23,8 +25,10 @@ import java.util.List;
  */
 public class NavInfoAdapter extends CommonAdapter<NavBean> {
 
+    private Context context;
     public NavInfoAdapter(Context context, int layoutId, List<NavBean> datas) {
         super(context, layoutId, datas);
+        this.context = context;
     }
 
     @Override
@@ -53,6 +57,9 @@ public class NavInfoAdapter extends CommonAdapter<NavBean> {
         mTagFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
+                Article article = mArticles.get(position);
+
+                WebActivity.startActivity((Activity) context,article.getTitle(),article.getLink());
                 return false;
             }
         });
