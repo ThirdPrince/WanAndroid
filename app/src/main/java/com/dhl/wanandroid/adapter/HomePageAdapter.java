@@ -47,27 +47,24 @@ public class HomePageAdapter extends CommonAdapter<Article> {
         holder.setText(R.id.time_tv, article.getNiceDate());
         TextView title = (TextView) holder.getView(R.id.content);
         title.setText(Html.fromHtml(article.getTitle()));
-//        final ImageView collection = holder.getView(R.id.collection);
-//        collection.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (onCollectionListener != null) {
-//                    onCollectionListener.onCollectionClick(collection, position);
-//                }
-//            }
-//        });
-        if (article.getAuthor().length() > 0) {
-            TextDrawable drawable = mDrawableBuilder.build(String.valueOf(article.getAuthor().charAt(0)), mColorGenerator.getColor(article.getAuthor()));
+
+        String author = article.getAuthor();
+        if(TextUtils.isEmpty(author)){
+            author = article.getShareUser();
+        }
+
+        if (!TextUtils.isEmpty(author)) {
+            TextDrawable drawable = mDrawableBuilder.build(String.valueOf(author.charAt(0)), mColorGenerator.getColor(article.getAuthor()));
             headerImg.setImageDrawable(drawable);
         } else {
             TextDrawable drawable = mDrawableBuilder.build("佚", mColorGenerator.getColor("佚"));
             headerImg.setImageDrawable(drawable);
         }
 
-        if (TextUtils.isEmpty(article.getAuthor())) {
+        if (TextUtils.isEmpty(author)) {
             nameTv.setText("佚名");
         } else {
-            nameTv.setText(article.getAuthor());
+            nameTv.setText(author);
         }
         TextView topTv = holder.getView(R.id.top_tv);
         if(article.isTop()){
