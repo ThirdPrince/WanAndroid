@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
  * @date 2023 1.11
  * @version V1.0
  */
-class SplashViewModel:ViewModel() {
+class SplashViewModel:BaseViewModel() {
 
     private  val TAG = "SplashViewModel"
     private val imageBeanLiveData :MutableLiveData<ImageSplash>  by lazy {

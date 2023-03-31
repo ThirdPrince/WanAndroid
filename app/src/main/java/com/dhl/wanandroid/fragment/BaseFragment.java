@@ -5,16 +5,20 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
+
 import com.dhl.wanandroid.R;
 import com.dhl.wanandroid.util.SettingUtil;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -46,8 +50,6 @@ public abstract class BaseFragment extends Fragment {
     protected RecyclerView recyclerView;
 
 
-
-
     public BaseFragment() {
         // Required empty public constructor
     }
@@ -61,7 +63,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
     }
 

@@ -18,25 +18,22 @@ import kotlinx.coroutines.launch
  * @date 2023 1 11
  * @version V2.0
  */
-class WxArticleViewModel : ViewModel() {
+class WxArticleViewModel : BaseViewModel() {
 
-    val  tag = "WxArticleTabViewModel"
-
-    private val api by lazy { RetrofitManager.apiService }
-
+    val tag = "WxArticleTabViewModel"
 
     /**
      * 文章LiveData
      */
     private val _resultArticle = MutableLiveData<RepoResult<MutableList<BaseData>>>()
-    private val resultArticle :LiveData<RepoResult<MutableList<BaseData>>>
+    private val resultArticle: LiveData<RepoResult<MutableList<BaseData>>>
         get() = _resultArticle
 
 
     /**
      * 获取文章
      */
-    fun getWxArticleChapters():LiveData<RepoResult<MutableList<BaseData>>> {
+    fun getWxArticleChapters(): LiveData<RepoResult<MutableList<BaseData>>> {
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultArticle.value = throwable.message?.let { RepoResult(it) }
             Log.e(tag, throwable.message!!)
@@ -45,18 +42,15 @@ class WxArticleViewModel : ViewModel() {
         viewModelScope.launch(exception) {
             val response = api.getWxArticleChapters()
             val data = response.body()?.data
-            if (data !=null){
-                _resultArticle.value = RepoResult(data,"")
-            }else{
+            if (data != null) {
+                _resultArticle.value = RepoResult(data, "")
+            } else {
                 _resultArticle.value = RepoResult(response.message())
             }
-
 
         }
         return resultArticle
     }
-
-
 
 
 }

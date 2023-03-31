@@ -18,25 +18,23 @@ import kotlinx.coroutines.launch
  * @date 2023 1-07
  * @version V2.0
  */
-class NavViewModel : ViewModel() {
+class NavViewModel : BaseViewModel() {
 
-    val  tag = "NavViewModel"
-
-    private val api by lazy { RetrofitManager.apiService }
+    val tag = "NavViewModel"
 
 
     /**
      * 文章LiveData
      */
     private val _resultNav = MutableLiveData<RepoResult<MutableList<NavBean>>>()
-    private val resultNav :LiveData<RepoResult<MutableList<NavBean>>>
+    private val resultNav: LiveData<RepoResult<MutableList<NavBean>>>
         get() = _resultNav
 
 
     /**
      * 获取文章
      */
-    fun getNav():LiveData<RepoResult<MutableList<NavBean>>> {
+    fun getNav(): LiveData<RepoResult<MutableList<NavBean>>> {
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultNav.value = throwable.message?.let { RepoResult(it) }
             Log.e(tag, throwable.message!!)
@@ -46,9 +44,9 @@ class NavViewModel : ViewModel() {
             val response = api.getNav()
             Log.i(tag, " response=${response}")
             val data = response.body()?.data
-            if (data !=null){
-                _resultNav.value = RepoResult(data,"")
-            }else{
+            if (data != null) {
+                _resultNav.value = RepoResult(data, "")
+            } else {
                 _resultNav.value = RepoResult(response.message())
             }
 
@@ -56,8 +54,6 @@ class NavViewModel : ViewModel() {
         }
         return resultNav
     }
-
-
 
 
 }

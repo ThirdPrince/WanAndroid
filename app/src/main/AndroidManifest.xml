@@ -53,9 +53,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/ActivityTheme" />
         <activity
-            android:name=".activity.BottomActivity"
-            android:label="@string/title_activity_bottom" />
-        <activity
             android:name=".activity.MaterialLoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"

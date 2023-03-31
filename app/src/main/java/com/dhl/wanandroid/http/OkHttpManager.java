@@ -28,7 +28,7 @@ import okhttp3.Response;
 import okio.BufferedSink;
 
 /**
- * 封装OKHttp
+ * 封装OKHttpManager
  * @author dhl 2016 6.6
  */
 public class OkHttpManager {

@@ -20,39 +20,35 @@ import kotlinx.coroutines.launch
  * LiveData的postValue和setValue方法是protected，而MutableLiveData这两个方法则是public，
  * 也就是说Livedata只允许调用observe方法被动监听数据变化，而MutableLiveData除了监听变化外，还可以用postValue和setValue方法发射数据。
  */
-class KnowledgeTabViewModel : ViewModel() {
+class KnowledgeTabViewModel : BaseViewModel() {
 
-    val  tag = "MainViewModel"
-
-    private val api by lazy { RetrofitManager.apiService }
+    val tag = "MainViewModel"
 
 
     /**
      * 文章LiveData
      */
     private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
-    private val resultArticle :LiveData<RepoResult<MutableList<Article>>>
+    private val resultArticle: LiveData<RepoResult<MutableList<Article>>>
         get() = _resultArticle
-
-
 
 
     /**
      * 获取文章
      */
-    fun getArticle(pageNum: Int,cid:Int):LiveData<RepoResult<MutableList<Article>>> {
+    fun getArticle(pageNum: Int, cid: Int): LiveData<RepoResult<MutableList<Article>>> {
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultArticle.value = throwable.message?.let { RepoResult(it) }
             Log.e(tag, throwable.message!!)
         }
 
         viewModelScope.launch(exception) {
-            val response = api.getKnowledgeArticleList(pageNum,cid)
+            val response = api.getKnowledgeArticleList(pageNum, cid)
             Log.i(tag, " response=${response}")
             val data = response.body()?.data
-            if (data !=null){
-                _resultArticle.value = RepoResult(response.body()?.data?.datas!!,"")
-            }else{
+            if (data != null) {
+                _resultArticle.value = RepoResult(response.body()?.data?.datas!!, "")
+            } else {
                 _resultArticle.value = RepoResult(response.message())
             }
 
@@ -60,8 +56,6 @@ class KnowledgeTabViewModel : ViewModel() {
         }
         return resultArticle
     }
-
-
 
 
 }

@@ -21,8 +21,6 @@ import kotlinx.coroutines.flow.first
 class MyApplication : Application() {
 
     private val mainScope = MainScope()
-
-
     override fun onCreate() {
         super.onCreate()
         Utils.init(this)
@@ -36,12 +34,12 @@ class MyApplication : Application() {
         var context: Context? = null
     }
 
-    private fun setNightMode(){
+    private fun setNightMode() {
         mainScope.launch {
             val isNight = false
-            if(isNight == true){
+            if (isNight == true) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }else{
+            } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
             }

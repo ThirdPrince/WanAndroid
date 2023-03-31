@@ -22,11 +22,11 @@ import kotlinx.coroutines.launch
  * LiveData的postValue和setValue方法是protected，而MutableLiveData这两个方法则是public，
  * 也就是说 Livedata 只允许调用observe方法被动监听数据变化，而MutableLiveData除了监听变化外，还可以用postValue和setValue方法发射数据。
  */
-class MainViewModel : ViewModel() {
+class MainViewModel : BaseViewModel() {
 
     val tag = "MainViewModel"
 
-    private val api by lazy { RetrofitManager.apiService }
+
 
     /**
      * banner LiveData

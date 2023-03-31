@@ -20,15 +20,14 @@ import kotlinx.coroutines.launch
  * @date 2022 12 24
  * @version V2.0
  */
-class KnowledgeSysViewModel:ViewModel() {
+class KnowledgeSysViewModel : BaseViewModel() {
 
     private val TAG = "KnowledgeSysViewModel"
 
     private val _resultLiveData = MutableLiveData<RepoResult<MutableList<KnowledgeTreeData>>>()
 
-    private val resultLiveData :LiveData<RepoResult<MutableList<KnowledgeTreeData>>>
+    private val resultLiveData: LiveData<RepoResult<MutableList<KnowledgeTreeData>>>
         get() = _resultLiveData
-
 
 
     /**
@@ -40,13 +39,13 @@ class KnowledgeSysViewModel:ViewModel() {
             _resultLiveData.value = throwable.message?.let { RepoResult(it) }
             Log.e("CoroutinesViewModel", throwable.message!!)
         }
-        viewModelScope.launch(exception){
-            var response = RetrofitManager.apiService.getKnowledge()
+        viewModelScope.launch(exception) {
+            var response = api.getKnowledge()
             Log.i(TAG, " response=${response}")
             val data = response.body()?.data
-            if(data != null){
-                _resultLiveData.value = RepoResult(data,"")
-            }else{
+            if (data != null) {
+                _resultLiveData.value = RepoResult(data, "")
+            } else {
                 _resultLiveData.value = RepoResult(response.message())
             }
 

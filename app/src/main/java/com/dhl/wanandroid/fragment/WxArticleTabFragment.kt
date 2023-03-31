@@ -41,8 +41,8 @@ class WxArticleTabFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            title = arguments!!.getString(ARG_PARAM1)
-            articleId = arguments!!.getString(ARG_PARAM2)
+            title = requireArguments().getString(ARG_PARAM1)
+            articleId = requireArguments().getString(ARG_PARAM2)
         }
     }
 

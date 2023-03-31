@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
  * @date 2023 1 11
  * @version V2.0
  */
-class ProjectViewModel : ViewModel() {
+class ProjectViewModel : BaseViewModel() {
 
     private val TAG = "ProjectViewModel"
 
@@ -38,7 +38,7 @@ class ProjectViewModel : ViewModel() {
             Log.e("CoroutinesViewModel", throwable.message!!)
         }
         viewModelScope.launch(exception) {
-            var response = RetrofitManager.apiService.getProject()
+            var response = api.getProject()
             val data = response.body()?.data
             if (data != null) {
                 _resultLiveData.value = RepoResult(data, "")

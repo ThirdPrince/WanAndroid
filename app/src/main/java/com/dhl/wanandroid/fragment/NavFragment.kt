@@ -41,7 +41,7 @@ class NavFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar(view)
-        toolbar.title = "导航"
+        toolbar.title = getString(R.string.title_nav)
         initRcy(view)
         refreshLayout.autoRefresh()
         refreshLayout.setEnableLoadMore(false)
