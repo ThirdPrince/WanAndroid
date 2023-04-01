@@ -51,7 +51,7 @@ class KnowledgeSysFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initToolbar(view)
-        toolbar.title = "知识体系"
+        toolbar.title = getString(R.string.title_knowledge)
         initRcy(view)
         recyclerView.adapter = knowledgeAdapter
         refreshLayout.autoRefresh()
@@ -65,7 +65,7 @@ class KnowledgeSysFragment : BaseFragment() {
      * 获取数据
      */
     private fun getData() {
-        knowledgeSysViewModel.getKnowledgeTree().observe(this, {
+        knowledgeSysViewModel.getKnowledgeTree().observe(viewLifecycleOwner, {
             knowledgeTreeDataList.clear()
             if (it.isSuccess) {
                 knowledgeTreeDataList.addAll(it.result!!)

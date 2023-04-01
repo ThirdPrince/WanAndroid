@@ -9,7 +9,6 @@
     android:background="@color/gray_bg"
     tools:context=".fragment.WxArticleFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <include layout="@layout/fragment_tab_vp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

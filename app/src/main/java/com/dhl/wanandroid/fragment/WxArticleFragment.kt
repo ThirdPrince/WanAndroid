@@ -63,7 +63,7 @@ class WxArticleFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar(view)
-        toolbar.title = "公众号"
+        toolbar.title = getString(R.string.title_wx)
         getData()
 
     }

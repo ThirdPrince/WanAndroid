@@ -14,7 +14,7 @@
     <item
         android:id="@+id/nav_wx_article"
         android:icon="@drawable/wechat_48px"
-        android:title="@string/title_notifications" />
+        android:title="@string/title_wx" />
 
     <item
         android:id="@+id/navigation_nav"

@@ -13,6 +13,7 @@ import com.dhl.wanandroid.R
 import com.dhl.wanandroid.fragment.KnowledgeTabFragment
 import com.dhl.wanandroid.fragment.KnowledgeTabFragment.Companion.newInstance
 import com.dhl.wanandroid.model.KnowledgeTreeData
+import com.dhl.wanandroid.util.SettingUtil
 import com.google.android.material.tabs.TabLayout
 import java.util.*
 
@@ -21,7 +22,7 @@ import java.util.*
  * @author dhl
  * @date 2022 12-28
  */
-class KnowledgeInfoActivity : AppCompatActivity() {
+class KnowledgeInfoActivity : BasicActivity() {
 
     private val toolbar: Toolbar by lazy {
         findViewById(R.id.tool_bar)
@@ -54,6 +55,11 @@ class KnowledgeInfoActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        tabLayout.setBackgroundColor(SettingUtil.getColor())
     }
 
     /**

@@ -1,41 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:id="@+id/container">
-
+    android:orientation="vertical">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <include
-            layout="@layout/fragment_toolbar"/>
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorPrimary"
-            app:tabIndicatorColor="@color/colorAccent"
-            app:tabTextColor="@color/colorTitle"
-            app:tabSelectedTextColor="@color/colorTitle"
-            app:tabMode="scrollable"
-            app:tabIndicatorHeight="3dp"
-            >
-            <!-- app:layout_scrollFlags="scroll|enterAlways"-->
-        </com.google.android.material.tabs.TabLayout>
+        android:layout_height="wrap_content">
+        <include layout="@layout/fragment_toolbar" />
     </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/content_vp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
-    </androidx.viewpager.widget.ViewPager>
-
-    <!-- TODO: Update blank fragment layout -->
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <include layout="@layout/fragment_tab_vp" />
+</LinearLayout>
