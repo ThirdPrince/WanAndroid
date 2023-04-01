@@ -100,7 +100,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
     /**
      * 导航
      */
-    private var navFragment: NavFragment? = null
+    private var squareFragment: SquareFragment? = null
 
     /**
      * 项目
@@ -158,9 +158,8 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
                 (fm.findFragmentByTag(MainFragment::class.java.simpleName) as MainFragment?)!!
             sysFragment =
                 fm.findFragmentByTag(SysFragment::class.java.simpleName) as SysFragment?
-            wxArticleFragment =
-                fm.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
-            navFragment = fm.findFragmentByTag(NavFragment::class.java.simpleName) as NavFragment?
+            wxArticleFragment = fm.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
+            squareFragment = fm.findFragmentByTag(SquareFragment::class.java.simpleName) as SquareFragment?
         }
         initEvent()
         downLoadImage()
@@ -172,7 +171,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         val headerView = navView?.getHeaderView(0)
         tv_login = headerView?.findViewById(R.id.tv_login)
         toolbar.run {
-            title = "首页"
+            title = getString(R.string.title_home)
             setSupportActionBar(this)
             //supportActionBar?.setBackgroundDrawable(ColorDrawable(SettingUtil.getColor()))
         }
@@ -268,17 +267,17 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
                 toolbar.title = getString(R.string.title_wx)
             }
             NAV_INDEX -> {
-                if (navFragment == null) {
-                    navFragment = NavFragment.newInstance("", "")
+                if (squareFragment == null) {
+                    squareFragment = SquareFragment.newInstance("", "")
                     fragmentTransaction.add(
                         R.id.content,
-                        navFragment!!,
-                        NavFragment::class.java.simpleName
+                        squareFragment!!,
+                        SquareFragment::class.java.simpleName
                     )
                 } else {
-                    fragmentTransaction.show(navFragment!!)
+                    fragmentTransaction.show(squareFragment!!)
                 }
-                toolbar.title = getString(R.string.title_nav)
+                toolbar.title = getString(R.string.title_square)
             }
             PROJECT_INDEX -> {
                 if (projectFragment == null) {
@@ -313,8 +312,8 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         if (wxArticleFragment != null) {
             fragmentTransaction.hide(wxArticleFragment!!)
         }
-        if (navFragment != null) {
-            fragmentTransaction.hide(navFragment!!)
+        if (squareFragment != null) {
+            fragmentTransaction.hide(squareFragment!!)
         }
         if (projectFragment != null) {
             fragmentTransaction.hide(projectFragment!!)
