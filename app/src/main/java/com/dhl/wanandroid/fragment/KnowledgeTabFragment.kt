@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
-import com.dhl.wanandroid.adapter.KnowledgeArticleAdapter
+import com.dhl.wanandroid.adapter.HomePageAdapter
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.vm.KnowledgeTabViewModel
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
@@ -26,7 +26,7 @@ class KnowledgeTabFragment : BaseFragment() {
     private var articleId: String? = null
 
     private val knowledgeChildBeanAdapter by lazy {
-        KnowledgeArticleAdapter(activity, R.layout.fragment_homepage_item, knowledgeList)
+        HomePageAdapter(activity, R.layout.fragment_homepage_item, knowledgeList)
     }
     private var knowledgeList: MutableList<Article> = mutableListOf()
 

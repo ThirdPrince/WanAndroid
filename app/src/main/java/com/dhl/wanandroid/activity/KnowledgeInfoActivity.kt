@@ -83,7 +83,7 @@ class KnowledgeInfoActivity : BasicActivity() {
                 }
 
                 override fun getPageTitle(position: Int): CharSequence? {
-                    return indicators.get(position)
+                    return indicators[position]
                 }
             }
             tabLayout.setupWithViewPager(viewPager)
