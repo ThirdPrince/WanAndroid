@@ -2,6 +2,7 @@ package com.dhl.wanandroid
 
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -35,6 +36,7 @@ import com.dhl.wanandroid.util.SettingUtil
 import com.dhl.wanandroid.util.Settings
 import com.dhl.wanandroid.util.SystemBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -62,6 +64,10 @@ private const val PROJECT_INDEX = 0x005
  */
 class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+
+    val fb_btn :FloatingActionButton by lazy {
+        findViewById(R.id.fb_btn)
+    }
     val toolbar: Toolbar by lazy {
         findViewById(R.id.tool_bar)
     }
@@ -182,6 +188,11 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         )
         drawerLayout?.addDrawerListener(toggle)
         toggle.syncState()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fb_btn.backgroundTintList = ColorStateList.valueOf(SettingUtil.getColor())
     }
 
     private fun initEvent() {

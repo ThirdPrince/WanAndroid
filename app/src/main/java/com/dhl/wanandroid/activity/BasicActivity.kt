@@ -18,10 +18,6 @@ import com.dhl.wanandroid.util.SystemBar
 abstract class BasicActivity : AppCompatActivity() {
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onResume() {
         super.onResume()
