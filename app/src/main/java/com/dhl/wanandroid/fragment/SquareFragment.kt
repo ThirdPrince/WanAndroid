@@ -1,16 +1,25 @@
 package com.dhl.wanandroid.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.dhl.wanandroid.R
+import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.HomePageAdapter
+import com.dhl.wanandroid.http.OkHttpManager
 import com.dhl.wanandroid.model.Article
+import com.dhl.wanandroid.util.APIUtil
 import com.dhl.wanandroid.vm.SquareViewModel
-
+import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 
 
 /**
@@ -65,12 +74,30 @@ class SquareFragment : BaseFragment() {
             }
             refreshLayout.finishRefresh()
             homePageAdapter.notifyDataSetChanged()
+            setListOnClick()
 
         })
     }
 
 
 
+    /**
+     * onClick
+     */
+    private fun setListOnClick() {
+        homePageAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
+            override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
+                val homePageData = squareList[position]
+                WebActivity.startActivity(activity!!, homePageData.title, homePageData.link)
+            }
+
+            override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
+                return false
+            }
+        })
+
+
+    }
 
     companion object {
         private const val ARG_PARAM1 = "param1"

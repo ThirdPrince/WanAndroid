@@ -12,7 +12,6 @@
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:titleTextColor="@color/white">
     </androidx.appcompat.widget.Toolbar>

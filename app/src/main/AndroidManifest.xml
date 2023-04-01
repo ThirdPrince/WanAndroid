@@ -46,7 +46,9 @@
             android:name=".activity.WebActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/ActivityTheme" />
+            android:theme="@style/ActivityTheme"
+            android:process=":tools"
+            />
         <activity
             android:name=".activity.KnowledgeInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
