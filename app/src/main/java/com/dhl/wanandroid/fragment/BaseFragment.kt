@@ -1,26 +1,20 @@
-package com.dhl.wanandroid.fragment;
+package com.dhl.wanandroid.fragment
 
-
-import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
-
-import com.dhl.wanandroid.R;
-import com.dhl.wanandroid.util.SettingUtil;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import android.content.Context
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.view.View
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.dhl.wanandroid.R
+import com.dhl.wanandroid.util.SettingUtil.getColor
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author dhl
@@ -28,62 +22,46 @@ import java.util.Locale;
  * Fragment 的存在，是 专注于承担 “视图控制器” 责任，
  * 以分担 Activity 责任、让 Activity 更专注于 “幕后协调者” 工作。
  */
-public abstract class BaseFragment extends Fragment {
-
-    private static final String TITLE = "title";
-
+abstract class BaseFragment : Fragment() {
     /**
      * 共用ToolBar
      */
-    protected Toolbar toolbar;
-
+    protected val toolbar: Toolbar by lazy {
+        requireView().findViewById(R.id.tool_bar)
+    }
 
     /**
      * smartRefresh
      */
-    protected RefreshLayout refreshLayout;
-    protected ClassicsHeader mClassicsHeader;
-    protected Drawable mDrawableProgress;
+    protected val refreshLayout: RefreshLayout by lazy {
+        requireView().findViewById(R.id.refreshLayout)
+    }
+    protected var mClassicsHeader: ClassicsHeader? = null
+    protected var mDrawableProgress: Drawable? = null
+
     /**
      * rcy
      */
-    protected RecyclerView recyclerView;
-
-
-    public BaseFragment() {
-        // Required empty public constructor
+    protected val recyclerView: RecyclerView by lazy {
+        requireView().findViewById(R.id.rcy_view)
+    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
+    protected fun initToolbar(view: View) {
+        toolbar.background = (ColorDrawable(getColor()))
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    protected fun initRcy(view: View) {
+        mClassicsHeader = refreshLayout.refreshHeader as ClassicsHeader?
+        mClassicsHeader!!.setTimeFormat(SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA))
+        recyclerView.layoutManager = LinearLayoutManager(activity)
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    companion object {
+        private const val TITLE = "title"
     }
-
-    protected void initToolbar(View view) {
-        toolbar = view.findViewById(R.id.tool_bar);
-        toolbar.setBackground(new ColorDrawable(SettingUtil.INSTANCE.getColor()));
-    }
-
-    protected void initRcy(View view) {
-        recyclerView = view.findViewById(R.id.rcy_view);
-        refreshLayout = view.findViewById(R.id.refreshLayout);
-        mClassicsHeader = (ClassicsHeader) refreshLayout.getRefreshHeader();
-        //mClassicsHeader.setLastUpdateTime(new Date(System.currentTimeMillis()-deta));
-        mClassicsHeader.setTimeFormat(new SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA));
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-    }
-
 }
