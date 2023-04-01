@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_knowledge"
         android:icon="@drawable/apps_48px"
-        android:title="@string/title_knowledge" />
+        android:title="@string/title_system" />
 
     <item
         android:id="@+id/nav_wx_article"

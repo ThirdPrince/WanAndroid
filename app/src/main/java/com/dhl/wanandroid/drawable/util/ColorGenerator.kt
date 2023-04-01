@@ -1,68 +1,64 @@
-package com.dhl.wanandroid.drawable.util;
+package com.dhl.wanandroid.drawable.util
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*
+import kotlin.math.abs
 
 /**
  * @author dhl
  */
-public class ColorGenerator {
+class ColorGenerator private constructor(private val mColors: List<Int>) {
+    companion object {
+        var DEFAULT: ColorGenerator? = null
+        @JvmField
+        var MATERIAL: ColorGenerator? = null
+        fun create(colorList: List<Int>): ColorGenerator {
+            return ColorGenerator(colorList)
+        }
 
-    public static ColorGenerator DEFAULT;
-
-    public static ColorGenerator MATERIAL;
-
-    static {
-        DEFAULT = create(Arrays.asList(
-                0xfff16364,
-                0xfff58559,
-                0xfff9a43e,
-                0xffe4c62e,
-                0xff67bf74,
-                0xff59a2be,
-                0xff2093cd,
-                0xffad62a7,
-                0xff805781
-        ));
-        MATERIAL = create(Arrays.asList(
-                0xffe57373,
-                0xfff06292,
-                0xffba68c8,
-                0xff9575cd,
-                0xff7986cb,
-                0xff64b5f6,
-                0xff4fc3f7,
-                0xff4dd0e1,
-                0xff4db6ac,
-                0xff81c784,
-                0xffaed581,
-                0xffff8a65,
-                0xffd4e157,
-                0xffffd54f,
-                0xffffb74d
-        ));
-        //0xffa1887f,
-        // 0xff90a4aeß
+        init {
+            DEFAULT = create(
+                listOf(
+                    -0xe9c9c,
+                    -0xa7aa7,
+                    -0x65bc2,
+                    -0x1b39d2,
+                    -0x98408c,
+                    -0xa65d42,
+                    -0xdf6c33,
+                    -0x529d59,
+                    -0x7fa87f
+                )
+            )
+            MATERIAL = create(
+                listOf(
+                    -0x1a8c8d,
+                    -0xf9d6e,
+                    -0x459738,
+                    -0x6a8a33,
+                    -0x867935,
+                    -0x9b4a0a,
+                    -0xb03c09,
+                    -0xb22f1f,
+                    -0xb24954,
+                    -0x7e387c,
+                    -0x512a7f,
+                    -0x759b,
+                    -0x2b1ea9,
+                    -0x2ab1,
+                    -0x48b3
+                )
+            )
+            //0xffa1887f,
+            // 0xff90a4aeß
+        }
     }
 
-    private final List<Integer> mColors;
-    private final Random mRandom;
+    private val mRandom: Random = Random(System.currentTimeMillis())
+    val randomColor: Int
+        get() = mColors[mRandom.nextInt(mColors.size)]
 
-    public static ColorGenerator create(List<Integer> colorList) {
-        return new ColorGenerator(colorList);
+    fun getColor(key: Any): Int {
+        return mColors[abs(key.hashCode()) % mColors.size]
     }
 
-    private ColorGenerator(List<Integer> colorList) {
-        mColors = colorList;
-        mRandom = new Random(System.currentTimeMillis());
-    }
-
-    public int getRandomColor() {
-        return mColors.get(mRandom.nextInt(mColors.size()));
-    }
-
-    public int getColor(Object key) {
-        return mColors.get(Math.abs(key.hashCode()) % mColors.size());
-    }
 }
