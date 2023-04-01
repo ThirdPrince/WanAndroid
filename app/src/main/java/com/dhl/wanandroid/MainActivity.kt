@@ -90,7 +90,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
     /**
      * 知识体系fragment
      */
-    private var knowledgeSysFragment: KnowledgeSysFragment? = null
+    private var sysFragment: SysFragment? = null
 
     /**
      * 公众号Fragment
@@ -156,8 +156,8 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         } else {
             mainFragment =
                 (fm.findFragmentByTag(MainFragment::class.java.simpleName) as MainFragment?)!!
-            knowledgeSysFragment =
-                fm.findFragmentByTag(KnowledgeSysFragment::class.java.simpleName) as KnowledgeSysFragment?
+            sysFragment =
+                fm.findFragmentByTag(SysFragment::class.java.simpleName) as SysFragment?
             wxArticleFragment =
                 fm.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
             navFragment = fm.findFragmentByTag(NavFragment::class.java.simpleName) as NavFragment?
@@ -239,20 +239,20 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
                 } else {
                     fragmentTransaction.show(mainFragment)
                 }
-                toolbar!!.title = "首页"
+                toolbar!!.title = getString(R.string.title_home)
             }
             KNOWLEDGE_INDEX -> {
-                if (knowledgeSysFragment == null) {
-                    knowledgeSysFragment = KnowledgeSysFragment.newInstance("", "")
+                if (sysFragment == null) {
+                    sysFragment = SysFragment.newInstance("", "")
                     fragmentTransaction.add(
                         R.id.content,
-                        knowledgeSysFragment!!,
+                        sysFragment!!,
                         KnowledgeSysFragment::class.java.simpleName
                     )
                 } else {
-                    fragmentTransaction.show(knowledgeSysFragment!!)
+                    fragmentTransaction.show(sysFragment!!)
                 }
-                toolbar!!.title = "知识体系"
+                toolbar!!.title = getString(R.string.title_system)
             }
             WX_ARTICLE_INDEX -> {
                 if (wxArticleFragment == null) {
@@ -265,7 +265,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
                 } else {
                     fragmentTransaction.show(wxArticleFragment!!)
                 }
-                toolbar.title = "公众号"
+                toolbar.title = getString(R.string.title_wx)
             }
             NAV_INDEX -> {
                 if (navFragment == null) {
@@ -278,7 +278,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
                 } else {
                     fragmentTransaction.show(navFragment!!)
                 }
-                toolbar.title = "导航"
+                toolbar.title = getString(R.string.title_nav)
             }
             PROJECT_INDEX -> {
                 if (projectFragment == null) {
@@ -291,7 +291,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
                 } else {
                     fragmentTransaction.show(projectFragment!!)
                 }
-                toolbar.title = "项目"
+                toolbar.title = getString(R.string.title_project)
             }
 
         }
@@ -307,8 +307,8 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         if (mainFragment != null) {
             fragmentTransaction.hide(mainFragment!!)
         }
-        if (knowledgeSysFragment != null) {
-            fragmentTransaction.hide(knowledgeSysFragment!!)
+        if (sysFragment != null) {
+            fragmentTransaction.hide(sysFragment!!)
         }
         if (wxArticleFragment != null) {
             fragmentTransaction.hide(wxArticleFragment!!)

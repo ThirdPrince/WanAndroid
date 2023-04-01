@@ -45,7 +45,6 @@ class WxArticleFragment : BaseFragment() {
      */
     private var tabIndicator: MutableList<String> = mutableListOf()
 
-
     /**
      * viewModel
      */

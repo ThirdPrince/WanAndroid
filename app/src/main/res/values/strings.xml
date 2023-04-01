@@ -6,6 +6,7 @@
     <string name="title_activity_bottom">BottomActivity</string>
     <string name="title_home">首页</string>
     <string name="title_knowledge">知识体系</string>
+    <string name="title_system">体系</string>
     <string name="title_wx">公众号</string>
 
     <string name="title_nav">导航</string>
