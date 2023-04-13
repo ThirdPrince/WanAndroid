@@ -17,6 +17,8 @@ import com.dhl.wanandroid.MainActivity
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.model.ImageSplash
 import com.dhl.wanandroid.util.SystemBar
+import com.dhl.wanandroid.vm.AppScope
+import com.dhl.wanandroid.vm.MainViewModel
 import com.dhl.wanandroid.vm.SplashViewModel
 import java.io.File
 
@@ -34,6 +36,13 @@ class SplashActivity : AppCompatActivity() {
     }
     private val splashViewModel: SplashViewModel by lazy {
         ViewModelProvider(this).get(SplashViewModel::class.java)
+    }
+
+    /**
+     * viewModel
+     */
+    private val mainViewModel: MainViewModel by lazy {
+        AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
     private val handler: Handler = object : Handler() {
         override fun handleMessage(msg: Message) {
@@ -53,7 +62,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
         initSystemBar()
-        splashViewModel.getImage().observe(this, { imageBean -> showImage(imageBean) })
+        splashViewModel.getImage().observe(this) { imageBean -> showImage(imageBean) }
+        preLoad()
     }
 
     /**
@@ -92,6 +102,16 @@ class SplashActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeMessages(WHAT)
+    }
+
+
+    /**
+     * 预加载首页
+     * 更快展示数据
+     */
+    private fun preLoad(){
+        mainViewModel.getBanner()
+        mainViewModel.getArticle(0)
     }
 
 

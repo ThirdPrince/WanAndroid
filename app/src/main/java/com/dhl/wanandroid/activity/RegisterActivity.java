@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Build;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -22,7 +25,9 @@ import com.dhl.wanandroid.app.Constants;
 import com.dhl.wanandroid.http.OkHttpManager;
 import com.dhl.wanandroid.model.RegisterBean;
 import com.google.gson.Gson;
+
 import java.io.IOException;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -51,14 +56,12 @@ public class RegisterActivity extends AppCompatActivity {
     EditText et_repeatpassword;
 
 
-    Button bt_register ;
+    Button bt_register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ShowEnterAnimation();
         }
@@ -66,15 +69,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.bt_register:
                 String userName = et_username.getText().toString();
                 String password = et_password.getText().toString();
                 String repeatPassword = et_repeatpassword.getText().toString();
-                register(userName,password,repeatPassword);
+                register(userName, password, repeatPassword);
                 break;
 
             case R.id.fab:
@@ -119,7 +120,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void animateRevealShow() {
-        Animator mAnimator = ViewAnimationUtils.createCircularReveal(cvAdd, cvAdd.getWidth()/2,0, fab.getWidth() / 2, cvAdd.getHeight());
+        Animator mAnimator = ViewAnimationUtils.createCircularReveal(cvAdd, cvAdd.getWidth() / 2, 0, fab.getWidth() / 2, cvAdd.getHeight());
         mAnimator.setDuration(500);
         mAnimator.setInterpolator(new AccelerateInterpolator());
         mAnimator.addListener(new AnimatorListenerAdapter() {
@@ -138,7 +139,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void animateRevealClose() {
-        Animator mAnimator = ViewAnimationUtils.createCircularReveal(cvAdd,cvAdd.getWidth()/2,0, cvAdd.getHeight(), fab.getWidth() / 2);
+        Animator mAnimator = ViewAnimationUtils.createCircularReveal(cvAdd, cvAdd.getWidth() / 2, 0, cvAdd.getHeight(), fab.getWidth() / 2);
         mAnimator.setDuration(500);
         mAnimator.setInterpolator(new AccelerateInterpolator());
         mAnimator.addListener(new AnimatorListenerAdapter() {
@@ -161,8 +162,7 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * 注册
      */
-    private void register(String userName,String password,String repeatPassword)
-    {
+    private void register(String userName, String password, String repeatPassword) {
 
         OkHttpManager.getInstance().register(Constants.REGISTER_URL, userName, password, repeatPassword, new Callback() {
             @Override
@@ -173,19 +173,17 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String rsp = response.body().string();
-                Log.e(TAG,"rsp::"+rsp);
+                Log.e(TAG, "rsp::" + rsp);
                 Gson gson = new Gson();
-                RegisterBean registerBean = gson.fromJson(rsp,RegisterBean.class);
+                RegisterBean registerBean = gson.fromJson(rsp, RegisterBean.class);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(registerBean.getErrorCode() ==0)
-                        {
+                        if (registerBean.getErrorCode() == 0) {
                             ToastUtils.showLong("注册成功");
                             animateRevealClose();
-                        }else
-                        {
+                        } else {
                             ToastUtils.showLong(registerBean.getErrorMsg());
                         }
 
@@ -196,6 +194,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public void onBackPressed() {
         animateRevealClose();

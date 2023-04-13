@@ -19,6 +19,7 @@ import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.model.BannerBean
 import com.dhl.wanandroid.module.GlideImageLoader
 import com.dhl.wanandroid.util.APIUtil
+import com.dhl.wanandroid.vm.AppScope
 import com.dhl.wanandroid.vm.MainViewModel
 import com.youth.banner.Banner
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
@@ -35,7 +36,6 @@ import java.util.*
  * 首页Fragment
  */
 class MainFragment : BaseFragment() {
-
 
 
     /**
@@ -84,11 +84,13 @@ class MainFragment : BaseFragment() {
      * viewModel
      */
     private val mainViewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
+        AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
@@ -104,13 +106,13 @@ class MainFragment : BaseFragment() {
 
     }
 
-    private fun initData(){
+    private fun initData() {
         recyclerView.adapter = headerAndFooterWrapper
         headerAndFooterWrapper.addHeaderView(mHeaderGroup)
         toolbar.title = "首页"
-        refreshLayout.autoRefresh()
+        //refreshLayout.autoRefresh()
         refreshLayout.setOnRefreshListener {
-            Log.e(TAG,"setOnRefreshListener")
+            Log.e(TAG, "setOnRefreshListener")
             pageCount = 0
             getData()
         }
@@ -119,48 +121,46 @@ class MainFragment : BaseFragment() {
             getData()
         }
 
+        observeData()
+
     }
 
     /**
      * 初始化数据
      */
-    private fun getData(){
-       if(mainViewModel.resultBanner.hasObservers()){
-           mainViewModel.getBanner()
-        }else{
-           mainViewModel.getBanner().observe(viewLifecycleOwner,{
-               if(it.isSuccess){
-                   bannerList = it.result!!
-                   setBanner()
-                   setHomePageAdapter()
-               }else{
-                   ToastUtils.showLong(it.errorMessage)
-               }
-               refreshLayout.finishRefresh()
-               refreshLayout.finishLoadMore()
-           })
-       }
+    private fun getData() {
+        mainViewModel.getBanner()
+        mainViewModel.getArticle(pageCount)
+    }
 
+    private fun observeData() {
+        mainViewModel.getBanner().observe(viewLifecycleOwner) {
+            if (it.isSuccess) {
+                bannerList = it.result!!
+                setBanner()
+                setHomePageAdapter()
+            } else {
+                ToastUtils.showLong(it.errorMessage)
+            }
+            refreshLayout.finishRefresh()
+            refreshLayout.finishLoadMore()
+        }
 
-        if(mainViewModel.resultArticle.hasObservers()){
-            mainViewModel.getArticle(pageCount)
-        }else{
-            mainViewModel.getArticle(pageCount).observe(viewLifecycleOwner,{
-                Log.e(TAG,"pageNo = $pageCount"+"-->"+it.result?.size)
-                if(it.isSuccess){
-                    if(pageCount == 0){
-                        homePageDataList.clear()
-                    }
-                    homePageDataList.addAll(it.result!!)
-                    headerAndFooterWrapper.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
-                    setListOnClick()
-                }else{
-                    ToastUtils.showLong(it.errorMessage)
+        mainViewModel.getArticle(pageCount).observe(viewLifecycleOwner) {
+            Log.e(TAG, "pageNo = $pageCount" + "-->" + it.result?.size)
+            if (it.isSuccess) {
+                if (pageCount == 0) {
+                    homePageDataList.clear()
                 }
-                refreshLayout.finishRefresh()
-                refreshLayout.finishLoadMore()
+                homePageDataList.addAll(it.result!!)
+                headerAndFooterWrapper.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
+                setListOnClick()
+            } else {
+                ToastUtils.showLong(it.errorMessage)
+            }
+            refreshLayout.finishRefresh()
+            refreshLayout.finishLoadMore()
 
-            })
         }
 
     }
@@ -192,19 +192,28 @@ class MainFragment : BaseFragment() {
      * onClick
      */
     private fun setListOnClick() {
-            homePageAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
-                override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
-                    val homePageData = homePageDataList[position - 1]
-                    WebActivity.startActivity(activity!!, homePageData.title, homePageData.link)
-                }
-
-                override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
-                    return false
-                }
-            })
-            homePageAdapter.setOnCollectionListener { view, position ->
+        homePageAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
+            override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
                 val homePageData = homePageDataList[position - 1]
-                OkHttpManager.getInstance().postCollectionOut(APIUtil.collectionArticleOut(), homePageData.title, homePageData.author, homePageData.link, object : Callback {
+                WebActivity.startActivity(activity!!, homePageData.title, homePageData.link)
+            }
+
+            override fun onItemLongClick(
+                view: View,
+                holder: RecyclerView.ViewHolder,
+                position: Int
+            ): Boolean {
+                return false
+            }
+        })
+        homePageAdapter.setOnCollectionListener { view, position ->
+            val homePageData = homePageDataList[position - 1]
+            OkHttpManager.getInstance().postCollectionOut(
+                APIUtil.collectionArticleOut(),
+                homePageData.title,
+                homePageData.author,
+                homePageData.link,
+                object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         e.printStackTrace()
                     }
@@ -216,7 +225,7 @@ class MainFragment : BaseFragment() {
                         activity!!.runOnUiThread { view.isSelected = true }
                     }
                 })
-            }
+        }
 
     }
 
