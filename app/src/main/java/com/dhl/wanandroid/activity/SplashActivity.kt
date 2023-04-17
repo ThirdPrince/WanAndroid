@@ -34,9 +34,13 @@ class SplashActivity : AppCompatActivity() {
     private val splashTv: TextView by lazy {
         findViewById(R.id.splash_tv)
     }
+
+    private val jumpBtn: TextView by lazy {
+        findViewById(R.id.jump_btn)
+    }
     private val splashViewModel: SplashViewModel by lazy {
         AppScope.getAppScopeViewModel(SplashViewModel::class.java)
-       // ViewModelProvider(this).get(SplashViewModel::class.java)
+        // ViewModelProvider(this).get(SplashViewModel::class.java)
     }
 
     /**
@@ -45,15 +49,19 @@ class SplashActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by lazy {
         AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
+
+    var count = 5
     private val handler: Handler = object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when (msg.what) {
                 WHAT -> {
-                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                    finish()
-                    //取消界面跳转时的动画
-                    overridePendingTransition(0, 0)
+                    goMain()
+                }
+                WHAT_JUMP -> {
+                    count--
+                    jumpBtn.text = getString(R.string.splash_jump) + "(${count}S)"
+                    sendEmptyMessageDelayed(WHAT_JUMP, 1000)
                 }
             }
         }
@@ -65,6 +73,9 @@ class SplashActivity : AppCompatActivity() {
         initSystemBar()
         splashViewModel.getImage().observe(this) { imageBean -> showImage(imageBean) }
         preLoad()
+        jumpBtn.setOnClickListener {
+            goMain()
+        }
     }
 
     /**
@@ -86,14 +97,16 @@ class SplashActivity : AppCompatActivity() {
                 splashTv.text = imageBean.copyright
                 val set = AnimatorSet()
                 set.playTogether(
-                        ObjectAnimator.ofFloat(imageView, "alpha", 0.88f, 1f),
-                        ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.12f),
-                        ObjectAnimator.ofFloat(imageView, "scaleY", 1f, 1.12f)
+                    ObjectAnimator.ofFloat(imageView, "alpha", 0.88f, 1f),
+                    ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.12f),
+                    ObjectAnimator.ofFloat(imageView, "scaleY", 1f, 1.12f)
                 )
                 set.duration = 2500
                 set.start()
+                handler.sendEmptyMessageDelayed(WHAT_JUMP, 1000)
+                handler.sendEmptyMessageDelayed(WHAT, 5000)
             }
-            handler.sendEmptyMessageDelayed(WHAT, 2500)
+
         } else {
             handler.sendEmptyMessageDelayed(WHAT, 1500)
         }
@@ -110,7 +123,7 @@ class SplashActivity : AppCompatActivity() {
      * 预加载首页
      * 更快展示数据
      */
-    private fun preLoad(){
+    private fun preLoad() {
         mainViewModel.getBanner()
         mainViewModel.getArticle(0)
     }
@@ -118,5 +131,15 @@ class SplashActivity : AppCompatActivity() {
 
     companion object {
         private const val WHAT = 1024
+        private const val WHAT_JUMP = 1025
+    }
+
+    private fun goMain() {
+        handler.removeMessages(WHAT)
+        handler.removeMessages(WHAT_JUMP)
+        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        finish()
+        //取消界面跳转时的动画
+        overridePendingTransition(0, 0)
     }
 }

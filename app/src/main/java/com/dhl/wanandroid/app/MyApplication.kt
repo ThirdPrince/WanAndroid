@@ -2,12 +2,7 @@ package com.dhl.wanandroid.app
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.preferencesKey
-import androidx.datastore.preferences.createDataStore
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
 import com.blankj.utilcode.util.CrashUtils
