@@ -120,9 +120,7 @@ class MainFragment : BaseFragment() {
             pageCount++
             getData()
         }
-
         observeData()
-
     }
 
     /**

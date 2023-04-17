@@ -35,7 +35,8 @@ class SplashActivity : AppCompatActivity() {
         findViewById(R.id.splash_tv)
     }
     private val splashViewModel: SplashViewModel by lazy {
-        ViewModelProvider(this).get(SplashViewModel::class.java)
+        AppScope.getAppScopeViewModel(SplashViewModel::class.java)
+       // ViewModelProvider(this).get(SplashViewModel::class.java)
     }
 
     /**

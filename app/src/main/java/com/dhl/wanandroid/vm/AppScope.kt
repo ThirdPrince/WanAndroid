@@ -11,7 +11,7 @@ import com.dhl.wanandroid.app.MyApplication
  * @Description:  构建全局 appScopeViewModel 可用于activity 通信
  * @author dhl
  * @date $
- * @version V1.0
+ * @version V2.0
  */
 object AppScope {
 
