@@ -1,5 +1,4 @@
 package com.dhl.wanandroid.activity
-
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -11,7 +10,6 @@ import android.os.Message
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.dhl.wanandroid.MainActivity
 import com.dhl.wanandroid.R

@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.util.SettingUtil.getColor
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.header.ClassicsHeader
+import com.scwang.smart.refresh.header.ClassicsHeader
+import com.scwang.smart.refresh.header.MaterialHeader
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,12 +34,12 @@ abstract class BaseFragment : Fragment() {
     /**
      * smartRefresh
      */
-    protected val refreshLayout: RefreshLayout by lazy {
+    protected val refreshLayout: SmartRefreshLayout by lazy {
         requireView().findViewById(R.id.refreshLayout)
     }
-    protected var mClassicsHeader: ClassicsHeader? = null
-    protected var mDrawableProgress: Drawable? = null
+   // protected var mClassicsHeader: MaterialHeader? = null
 
+    protected var materialHeader: MaterialHeader? =null
     /**
      * rcy
      */
@@ -56,8 +57,8 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected fun initRcy(view: View) {
-        mClassicsHeader = refreshLayout.refreshHeader as ClassicsHeader?
-        mClassicsHeader!!.setTimeFormat(SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA))
+        materialHeader = refreshLayout.refreshHeader as MaterialHeader ?
+      //  mClassicsHeader!!.setTimeFormat(SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA))
         recyclerView.layoutManager = LinearLayoutManager(activity)
     }
 

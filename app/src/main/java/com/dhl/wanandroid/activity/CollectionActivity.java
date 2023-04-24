@@ -30,9 +30,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.header.ClassicsHeader;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class CollectionActivity extends AppCompatActivity {
     /**
      * smartRefresh
      */
-    protected RefreshLayout refreshLayout;
+    protected SmartRefreshLayout refreshLayout;
     protected ClassicsHeader mClassicsHeader;
     protected Drawable mDrawableProgress;
     /**
