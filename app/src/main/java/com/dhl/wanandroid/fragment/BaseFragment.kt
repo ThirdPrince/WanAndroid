@@ -11,11 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.util.SettingUtil.getColor
-import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import java.text.SimpleDateFormat
-import java.util.*
+
 
 /**
  * @author dhl
@@ -37,7 +35,7 @@ abstract class BaseFragment : Fragment() {
     protected val refreshLayout: SmartRefreshLayout by lazy {
         requireView().findViewById(R.id.refreshLayout)
     }
-   // protected var mClassicsHeader: MaterialHeader? = null
+
 
     protected var materialHeader: MaterialHeader? =null
     /**
