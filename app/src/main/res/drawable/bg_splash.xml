@@ -3,13 +3,13 @@
 
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/white" />
+            <solid android:color="#ffc2ac" />
         </shape>
     </item>
 
     <item>
         <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-            android:src="@drawable/splash"
+            android:src="@drawable/kotlin"
             android:gravity="center"
             android:scaleType="centerCrop"
             />

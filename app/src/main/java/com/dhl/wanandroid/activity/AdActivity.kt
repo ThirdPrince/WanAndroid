@@ -55,7 +55,7 @@ class AdActivity : AppCompatActivity() {
             super.handleMessage(msg)
             when (msg.what) {
                 WHAT -> {
-                    goMain()
+                    //goMain()
                 }
                 WHAT_JUMP -> {
                     count--

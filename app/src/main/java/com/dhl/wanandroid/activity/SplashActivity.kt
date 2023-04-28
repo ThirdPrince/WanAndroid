@@ -30,6 +30,17 @@ import java.io.File
 class SplashActivity : AppCompatActivity() {
 
 
+
+    private val imageView: ImageView by lazy {
+        findViewById(R.id.image)
+    }
+    private val splashTv: TextView by lazy {
+        findViewById(R.id.splash_tv)
+    }
+
+    private val jumpBtn: TextView by lazy {
+        findViewById(R.id.jump_btn)
+    }
     private val splashViewModel: SplashViewModel by lazy {
         AppScope.getAppScopeViewModel(SplashViewModel::class.java)
         // ViewModelProvider(this).get(SplashViewModel::class.java)
@@ -42,15 +53,32 @@ class SplashActivity : AppCompatActivity() {
         AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
 
+    var count = 5
+    private val handler: Handler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            when (msg.what) {
+                WHAT -> {
+                    goMain()
+                }
+                WHAT_JUMP -> {
+                    count--
+                    jumpBtn.text = getString(R.string.splash_jump) + "(${count}s)"
+                    sendEmptyMessageDelayed(WHAT_JUMP, 1000)
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //window.setBackgroundDrawable(null)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_welcome)
+        setContentView(R.layout.activity_ad)
         initSystemBar()
-        goAD()
-//        splashViewModel.getImage().observe(this) {
-//                imageBean -> showImage(imageBean) }
+        preLoad()
+       // goAD()
+        splashViewModel.getImage().observe(this) {
+                imageBean -> showImage(imageBean) }
     }
 
     /**
@@ -61,13 +89,39 @@ class SplashActivity : AppCompatActivity() {
         SystemBar.invasionNavigationBar(this)
         SystemBar.setStatusBarColor(this, Color.TRANSPARENT)
     }
+    private fun preLoad() {
+        mainViewModel.getBanner()
+        mainViewModel.getArticle(0)
+    }
 
 
     companion object {
         private const val WHAT = 1024
         private const val WHAT_JUMP = 1025
     }
+    @SuppressLint("ObjectAnimatorBinding")
+    private fun showImage(imageBean: ImageSplash?) {
+        if (imageBean != null) {
+            val imagePath = imageBean.imagePath
+            if (File(imagePath).exists()) {
+                Glide.with(this).load(imagePath).into(imageView!!)
+                splashTv.text = imageBean.copyright
+                val set = AnimatorSet()
+                set.playTogether(
+                    ObjectAnimator.ofFloat(imageView, "alpha", 0.88f, 1f),
+                    ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.12f),
+                    ObjectAnimator.ofFloat(imageView, "scaleY", 1f, 1.12f)
+                )
+                set.duration = 2500
+                set.start()
+                handler.sendEmptyMessageDelayed(WHAT_JUMP, 1000)
+                handler.sendEmptyMessageDelayed(WHAT, 5000)
+            }
 
+        } else {
+            handler.sendEmptyMessageDelayed(WHAT, 1500)
+        }
+    }
 
     private fun goAD() {
         //startActivity(Intent(this@SplashActivity, AdActivity::class.java))
@@ -83,5 +137,14 @@ class SplashActivity : AppCompatActivity() {
         finish()
         //取消界面跳转时的动画
         //overridePendingTransition(0, 0)
+    }
+
+    private fun goMain() {
+        handler.removeMessages(WHAT)
+        handler.removeMessages(WHAT_JUMP)
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+        //取消界面跳转时的动画
+        overridePendingTransition(0, 0)
     }
 }

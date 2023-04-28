@@ -1,54 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <FrameLayout
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/splash"
-                 />
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/jump_btn"
-                android:layout_width="@dimen/dp_60"
-                android:layout_height="@dimen/dp_30"
-                android:layout_gravity="right"
-                android:layout_marginTop="@dimen/dp_30"
-                android:layout_marginRight="@dimen/dp_10"
-                android:textSize="@dimen/sp_12"
-                android:background="@drawable/bg_tv_corner_black"
-                android:text="@string/splash_jump"
-                android:gravity="center"
-                android:padding="@dimen/dp_2"
-                android:paddingLeft="@dimen/dp_2"
-                android:paddingRight="@dimen/dp_2"
-                android:textColor="@color/white"
-                />
-        </FrameLayout>
-
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/splash" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/jump_btn"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_30"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@drawable/bg_tv_corner_black"
+            android:gravity="center"
+            android:padding="@dimen/dp_2"
+            android:paddingLeft="@dimen/dp_2"
+            android:paddingRight="@dimen/dp_2"
+            android:text="@string/splash_jump"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/splash_tv"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/dp_2"
-        android:layout_marginTop="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_2"
-        android:padding="5dp"
-        android:text="玩转 Android--如果不够幸运，那就足够努力" />
+        android:layout_height="@dimen/dp_90"
+        android:layout_gravity="center_vertical|bottom"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@drawable/bg_tv_gray"
+        android:gravity="center"
+        android:text="玩转 Android--如果不够幸运，那就足够努力"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14" />
 
-</LinearLayout>
+</FrameLayout>

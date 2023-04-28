@@ -1,0 +1,7 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:gravity="center">
+        <bitmap android:src="@drawable/kotlin_logo" /> <!-- 中间的图片 -->
+    </item>
+
+</layer-list>
