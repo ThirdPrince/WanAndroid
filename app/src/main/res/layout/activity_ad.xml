@@ -5,15 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/splash" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/jump_btn"
             android:layout_width="@dimen/dp_60"
@@ -31,16 +34,27 @@
             android:textSize="@dimen/sp_12" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/splash_tv"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_90"
-        android:layout_gravity="center_vertical|bottom"
-        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_gravity="bottom"
         android:background="@drawable/bg_tv_gray"
         android:gravity="center"
-        android:text="玩转 Android--如果不够幸运，那就足够努力"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_14" />
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/splash_tv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="玩转 Android--如果不够幸运，那就足够努力"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+        <View
 
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
 </FrameLayout>
