@@ -1,9 +1,12 @@
 package com.dhl.wanandroid.activity
+
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -26,16 +29,7 @@ import java.io.File
  */
 class SplashActivity : AppCompatActivity() {
 
-    private val imageView: ImageView by lazy {
-        findViewById(R.id.image)
-    }
-    private val splashTv: TextView by lazy {
-        findViewById(R.id.splash_tv)
-    }
 
-    private val jumpBtn: TextView by lazy {
-        findViewById(R.id.jump_btn)
-    }
     private val splashViewModel: SplashViewModel by lazy {
         AppScope.getAppScopeViewModel(SplashViewModel::class.java)
         // ViewModelProvider(this).get(SplashViewModel::class.java)
@@ -48,32 +42,15 @@ class SplashActivity : AppCompatActivity() {
         AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
 
-    var count = 5
-    private val handler: Handler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            when (msg.what) {
-                WHAT -> {
-                    goMain()
-                }
-                WHAT_JUMP -> {
-                    count--
-                    jumpBtn.text = getString(R.string.splash_jump) + "(${count}S)"
-                    sendEmptyMessageDelayed(WHAT_JUMP, 1000)
-                }
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //window.setBackgroundDrawable(null)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
         initSystemBar()
-        splashViewModel.getImage().observe(this) { imageBean -> showImage(imageBean) }
-        preLoad()
-        jumpBtn.setOnClickListener {
-            goMain()
-        }
+        goAD()
+//        splashViewModel.getImage().observe(this) {
+//                imageBean -> showImage(imageBean) }
     }
 
     /**
@@ -86,58 +63,25 @@ class SplashActivity : AppCompatActivity() {
     }
 
 
-    @SuppressLint("ObjectAnimatorBinding")
-    private fun showImage(imageBean: ImageSplash?) {
-        if (imageBean != null) {
-            val imagePath = imageBean.imagePath
-            if (File(imagePath).exists()) {
-                Glide.with(this).load(imagePath).into(imageView!!)
-                splashTv.text = imageBean.copyright
-                val set = AnimatorSet()
-                set.playTogether(
-                    ObjectAnimator.ofFloat(imageView, "alpha", 0.88f, 1f),
-                    ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.12f),
-                    ObjectAnimator.ofFloat(imageView, "scaleY", 1f, 1.12f)
-                )
-                set.duration = 2500
-                set.start()
-                handler.sendEmptyMessageDelayed(WHAT_JUMP, 1000)
-                handler.sendEmptyMessageDelayed(WHAT, 5000)
-            }
-
-        } else {
-            handler.sendEmptyMessageDelayed(WHAT, 1500)
-        }
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeMessages(WHAT)
-    }
-
-
-    /**
-     * 预加载首页
-     * 更快展示数据
-     */
-    private fun preLoad() {
-        mainViewModel.getBanner()
-        mainViewModel.getArticle(0)
-    }
-
-
     companion object {
         private const val WHAT = 1024
         private const val WHAT_JUMP = 1025
     }
 
-    private fun goMain() {
-        handler.removeMessages(WHAT)
-        handler.removeMessages(WHAT_JUMP)
-        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+
+    private fun goAD() {
+        //startActivity(Intent(this@SplashActivity, AdActivity::class.java))
+        val activityOptions = ActivityOptions.makeCustomAnimation(
+            this,
+            android.R.anim.fade_in,
+            android.R.anim.fade_out
+        )
+        startActivity(
+            Intent(this@SplashActivity, AdActivity::class.java),
+            activityOptions.toBundle()
+        )
         finish()
         //取消界面跳转时的动画
-        overridePendingTransition(0, 0)
+        //overridePendingTransition(0, 0)
     }
 }

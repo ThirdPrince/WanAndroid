@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.first
  */
 class MyApplication : Application(), ViewModelStoreOwner {
 
-    private val mainScope = MainScope()
 
 
     private val appViewModelStore: ViewModelStore by lazy {
@@ -41,7 +40,6 @@ class MyApplication : Application(), ViewModelStoreOwner {
             Utils.init(this)
             CrashUtils.init()
             AppScope.init(this)
-            setNightMode()
             preloadSplashImage()
         }
 
@@ -53,19 +51,7 @@ class MyApplication : Application(), ViewModelStoreOwner {
         var context: Context? = null
     }
 
-    private fun setNightMode() {
-        mainScope.launch {
-            val isNight = false
-            if (isNight == true) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-            }
-            mainScope.cancel()
-        }
-
-    }
 
     override fun getViewModelStore(): ViewModelStore {
         return appViewModelStore
