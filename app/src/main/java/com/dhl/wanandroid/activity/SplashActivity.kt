@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -59,12 +60,17 @@ class SplashActivity : AppCompatActivity() {
             super.handleMessage(msg)
             when (msg.what) {
                 WHAT -> {
-                    goMain()
+
                 }
                 WHAT_JUMP -> {
-                    count--
-                    jumpBtn.text = getString(R.string.splash_jump) + "(${count}s)"
-                    sendEmptyMessageDelayed(WHAT_JUMP, 1000)
+                    if(count == 0){
+                        goMain()
+                    }else{
+                        jumpBtn.text = getString(R.string.splash_jump) + "(${count})"
+                        count--
+                        sendEmptyMessageDelayed(WHAT_JUMP, 1000)
+                    }
+
                 }
             }
         }
@@ -114,8 +120,9 @@ class SplashActivity : AppCompatActivity() {
                 )
                 set.duration = 2500
                 set.start()
-                handler.sendEmptyMessageDelayed(WHAT_JUMP, 1000)
-                handler.sendEmptyMessageDelayed(WHAT, 5000)
+                jumpBtn.visibility = View.VISIBLE
+                handler.sendEmptyMessage(WHAT_JUMP)
+                //handler.sendEmptyMessageDelayed(WHAT, 5000)
             }
 
         } else {
@@ -123,21 +130,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun goAD() {
-        //startActivity(Intent(this@SplashActivity, AdActivity::class.java))
-        val activityOptions = ActivityOptions.makeCustomAnimation(
-            this,
-            android.R.anim.fade_in,
-            android.R.anim.fade_out
-        )
-        startActivity(
-            Intent(this@SplashActivity, AdActivity::class.java),
-            activityOptions.toBundle()
-        )
-        finish()
-        //取消界面跳转时的动画
-        //overridePendingTransition(0, 0)
-    }
+
 
     private fun goMain() {
         handler.removeMessages(WHAT)

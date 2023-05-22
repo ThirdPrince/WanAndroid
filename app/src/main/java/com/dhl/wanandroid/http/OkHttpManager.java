@@ -1,31 +1,18 @@
 package com.dhl.wanandroid.http;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.blankj.utilcode.util.SPUtils;
-import com.blankj.utilcode.util.SpanUtils;
-import com.bumptech.glide.RequestBuilder;
-import com.dhl.wanandroid.R;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Cookie;
-import okhttp3.CookieJar;
 import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
-import okio.BufferedSink;
 
 /**
  * 封装OKHttpManager

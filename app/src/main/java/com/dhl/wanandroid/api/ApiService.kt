@@ -1,7 +1,6 @@
 package com.dhl.wanandroid.api
 
 import com.dhl.wanandroid.model.*
-import com.youth.banner.Banner
 import retrofit2.Response
 import retrofit2.http.*
 
