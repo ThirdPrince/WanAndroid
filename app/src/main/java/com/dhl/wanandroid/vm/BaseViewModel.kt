@@ -23,4 +23,16 @@ open abstract class BaseViewModel : ViewModel() {
     val api by lazy { RetrofitManager.apiService }
 
 
+    val _errorResponse =  MutableLiveData<RepoResult<String>>()
+    val errorResponse: LiveData<RepoResult<String>>
+        get() = _errorResponse
+
+
+
+    val exception = CoroutineExceptionHandler { _, throwable ->
+        _errorResponse.value = throwable.message?.let { RepoResult(it) }
+        Log.e("BaseViewModel", throwable.message!!)
+    }
+
+
 }

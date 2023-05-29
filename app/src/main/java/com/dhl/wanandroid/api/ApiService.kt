@@ -24,7 +24,7 @@ interface ApiService {
 
     /**
      * top 置顶
-     * /top/json
+7     * /top/json
      */
     @GET("article/top/json")
     suspend fun getTopArticle(): Response<HttpData<MutableList<Article>>>

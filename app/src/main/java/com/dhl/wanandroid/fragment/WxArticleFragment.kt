@@ -76,12 +76,17 @@ class WxArticleFragment : BaseFragment() {
      * 获取data
      */
     private fun getData() {
-        wxArticleViewModel.getWxArticleChapters().observe(viewLifecycleOwner, {
+        wxArticleViewModel.getWxArticleChapters().observe(viewLifecycleOwner) {
             wxArticleTabFragmentList.clear()
             tabIndicator.clear()
             for (baseData in it.result!!) {
                 tabIndicator.add(baseData.name)
-                wxArticleTabFragmentList.add(WxArticleTabFragment.newInstance(baseData.name, baseData.id.toString() + ""))
+                wxArticleTabFragmentList.add(
+                    WxArticleTabFragment.newInstance(
+                        baseData.name,
+                        baseData.id.toString() + ""
+                    )
+                )
             }
             viewPager.adapter = object : FragmentStatePagerAdapter(childFragmentManager) {
                 override fun getItem(i: Int): Fragment {
@@ -98,7 +103,7 @@ class WxArticleFragment : BaseFragment() {
             }
             viewPager.offscreenPageLimit = wxArticleTabFragmentList.size
             tabLayout.setupWithViewPager(viewPager)
-        })
+        }
     }
 
 

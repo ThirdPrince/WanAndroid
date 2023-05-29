@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.HomePageAdapter
@@ -243,6 +245,10 @@ class HotSearchFragment : BaseFragment() {
             })
 
         })
+
+        searchViewModel.errorResponse.observe(viewLifecycleOwner) {
+            ToastUtils.showLong(it.errorMessage)
+        }
     }
 
     /**
@@ -250,11 +256,11 @@ class HotSearchFragment : BaseFragment() {
      */
     private fun getSearchKey(key: String) {
         if (!TextUtils.isEmpty(key)) {
-            searchDataList.clear()
             searchViewModel.getSearchResult(0, key).observe(viewLifecycleOwner, Observer {
                 Log.e(TAG, "it -->${it.result?.datas.toString()}")
                 if (it.result != null) {
                     if (it.result!!.datas != null && it.result!!.datas.size > 0) {
+                        searchDataList.clear()
                         searchDataList.addAll(it.result?.datas!!)
                     }
                 }

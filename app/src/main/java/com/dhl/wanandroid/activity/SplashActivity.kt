@@ -85,6 +85,9 @@ class SplashActivity : AppCompatActivity() {
        // goAD()
         splashViewModel.getImage().observe(this) {
                 imageBean -> showImage(imageBean) }
+        jumpBtn.setOnClickListener {
+            goMain()
+        }
     }
 
     /**

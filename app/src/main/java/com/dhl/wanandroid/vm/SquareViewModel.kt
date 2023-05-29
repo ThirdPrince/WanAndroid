@@ -37,10 +37,10 @@ class SquareViewModel : BaseViewModel() {
      * 获取文章
      */
     fun getSquareList(pageNum: Int): LiveData<RepoResult<MutableList<Article>>> {
-        val exception = CoroutineExceptionHandler { _, throwable ->
-            _resultArticle.value = throwable.message?.let { RepoResult(it) }
-            Log.e(tag, throwable.message!!)
-        }
+//        val exception = CoroutineExceptionHandler { _, throwable ->
+//            _resultArticle.value = throwable.message?.let { RepoResult(it) }
+//            Log.e(tag, throwable.message!!)
+//        }
 
         viewModelScope.launch(exception) {
             val response = api.getSquareList(pageNum)

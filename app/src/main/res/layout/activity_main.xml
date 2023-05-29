@@ -28,15 +28,15 @@
             app:itemHorizontalTranslationEnabled="false"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/main_bottom" />
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fb_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="@dimen/dp_20"
-            android:layout_marginRight="@dimen/dp_20"
-            android:layout_marginBottom="@dimen/dp_60"
-            app:srcCompat="@drawable/ic_fb_white_24dp" />
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fb_btn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="bottom|end"-->
+<!--            android:layout_marginEnd="@dimen/dp_20"-->
+<!--            android:layout_marginRight="@dimen/dp_20"-->
+<!--            android:layout_marginBottom="@dimen/dp_60"-->
+<!--            app:srcCompat="@drawable/ic_fb_white_24dp" />-->
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

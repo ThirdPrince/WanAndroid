@@ -37,7 +37,7 @@ abstract class BaseFragment : Fragment() {
     }
 
 
-    protected var materialHeader: MaterialHeader? =null
+    private var materialHeader: MaterialHeader? =null
     /**
      * rcy
      */
@@ -47,6 +47,11 @@ abstract class BaseFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 
 

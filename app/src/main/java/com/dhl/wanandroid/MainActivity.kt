@@ -65,9 +65,9 @@ private const val PROJECT_INDEX = 0x005
 class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
-    val fb_btn :FloatingActionButton by lazy {
-        findViewById(R.id.fb_btn)
-    }
+//    val fb_btn :FloatingActionButton by lazy {
+//        findViewById(R.id.fb_btn)
+//    }
     val toolbar: Toolbar by lazy {
         findViewById(R.id.tool_bar)
     }
@@ -192,7 +192,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
 
     override fun onResume() {
         super.onResume()
-        fb_btn.backgroundTintList = ColorStateList.valueOf(SettingUtil.getColor())
+       // fb_btn.backgroundTintList = ColorStateList.valueOf(SettingUtil.getColor())
     }
 
     private fun initEvent() {
