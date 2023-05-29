@@ -1,30 +1,98 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory android:title="@string/basic_setting">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="switch_noPhotoMode"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/switch_no_photo_mode_summary"
+            android:title="@string/switch_photo_mode" />
 
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="switch_show_top"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/switch_show_top_summary"
+            android:title="@string/switch_show_top_title" />
+
+        <Preference
+            android:key="auto_nightMode"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/auto_night_mode_summary"
+            android:title="@string/auto_night_mode" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory android:title="@string/other_setting">
+
 
         <com.dhl.wanandroid.widgt.IconPreference
-            android:key="@string/IconPreference"
+            android:key="color"
             android:layout="@layout/custom_preference_layout"
             android:summary="@string/choose_theme_color_summary"
             android:title="@string/choose_theme_color" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="nav_bar"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/nav_bar_coloration_summary"
+            android:title="@string/nav_bar_coloration" />
+
+        <Preference
+            android:key="clearCache"
+            android:layout="@layout/custom_preference_layout"
+            android:title="@string/clear_cache" />
+
+        <Preference
+            android:key="scanQrCode"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/scan_share_tip"
+            android:title="@string/scan_code_download" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/about_settings">
+
+        <Preference
+            android:key="version"
+            android:layout="@layout/custom_preference_layout"
+            android:title="@string/version" />
+
+        <Preference
+            android:key="official_website"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/official_website_url"
+            android:title="@string/official_website" />
+
+        <Preference
+            android:key="changelog"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/changelog_url"
+            android:title="@string/changelog" />
+
+        <!--<Preference-->
+        <!--android:key="licenses"-->
+        <!--android:summary="@string/about_libraries_summary"-->
+        <!--android:title="@string/about_libraries_label" />-->
+
+        <Preference
+            android:key="sourceCode"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/source_code_url"
+            android:title="@string/source_code" />
+
+        <Preference
+            android:key="copyRight"
+            android:layout="@layout/custom_preference_layout"
+            android:summary="@string/copyright_summary"
+            android:title="@string/copyright" />
+
+        <Preference
+            android:key="about_us"
+            android:layout="@layout/custom_preference_layout"
+            android:summary=""
+            android:title="@string/about_us" />
 
     </PreferenceCategory>
 

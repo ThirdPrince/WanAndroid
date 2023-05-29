@@ -18,7 +18,9 @@ import com.dhl.wanandroid.util.SystemBar
 abstract class BasicActivity : AppCompatActivity() {
 
 
-
+    protected val toolbar: Toolbar by lazy {
+        findViewById(R.id.tool_bar)
+    }
     override fun onResume() {
         super.onResume()
         initColor()

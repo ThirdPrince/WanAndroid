@@ -56,9 +56,9 @@ class SquareFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRcy(view)
-        recyclerView.adapter = homePageAdapter
         refreshLayout.autoRefresh()
         refreshLayout.setEnableLoadMore(false)
+        recyclerView.adapter = homePageAdapter
         refreshLayout.setOnRefreshListener {
             getData()
         }

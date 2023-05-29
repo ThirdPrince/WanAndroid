@@ -20,12 +20,7 @@ class WebActivity : BasicActivity() {
     private var title: String? = null
     private var url: String? = null
 
-    /**
-     * 返回Lay
-     */
-    private val toolbar: Toolbar by lazy {
-        findViewById(R.id.tool_bar)
-    }
+
 
     private val linearLayout: LinearLayout by lazy {
         findViewById(R.id.container)

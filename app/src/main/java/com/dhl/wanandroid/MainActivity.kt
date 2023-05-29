@@ -68,9 +68,9 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
 //    val fb_btn :FloatingActionButton by lazy {
 //        findViewById(R.id.fb_btn)
 //    }
-    val toolbar: Toolbar by lazy {
-        findViewById(R.id.tool_bar)
-    }
+//    val toolbar: Toolbar by lazy {
+//        findViewById(R.id.tool_bar)
+//    }
 
     /**
      * 底部Bottom

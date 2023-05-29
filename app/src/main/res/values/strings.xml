@@ -71,8 +71,7 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
-    <string name="choose_theme_color">主题颜色</string>
-    <string name="choose_theme_color_summary">自定义主题颜色</string>
+
     <string name="cancel">取消</string>
     <string name="done">完成</string>
 
@@ -83,5 +82,48 @@
     <string name="article_fresh">新</string>
 
     <string name="splash_jump">跳过</string>
+
+
+    <!-- Setting -->
+    <string name="setting">设置</string>
+    <string name="basic_setting">基本设置</string>
+    <string name="switch_photo_mode">无图模式</string>
+    <string name="switch_no_photo_mode_summary">开启后在非Wifi环境下不加载图片</string>
+    <string name="switch_show_top_summary">开启后将不会显示首页置顶文章</string>
+    <string name="switch_show_top_title">是否显示首页置顶文章</string>
+    <string name="switch_night_mode">夜间模式</string>
+    <string name="switch_night_mode_summary">切换夜间皮肤</string>
+    <string name="clear_cache">清除缓存</string>
+    <string name="clear_cache_successfully">清理成功</string>
+    <string name="other_setting">其他设置</string>
+    <string name="about_settings">关于</string>
+    <string name="choose_theme_color">主题颜色</string>
+    <string name="choose_theme_color_summary">自定义主题颜色</string>
+    <string name="auto_night_mode">自动切换夜间模式</string>
+    <string name="auto_night_mode_summary">设置切换的时间</string>
+    <string name="nav_bar_coloration">导航栏着色</string>
+    <string name="nav_bar_coloration_summary">导航栏颜色跟随主题颜色</string>
+    <string name="scan_share_tip">好用的话推荐给你的小伙伴吧</string>
+    <string name="scan_code_tip">好用的话推荐给你的小伙伴吧\n（ 建议使用浏览器扫描二维码下载 ^_^ ）</string>
+    <string name="back">返回</string>
+
+
+    <!-- AboutUs -->
+    <string name="about_us">关于我们</string>
+    <string name="changelog">更新日志</string>
+    <string name="changelog_url">https://github.com/ThirdPrince/WanAndroid/releases</string>
+    <string name="about_developers_label">主要开发者</string>
+    <string name="about_developers">https://github.com/ThirdPrince/WanAndroid</string>
+    <string name="source_code">源代码</string>
+    <string name="source_code_url">https://github.com/ThirdPrince/WanAndroid</string>
+    <string name="about_libraries_label">开源许可</string>
+    <string name="about_libraries_summary">查看开源许可信息</string>
+    <string name="copyright">版权声明</string>
+    <string name="copyright_summary">仅作个人及非商业用途</string>
+    <string name="version">版本</string>
+    <string name="current_version">当前版本&#160;</string>
+    <string name="official_website">官方网站</string>
+    <string name="official_website_url">https://www.wanandroid.com</string>
+    <string name="scan_code_download">扫码下载</string>
 
 </resources>

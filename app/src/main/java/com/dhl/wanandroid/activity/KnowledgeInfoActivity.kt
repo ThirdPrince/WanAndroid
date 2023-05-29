@@ -24,9 +24,9 @@ import java.util.*
  */
 class KnowledgeInfoActivity : BasicActivity() {
 
-    private val toolbar: Toolbar by lazy {
-        findViewById(R.id.tool_bar)
-    }
+//    private val toolbar: Toolbar by lazy {
+//        findViewById(R.id.tool_bar)
+//    }
     private val tabLayout: TabLayout by lazy {
         findViewById(R.id.tab_layout)
     }
