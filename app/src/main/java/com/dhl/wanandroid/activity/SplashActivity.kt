@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -30,7 +31,7 @@ import java.io.File
  */
 class SplashActivity : AppCompatActivity() {
 
-
+    private  val TAG = "SplashActivity"
 
     private val imageView: ImageView by lazy {
         findViewById(R.id.image)
@@ -59,7 +60,7 @@ class SplashActivity : AppCompatActivity() {
             super.handleMessage(msg)
             when (msg.what) {
                 WHAT -> {
-
+                     goMain()
                 }
                 WHAT_JUMP -> {
                     if(count == 0){
@@ -83,7 +84,9 @@ class SplashActivity : AppCompatActivity() {
         preLoad()
        // goAD()
         splashViewModel.getImage().observe(this) {
-                imageBean -> showImage(imageBean) }
+                imageBean ->
+            showImage(imageBean)
+        }
         jumpBtn.setOnClickListener {
             goMain()
         }
