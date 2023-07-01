@@ -5,8 +5,12 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.blankj.utilcode.util.CrashUtils
 import com.blankj.utilcode.util.Utils
+import com.dhl.wanandroid.image.ImageWork
 import com.dhl.wanandroid.util.ProcessUtils
 import com.dhl.wanandroid.util.Settings
 import com.dhl.wanandroid.vm.AppScope
@@ -41,6 +45,7 @@ class MyApplication : Application(), ViewModelStoreOwner {
             CrashUtils.init()
             AppScope.init(this)
             preloadSplashImage()
+            imageWork()
         }
 
 
@@ -59,6 +64,15 @@ class MyApplication : Application(), ViewModelStoreOwner {
 
     private  fun preloadSplashImage(){
         splashViewModel.getImage()
+    }
+
+    private  fun imageWork(){
+        val uploadWorkRequest: WorkRequest =
+            OneTimeWorkRequestBuilder<ImageWork>()
+                .build()
+        WorkManager
+            .getInstance(this)
+            .enqueue(uploadWorkRequest)
     }
 
 }

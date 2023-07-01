@@ -1,5 +1,6 @@
 package com.dhl.wanandroid.fragment
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -28,10 +29,11 @@ class SettingsFragment : PreferenceFragmentCompat(),
     private lateinit var colorPreview: IconPreference
 
 
+    @SuppressLint("CheckResult")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         colorPreview = findPreference(iconPreferenceKey)!!
-        colorPreview?.setOnPreferenceClickListener {
+        colorPreview.setOnPreferenceClickListener {
             activity?.let { activity ->
                 MaterialDialog(activity).show {
                     title(R.string.choose_theme_color)
@@ -39,7 +41,7 @@ class SettingsFragment : PreferenceFragmentCompat(),
                         ColorUtil.ACCENT_COLORS,
                         initialSelection = SettingUtil.getColor(),
                         subColors = ColorUtil.PRIMARY_COLORS_SUB
-                    ) { dialog, color ->
+                    ) { _, color ->
                         SettingUtil.setColor(color)
                     }
 

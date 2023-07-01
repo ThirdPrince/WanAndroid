@@ -39,7 +39,7 @@ class WebActivity : BasicActivity() {
         if (intent != null) {
             title = intent.getStringExtra("title")
             url = intent.getStringExtra("webUrl")
-            toolbar!!.title = Html.fromHtml(title)
+            toolbar.title = Html.fromHtml(title)
         }
         setSupportActionBar(toolbar)
         toolbar.run {

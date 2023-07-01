@@ -10,20 +10,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-   /* signingConfigs {
-        release {
-            storeFile file('D:/dhlkeystore.jks')
-            storePassword "123456"
-            keyAlias 'dhlkeystore'
-            keyPassword "123456"
-        }
-        debug {
-            storeFile file('D:/dhlkeystore.jks')
-            storePassword "123456"
-            keyAlias 'dhlkeystore'
-            keyPassword "123456"
-        }
-    }*/
+
     defaultConfig {
         applicationId "com.dhl.wanandroid"
         minSdkVersion 21
@@ -32,23 +19,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
-//        kapt {
-//            arguments {
-//                arg("room.schemaLocation", "$projectDir/schemas")
-//            }
-//        }
-//        javaCompileOptions {
-//            annotationProcessorOptions {
-//               // includeCompileClasspath = true
-//                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-//
-//            }
-//        }
-//        kapt {
-//            arguments {
-//                arg("room.schemaLocation", "$projectDir/schemas")
-//            }
-//        }
     }
     buildTypes {
         release {
@@ -117,6 +87,9 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
     implementation 'com.afollestad.material-dialogs:color:3.3.0'
+    def work_version = "2.6.0"
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 }
 repositories {
     mavenCentral()

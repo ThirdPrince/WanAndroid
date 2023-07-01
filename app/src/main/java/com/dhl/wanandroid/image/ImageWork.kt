@@ -1,9 +1,9 @@
-package com.dhl.wanandroid.service
+package com.dhl.wanandroid.image
 
-import android.app.IntentService
 import android.content.Context
-import android.content.Intent
 import android.util.Log
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.dhl.wanandroid.app.Constants
 import com.dhl.wanandroid.dao.AppDataBase
 import com.dhl.wanandroid.dao.ImageSplashDao
@@ -22,43 +22,38 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
+ * @Title: $
+ * @Package  com.dhl.wanandroid.image
+ * @Description: 下载首页展示Image
  * @author dhl
- * 负责下载 Splash 展示的图片(图片从必应上下载)
+ * @date 2023 0701
+ * @version V1.0
  */
-@Deprecated("User WorkManager download image")
-class SplashImageService : IntentService("SplashImageService") {
 
-    private val TAG = "SplashImageService"
+class ImageWork(val appContext: Context, workerParams: WorkerParameters):
+    Worker(appContext, workerParams) {
+
+    private  val TAG = "ImageWork"
 
     /**
      * 图片下载 的路径
      */
     private var imagePath: String? = null
 
-
     private var imageInfoList: MutableList<ImageSplash> = mutableListOf()
 
-    /**
-     * 图片格式
-     */
+    private val imageDao: ImageSplashDao by lazy {
+        AppDataBase.instance.getImageDao()
+    }
     private val simpleDateFormat: SimpleDateFormat by lazy {
         SimpleDateFormat("yyyy-MM-dd")
     }
 
-
-    /**
-     *
-     */
-    val imageDao: ImageSplashDao by lazy {
-        AppDataBase.instance.getImageDao()
+    override fun doWork(): Result {
+        getImageUrl()
+        return Result.success()
     }
 
-
-    override fun onHandleIntent(intent: Intent?) {
-        if (intent != null) {
-            getImageUrl()
-        }
-    }
 
     private fun getImageUrl() {
         val imageSplash = imageDao.getLatestImage()
@@ -91,19 +86,14 @@ class SplashImageService : IntentService("SplashImageService") {
                             val imageInfo = it?.get(0)
                             Log.e(TAG, "imageInfo = $imageInfo")
                             val image = "http://s.cn.bing.net" + imageInfo?.url
-                            handleActionFoo(image, imageInfo)
+                            downLoadImage(image, imageInfo)
                         }
 
                     }
                 }]
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private fun handleActionFoo(imageUrl: String, imageSplash: ImageSplash) {
-        // TODO: Handle action Foo
+    private fun downLoadImage(imageUrl: String, imageSplash: ImageSplash) {
 
         OkHttpManager.getInstance()[imageUrl, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -113,8 +103,7 @@ class SplashImageService : IntentService("SplashImageService") {
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 val inputStream = response.body?.byteStream()
-                imagePath =
-                    getExternalFilesDir("image").toString() + "/" + simpleDateFormat.format(Date()) + "_splash.jpg"
+                imagePath = appContext.getExternalFilesDir("image").toString() + "/" + simpleDateFormat.format(Date()) + "_splash.jpg"
                 Log.e(TAG, "imagePath=$imagePath")
                 val fileOutputStream = FileOutputStream(imagePath)
                 val bytes = ByteArray(1024)
@@ -135,17 +124,5 @@ class SplashImageService : IntentService("SplashImageService") {
 
             }
         }]
-    }
-
-    companion object {
-
-        private const val ACTION = "Download_image"
-
-        @JvmStatic
-        fun startDownLoadAction(context: Context) {
-            val intent = Intent(context, SplashImageService::class.java)
-            intent.action = ACTION
-            context.startService(intent)
-        }
     }
 }

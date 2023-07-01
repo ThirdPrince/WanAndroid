@@ -132,7 +132,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             val mainActivity = mActivity.get()
             if (mainActivity != null) {
                 when (msg.what) {
-                    DOWNLOAD_IMAGE -> mainActivity.downLoadImage()
+                    //DOWNLOAD_IMAGE -> mainActivity.downLoadImage()
                     EXIT_APP -> {
                     }
                 }
@@ -394,8 +394,9 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
     /**
      * 开启下载图片的service
      */
+    @Deprecated("Use ImageWork")
     private fun downLoadImage() {
-        startDownLoadAction(this)
+        //startDownLoadAction(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
