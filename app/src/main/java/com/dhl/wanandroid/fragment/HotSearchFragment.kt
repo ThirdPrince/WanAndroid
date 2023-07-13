@@ -123,7 +123,6 @@ class HotSearchFragment : BaseFragment() {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    Log.e(TAG, "dy -->$dy")
                     if (abs(dy) >= 15) {
                         if (KeyboardUtils.isSoftInputVisible(activity!!)) {
                             KeyboardUtils.hideSoftInput(searchResultRcy)

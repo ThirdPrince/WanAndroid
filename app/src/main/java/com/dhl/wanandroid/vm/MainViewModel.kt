@@ -27,13 +27,12 @@ class MainViewModel : BaseViewModel() {
     val tag = "MainViewModel"
 
 
-
     /**
      * banner LiveData
      */
     private val _resultBanner = MutableLiveData<RepoResult<MutableList<BannerBean>>>()
 
-     val resultBanner: LiveData<RepoResult<MutableList<BannerBean>>>
+    val resultBanner: LiveData<RepoResult<MutableList<BannerBean>>>
         get() = _resultBanner
 
 
@@ -41,7 +40,7 @@ class MainViewModel : BaseViewModel() {
      * 文章LiveData
      */
     private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
-     val resultArticle: LiveData<RepoResult<MutableList<Article>>>
+    val resultArticle: LiveData<RepoResult<MutableList<Article>>>
         get() = _resultArticle
 
 
@@ -73,31 +72,38 @@ class MainViewModel : BaseViewModel() {
      * 包括置顶文章
      */
     fun getArticle(pageNum: Int): LiveData<RepoResult<MutableList<Article>>> {
-        Log.e(tag,"getArticle")
-        val exception = CoroutineExceptionHandler { _, throwable ->
-            _resultArticle.value = throwable.message?.let { RepoResult(it) }
-            Log.e(tag, throwable.message!!)
-        }
-
         viewModelScope.launch(exception) {
             val articleList = mutableListOf<Article>()
-            val deferredArticle = async { api.getArticleList(pageNum) }
+            val deferredArticle = async(exception) { api.getArticleList(pageNum) }
             if (pageNum == 0) {
-                val deferredTop = async { api.getTopArticle() }
+                val deferredTop = async(exception) { api.getTopArticle() }
                 var awaitTop = deferredTop.await()
-                awaitTop.body()!!.data.forEach {
-                    it.isTop = true
-                    articleList.add(it)
+                if (awaitTop.isSuccessful) {
+                    awaitTop.body()!!.data.forEach {
+                        it.isTop = true
+                        articleList.add(it)
+                    }
+
+                } else {
+                    _resultArticle.value = RepoResult(awaitTop.message())
                 }
+
             }
             var awaitArticle = deferredArticle.await()
-            articleList.addAll(awaitArticle.body()?.data!!.datas)
-            articleList.let {
-                _resultArticle.value = RepoResult(articleList, "")
+            awaitArticle.body().let {
+                if (awaitArticle.isSuccessful) {
+                    articleList.addAll(it?.data!!.datas)
+                    articleList.let {
+                        _resultArticle.value = RepoResult(articleList, "")
+                    }
+
+                } else {
+                    _resultArticle.value = RepoResult(awaitArticle.message())
+                }
+
+
             }
-            if (!awaitArticle.isSuccessful) {
-                _resultArticle.value = RepoResult(awaitArticle.message())
-            }
+
         }
         return resultArticle
     }

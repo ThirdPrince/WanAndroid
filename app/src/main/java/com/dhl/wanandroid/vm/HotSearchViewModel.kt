@@ -24,6 +24,8 @@ class HotSearchViewModel : BaseViewModel() {
 
     val  tag = "SearchViewModel"
 
+
+
     /**
      * 获取搜索热词
      */
@@ -47,10 +49,6 @@ class HotSearchViewModel : BaseViewModel() {
      */
     fun getSearchResult(page:Int,key:String):LiveData<RepoResult<ArticleData>>{
         val result = MutableLiveData<RepoResult<ArticleData>>()
-//        val exception = CoroutineExceptionHandler { _, throwable ->
-//            result.value = throwable.message?.let { RepoResult(it) }
-//            Log.e("CoroutinesViewModel", throwable.message!!)
-//        }
         viewModelScope.launch(exception) {
             val response =  api.getSearchKey(page,key)
             if(response.isSuccessful){
@@ -61,7 +59,6 @@ class HotSearchViewModel : BaseViewModel() {
                     result.value = RepoResult(response.message())
                 }
             }else{
-               // errorResponse.value = RepoResult(response.message())
                 _errorResponse.value = RepoResult(response.message())
             }
 
