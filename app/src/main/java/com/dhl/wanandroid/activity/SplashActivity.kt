@@ -8,7 +8,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import android.util.Log
 import android.view.View
@@ -31,7 +33,6 @@ import java.io.File
  */
 class SplashActivity : AppCompatActivity() {
 
-    private  val TAG = "SplashActivity"
 
     private val imageView: ImageView by lazy {
         findViewById(R.id.image)
@@ -47,6 +48,9 @@ class SplashActivity : AppCompatActivity() {
         AppScope.getAppScopeViewModel(SplashViewModel::class.java)
     }
 
+
+
+
     /**
      * viewModel
      */
@@ -54,27 +58,22 @@ class SplashActivity : AppCompatActivity() {
         AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
 
-    var count = 5
-    private val handler: Handler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            when (msg.what) {
-                WHAT -> {
-                     goMain()
-                }
-                WHAT_JUMP -> {
-                    if(count == 0){
-                        goMain()
-                    }else{
-                        jumpBtn.text = getString(R.string.splash_jump) + "(${count})"
-                        count--
-                        sendEmptyMessageDelayed(WHAT_JUMP, 1000)
-                    }
+    /**
+     * 广告倒计时
+     */
+    private val countDownTimer = object : CountDownTimer(AD_TIME, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            val seconds = millisUntilFinished / 1000 + 1;
+            jumpBtn.text = getString(R.string.splash_jump) + "(${seconds})"
 
-                }
-            }
         }
+
+        override fun onFinish() {
+            goMain()
+        }
+
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //window.setBackgroundDrawable(null)
@@ -82,9 +81,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_ad)
         initSystemBar()
         preLoad()
-       // goAD()
-        splashViewModel.getImage().observe(this) {
-                imageBean ->
+        splashViewModel.getImage().observe(this) { imageBean ->
             showImage(imageBean)
         }
         jumpBtn.setOnClickListener {
@@ -100,6 +97,7 @@ class SplashActivity : AppCompatActivity() {
         SystemBar.invasionNavigationBar(this)
         SystemBar.setStatusBarColor(this, Color.TRANSPARENT)
     }
+
     private fun preLoad() {
         mainViewModel.getBanner()
         mainViewModel.getArticle(0)
@@ -107,9 +105,17 @@ class SplashActivity : AppCompatActivity() {
 
 
     companion object {
-        private const val WHAT = 1024
-        private const val WHAT_JUMP = 1025
+        /**
+         * 广告时长
+         */
+        private const val AD_TIME = 5000L
+
+        /**
+         * 没有广告时长
+         */
+        private const val JUMP_TIME = 1000L
     }
+
     @SuppressLint("ObjectAnimatorBinding")
     private fun showImage(imageBean: ImageSplash?) {
         if (imageBean != null) {
@@ -126,20 +132,20 @@ class SplashActivity : AppCompatActivity() {
                 set.duration = 2500
                 set.start()
                 jumpBtn.visibility = View.VISIBLE
-                handler.sendEmptyMessage(WHAT_JUMP)
-                //handler.sendEmptyMessageDelayed(WHAT, 5000)
+                countDownTimer.start()
             }
 
         } else {
-            handler.sendEmptyMessageDelayed(WHAT, 1500)
+            Handler(Looper.getMainLooper()).postDelayed({
+                goMain()
+            }, JUMP_TIME)
         }
+
     }
 
 
-
     private fun goMain() {
-        handler.removeMessages(WHAT)
-        handler.removeMessages(WHAT_JUMP)
+        countDownTimer.cancel()
         startActivity(Intent(this, MainActivity::class.java))
         finish()
         //取消界面跳转时的动画
