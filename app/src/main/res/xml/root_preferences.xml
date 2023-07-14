@@ -1,6 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/basic_setting">
+    <PreferenceCategory
+        android:title="@string/basic_setting"
+        >
 
         <CheckBoxPreference
             android:defaultValue="false"
@@ -25,8 +27,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/other_setting">
-
-
         <com.dhl.wanandroid.widgt.IconPreference
             android:key="color"
             android:layout="@layout/custom_preference_layout"

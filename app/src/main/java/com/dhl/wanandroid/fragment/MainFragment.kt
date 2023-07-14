@@ -132,7 +132,7 @@ class MainFragment : BaseFragment() {
     }
 
     private fun observeData() {
-        mainViewModel.getBanner().observe(viewLifecycleOwner) {
+        mainViewModel.resultBanner.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
                 bannerList = it.result!!
                 setBanner()
@@ -144,7 +144,7 @@ class MainFragment : BaseFragment() {
             refreshLayout.finishLoadMore()
         }
 
-        mainViewModel.getArticle(pageCount).observe(viewLifecycleOwner) {
+        mainViewModel.resultArticle.observe(viewLifecycleOwner) {
             Log.e(TAG, "pageNo = $pageCount" + "-->" + it.result?.size)
             if (it.isSuccess) {
                 if (pageCount == 0) {

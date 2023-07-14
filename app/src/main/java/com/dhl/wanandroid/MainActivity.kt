@@ -164,8 +164,10 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
                 (fm.findFragmentByTag(MainFragment::class.java.simpleName) as MainFragment?)!!
             sysFragment =
                 fm.findFragmentByTag(SysFragment::class.java.simpleName) as SysFragment?
-            wxArticleFragment = fm.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
-            squareFragment = fm.findFragmentByTag(SquareFragment::class.java.simpleName) as SquareFragment?
+            wxArticleFragment =
+                fm.findFragmentByTag(WxArticleFragment::class.java.simpleName) as WxArticleFragment?
+            squareFragment =
+                fm.findFragmentByTag(SquareFragment::class.java.simpleName) as SquareFragment?
         }
         initEvent()
         downLoadImage()
@@ -181,18 +183,11 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             setSupportActionBar(this)
             //supportActionBar?.setBackgroundDrawable(ColorDrawable(SettingUtil.getColor()))
         }
-
-
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.app_name, R.string.app_name
         )
         drawerLayout?.addDrawerListener(toggle)
         toggle.syncState()
-    }
-
-    override fun onResume() {
-        super.onResume()
-       // fb_btn.backgroundTintList = ColorStateList.valueOf(SettingUtil.getColor())
     }
 
     private fun initEvent() {
@@ -396,7 +391,6 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
      */
     @Deprecated("Use ImageWork")
     private fun downLoadImage() {
-        //startDownLoadAction(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -412,13 +406,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
 
     companion object {
         private const val TAG = "MainActivity"
-
-        /**
-         * 下载
-         */
-        private const val DOWNLOAD_IMAGE = 1024
-
-        /**
+        /*
          * 退出应用
          */
         private const val EXIT_APP = 1025

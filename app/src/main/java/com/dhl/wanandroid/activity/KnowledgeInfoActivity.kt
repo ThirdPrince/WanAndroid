@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -24,9 +22,6 @@ import java.util.*
  */
 class KnowledgeInfoActivity : BasicActivity() {
 
-//    private val toolbar: Toolbar by lazy {
-//        findViewById(R.id.tool_bar)
-//    }
     private val tabLayout: TabLayout by lazy {
         findViewById(R.id.tab_layout)
     }

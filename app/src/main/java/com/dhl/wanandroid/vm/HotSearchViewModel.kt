@@ -22,21 +22,18 @@ import kotlinx.coroutines.launch
  */
 class HotSearchViewModel : BaseViewModel() {
 
-    val  tag = "SearchViewModel"
-
-
-
+    val tag = "SearchViewModel"
     /**
      * 获取搜索热词
      */
-     fun getSearchHot(): LiveData<RepoResult<MutableList<HotSearchBean>>>{
-         val result = MutableLiveData<RepoResult<MutableList<HotSearchBean>>>()
+    fun getSearchHot(): LiveData<RepoResult<MutableList<HotSearchBean>>> {
+        val result = MutableLiveData<RepoResult<MutableList<HotSearchBean>>>()
         viewModelScope.launch(exception) {
-           val response =  api.getHotSearch()
+            val response = api.getHotSearch()
             val data = response.body()?.data
-            if (data !=null){
-                result.value = RepoResult(data,"")
-            }else{
+            if (data != null) {
+                result.value = RepoResult(data, "")
+            } else {
                 result.value = RepoResult(response.message())
             }
         }
@@ -47,18 +44,18 @@ class HotSearchViewModel : BaseViewModel() {
     /**
      * 搜索 page key
      */
-    fun getSearchResult(page:Int,key:String):LiveData<RepoResult<ArticleData>>{
+    fun getSearchResult(page: Int, key: String): LiveData<RepoResult<ArticleData>> {
         val result = MutableLiveData<RepoResult<ArticleData>>()
         viewModelScope.launch(exception) {
-            val response =  api.getSearchKey(page,key)
-            if(response.isSuccessful){
+            val response = api.getSearchKey(page, key)
+            if (response.isSuccessful) {
                 val data = response.body()!!.data
-                if (data !=null){
-                    result.value = RepoResult(data,"")
-                }else{
+                if (data != null) {
+                    result.value = RepoResult(data, "")
+                } else {
                     result.value = RepoResult(response.message())
                 }
-            }else{
+            } else {
                 _errorResponse.value = RepoResult(response.message())
             }
 

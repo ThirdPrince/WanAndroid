@@ -71,7 +71,7 @@ class MainViewModel : BaseViewModel() {
      * 获取文章
      * 包括置顶文章
      */
-    fun getArticle(pageNum: Int): LiveData<RepoResult<MutableList<Article>>> {
+    fun getArticle(pageNum: Int=0): LiveData<RepoResult<MutableList<Article>>> {
         viewModelScope.launch(exception) {
             val articleList = mutableListOf<Article>()
             val deferredArticle = async(exception) { api.getArticleList(pageNum) }
