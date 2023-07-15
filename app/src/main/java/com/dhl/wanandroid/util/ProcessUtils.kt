@@ -16,7 +16,7 @@ import java.lang.reflect.Method
  * @Title: ProcessUtils
  * @Package com.dhl.wanandroid.util
  * @Description: 进程工具类
- * @author $
+ * @author dhl
  * @date 2023 4.17
  * @version V2.0
  */
@@ -109,7 +109,6 @@ object ProcessUtils {
      fun isMainProcess(context: Context):Boolean {
         //获取当前进程名，并与主进程对比，来判断是否为主进程
         val processName = getCurrentProcessName(context);
-        Log.e(TAG, "MainProcess processName=$processName");
         return BuildConfig.APPLICATION_ID == processName;
     }
 

@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * @Title: $
+ * @Title: ImageWork
  * @Package  com.dhl.wanandroid.image
  * @Description: 下载首页展示Image
  * @author dhl
@@ -60,7 +60,7 @@ class ImageWork(val appContext: Context, workerParams: WorkerParameters):
         imageSplash?.let { imageSplash ->
             imageSplash.imagePath?.let {
                 if (File(it).name.startsWith(simpleDateFormat.format(Date()))) {
-                    Log.e(TAG, "今天的图片已经下载过")
+                    Log.d(TAG, "今天的图片已经下载过")
                     return@getImageUrl
                 }
             }
@@ -84,7 +84,7 @@ class ImageWork(val appContext: Context, workerParams: WorkerParameters):
                         )
                         imageInfoList.let {
                             val imageInfo = it?.get(0)
-                            Log.e(TAG, "imageInfo = $imageInfo")
+                            Log.d(TAG, "imageInfo = $imageInfo")
                             val image = "http://s.cn.bing.net" + imageInfo?.url
                             downLoadImage(image, imageInfo)
                         }
@@ -104,7 +104,7 @@ class ImageWork(val appContext: Context, workerParams: WorkerParameters):
             override fun onResponse(call: Call, response: Response) {
                 val inputStream = response.body?.byteStream()
                 imagePath = appContext.getExternalFilesDir("image").toString() + "/" + simpleDateFormat.format(Date()) + "_splash.jpg"
-                Log.e(TAG, "imagePath=$imagePath")
+                Log.d(TAG, "imagePath=$imagePath")
                 val fileOutputStream = FileOutputStream(imagePath)
                 val bytes = ByteArray(1024)
                 var len = 0
@@ -119,7 +119,7 @@ class ImageWork(val appContext: Context, workerParams: WorkerParameters):
                 fileOutputStream.close()
                 inputStream?.close()
                 imageSplash.imagePath = imagePath as String
-                Log.e(TAG, "imageSplash = $imageSplash")
+                Log.d(TAG, "imageSplash = $imageSplash")
                 imageDao.insert(imageSplash)
 
             }
