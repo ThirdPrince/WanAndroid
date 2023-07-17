@@ -29,10 +29,8 @@ import com.dhl.wanandroid.model.LoginBean;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
 import java.io.IOException;
 import java.util.List;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;
@@ -43,15 +41,11 @@ import okhttp3.Response;
 /**
  * 登录
  */
-public class MaterialLoginActivity extends AppCompatActivity {
+public class MaterialLoginActivity extends BasicActivity {
 
     private static final String TAG = "MaterialLoginActivity";
 
 
-    RelativeLayout login_bg;
-
-
-    Toolbar toolbar;
 
     EditText userName;
 
@@ -69,7 +63,7 @@ public class MaterialLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_material_login);
-        toolbar.setTitle("登录");
+        getToolbar().setTitle("登录");
     }
 
 

@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id  'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion 31
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+}
+
+dependencies {
+
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
+    api 'com.squareup.retrofit2:converter-gson:2.9.0'
+    api 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    api 'com.squareup.moshi:moshi-kotlin:1.7.0'
+    api 'com.squareup.retrofit2:converter-moshi:2.4.0'
+    def room_version = "2.4.1"
+    api "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    api "androidx.datastore:datastore-preferences:1.0.0-alpha04"
+    api 'androidx.preference:preference-ktx:1.1.1'
+    api 'com.afollestad.material-dialogs:core:3.3.0'
+    api 'com.afollestad.material-dialogs:color:3.3.0'
+    def work_version = "2.6.0"
+    // Kotlin + coroutines
+    api "androidx.work:work-runtime-ktx:$work_version"
+    api "androidx.core:core-ktx:1.6.0"
+}

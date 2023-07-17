@@ -24,14 +24,10 @@ abstract class AppDataBase : RoomDatabase() {
      * 首页图片展示
      */
     abstract fun getImageDao(): ImageSplashDao
-
-
     companion object {
         val instance = Single.sin
     }
-
     private object Single {
-
         val sin: AppDataBase = Room.databaseBuilder(
                 MyApplication.context!!,
                 AppDataBase::class.java,

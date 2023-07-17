@@ -65,12 +65,6 @@ private const val PROJECT_INDEX = 0x005
 class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedListener {
 
 
-//    val fb_btn :FloatingActionButton by lazy {
-//        findViewById(R.id.fb_btn)
-//    }
-//    val toolbar: Toolbar by lazy {
-//        findViewById(R.id.tool_bar)
-//    }
 
     /**
      * 底部Bottom

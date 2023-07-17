@@ -38,12 +38,12 @@ public class WxArticleAdapter extends CommonAdapter<Article> {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void convert(ViewHolder holder, Article article, int position) {
-        ImageView headerImg = (ImageView)holder.getView(R.id.header_image);
+        ImageView headerImg = (ImageView) holder.getView(R.id.header_image);
         TextView nameTv = holder.getView(R.id.name);
         holder.setText(R.id.name, article.getAuthor());
         TextView title = holder.getView(R.id.content);
         holder.setText(R.id.time_tv, article.getNiceDate());
-        title.setText(Html.fromHtml(article.getTitle(),0));
+        title.setText(Html.fromHtml(article.getTitle(), 0));
         if (!TextUtils.isEmpty(article.getEnvelopePic())) {
             ImageView imageView = holder.getView(R.id.image);
             imageView.setVisibility(View.VISIBLE);
@@ -63,9 +63,9 @@ public class WxArticleAdapter extends CommonAdapter<Article> {
             nameTv.setText(article.getAuthor());
         }
         TextView topTv = holder.getView(R.id.top_tv);
-        if(article.isTop()){
+        if (article.isTop()) {
             topTv.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             topTv.setVisibility(View.GONE);
         }
         holder.setText(R.id.desc, article.getSuperChapterName() + " / " + article.getChapterName());
