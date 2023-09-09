@@ -17,6 +17,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.dhl.wanandroid.MainActivity
 import com.dhl.wanandroid.R
@@ -25,6 +26,8 @@ import com.dhl.wanandroid.util.SystemBar
 import com.dhl.wanandroid.vm.AppScope
 import com.dhl.wanandroid.vm.MainViewModel
 import com.dhl.wanandroid.vm.SplashViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -49,8 +52,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
 
-
-
     /**
      * viewModel
      */
@@ -61,6 +62,7 @@ class SplashActivity : AppCompatActivity() {
     /**
      * 广告倒计时
      */
+    @Deprecated("instead of coroutines")
     private val countDownTimer = object : CountDownTimer(AD_TIME, 1000) {
         override fun onTick(millisUntilFinished: Long) {
             val seconds = millisUntilFinished / 1000 + 1;
@@ -132,23 +134,40 @@ class SplashActivity : AppCompatActivity() {
                 set.duration = 2500
                 set.start()
                 jumpBtn.visibility = View.VISIBLE
-                countDownTimer.start()
+                jumpBtn.text = getString(R.string.splash_jump) + "(5)"
+                adShow()
             }
 
         } else {
-            Handler(Looper.getMainLooper()).postDelayed({
+            lifecycleScope.launch {
+                delay(JUMP_TIME)
                 goMain()
-            }, JUMP_TIME)
+            }
         }
 
     }
 
 
+    /**
+     * 展示广告页
+     */
+    private fun adShow() {
+        lifecycleScope.launch {
+            for (i in 3 downTo 1) {
+                delay(1000)
+                jumpBtn.text = getString(R.string.splash_jump) + "(${i})"
+            }
+            goMain()
+
+        }
+    }
+
     private fun goMain() {
-        countDownTimer.cancel()
         startActivity(Intent(this, MainActivity::class.java))
         finish()
         //取消界面跳转时的动画
         overridePendingTransition(0, 0)
     }
+
+
 }
