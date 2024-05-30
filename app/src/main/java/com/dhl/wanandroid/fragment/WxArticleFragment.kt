@@ -54,8 +54,10 @@ class WxArticleFragment : BaseFragment() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_wx_article, container, false)
     }
 
@@ -79,30 +81,33 @@ class WxArticleFragment : BaseFragment() {
         wxArticleViewModel.getWxArticleChapters().observe(viewLifecycleOwner) {
             wxArticleTabFragmentList.clear()
             tabIndicator.clear()
-            for (baseData in it.result!!) {
-                tabIndicator.add(baseData.name)
-                wxArticleTabFragmentList.add(
-                    WxArticleTabFragment.newInstance(
-                        baseData.name,
-                        baseData.id.toString() + ""
+            it.result?.let { result ->
+                for (baseData in result) {
+                    tabIndicator.add(baseData.name)
+                    wxArticleTabFragmentList.add(
+                        WxArticleTabFragment.newInstance(
+                            baseData.name,
+                            baseData.id.toString() + ""
+                        )
                     )
-                )
-            }
-            viewPager.adapter = object : FragmentStatePagerAdapter(childFragmentManager) {
-                override fun getItem(i: Int): Fragment {
-                    return wxArticleTabFragmentList[i]
                 }
+                viewPager.adapter = object : FragmentStatePagerAdapter(childFragmentManager) {
+                    override fun getItem(i: Int): Fragment {
+                        return wxArticleTabFragmentList[i]
+                    }
 
-                override fun getCount(): Int {
-                    return wxArticleTabFragmentList.size
-                }
+                    override fun getCount(): Int {
+                        return wxArticleTabFragmentList.size
+                    }
 
-                override fun getPageTitle(position: Int): CharSequence? {
-                    return tabIndicator[position]
+                    override fun getPageTitle(position: Int): CharSequence? {
+                        return tabIndicator[position]
+                    }
                 }
+                viewPager.offscreenPageLimit = wxArticleTabFragmentList.size
+                tabLayout.setupWithViewPager(viewPager)
             }
-            viewPager.offscreenPageLimit = wxArticleTabFragmentList.size
-            tabLayout.setupWithViewPager(viewPager)
+
         }
     }
 

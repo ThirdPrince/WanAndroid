@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class HomePageAdapter extends CommonAdapter<Article> {
 
-    private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
+    private ColorGenerator mColorGenerator = ColorGenerator.Companion.getMATERIAL();
     private TextDrawable.IBuilder mDrawableBuilder;
 
     public void setOnCollectionListener(OnCollectionListener onCollectionListener) {

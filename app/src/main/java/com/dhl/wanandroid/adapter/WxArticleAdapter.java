@@ -23,7 +23,7 @@ import java.util.List;
 
 public class WxArticleAdapter extends CommonAdapter<Article> {
 
-    private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
+    private ColorGenerator mColorGenerator = ColorGenerator.Companion.getMATERIAL();
     private TextDrawable.IBuilder mDrawableBuilder;
 
     private Context mContext;

@@ -8,15 +8,8 @@ import kotlin.math.abs
  */
 class ColorGenerator private constructor(private val mColors: List<Int>) {
     companion object {
-        var DEFAULT: ColorGenerator? = null
-        @JvmField
-        var MATERIAL: ColorGenerator? = null
-        fun create(colorList: List<Int>): ColorGenerator {
-            return ColorGenerator(colorList)
-        }
-
-        init {
-            DEFAULT = create(
+        private val DEFAULT: ColorGenerator by lazy {
+            create(
                 listOf(
                     -0xe9c9c,
                     -0xa7aa7,
@@ -29,7 +22,11 @@ class ColorGenerator private constructor(private val mColors: List<Int>) {
                     -0x7fa87f
                 )
             )
-            MATERIAL = create(
+        }
+
+
+        val MATERIAL: ColorGenerator by lazy {
+             create(
                 listOf(
                     -0x1a8c8d,
                     -0xf9d6e,
@@ -48,8 +45,9 @@ class ColorGenerator private constructor(private val mColors: List<Int>) {
                     -0x48b3
                 )
             )
-            //0xffa1887f,
-            // 0xff90a4aeß
+        }
+        private fun create(colorList: List<Int>): ColorGenerator {
+            return ColorGenerator(colorList)
         }
     }
 

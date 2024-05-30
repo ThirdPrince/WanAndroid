@@ -6,14 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.WxArticleAdapter
+import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.vm.WxArticleTabViewModel
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 /**
@@ -26,11 +30,9 @@ class WxArticleTabFragment : BaseFragment() {
         private set
     private var articleId: String? = null
 
-    private val wxArticleAdapter: WxArticleAdapter by lazy {
-        WxArticleAdapter(activity, R.layout.fragment_homepage_item, wxArticleBeanList)
-    }
-    private var wxArticleBeanList: MutableList<Article> = mutableListOf()
 
+
+    private lateinit var wxArticlePgAdapter: WxArticlePgAdapter
     private var isViewCreate = false
     private var isDataInited = false
 
@@ -44,6 +46,7 @@ class WxArticleTabFragment : BaseFragment() {
             title = requireArguments().getString(ARG_PARAM1)
             articleId = requireArguments().getString(ARG_PARAM2)
         }
+        wxArticlePgAdapter = WxArticlePgAdapter(requireContext())
     }
 
     override fun onCreateView(
@@ -71,7 +74,7 @@ class WxArticleTabFragment : BaseFragment() {
      * 加载数据
      */
     private fun onLoadData() {
-        recyclerView.adapter = wxArticleAdapter
+        recyclerView.adapter = wxArticlePgAdapter
         refreshLayout.autoRefresh()
         refreshLayout.setOnRefreshListener { getData() }
         isDataInited = true
@@ -81,35 +84,13 @@ class WxArticleTabFragment : BaseFragment() {
      * 获取数据
      */
     private fun getData() {
-        wxArticleTabViewModel.getArticle(0, articleId!!.toInt()).observe(this, {
-            if (it.isSuccess) {
-                wxArticleBeanList.addAll(it.result!!)
-                wxArticleAdapter.notifyDataSetChanged()
-                wxArticleAdapter.setOnItemClickListener(object :
-                    MultiItemTypeAdapter.OnItemClickListener {
-                    override fun onItemClick(
-                        view: View,
-                        holder: RecyclerView.ViewHolder,
-                        position: Int
-                    ) {
-                        val wxArticleBean = wxArticleBeanList!![position]
-                        WebActivity.startActivity(activity!!, wxArticleBean.title, wxArticleBean.link)
-                    }
+        lifecycleScope.launch {
+            wxArticleTabViewModel.getArticles(articleId!!.toInt()).collectLatest {
+                wxArticlePgAdapter.submitData(it)
 
-                    override fun onItemLongClick(
-                        view: View,
-                        holder: RecyclerView.ViewHolder,
-                        position: Int
-                    ): Boolean {
-                        return false
-                    }
-                })
-            } else {
-                ToastUtils.showLong(it.errorMessage)
             }
-            refreshLayout.finishRefresh()
+        }
 
-        })
     }
 
 

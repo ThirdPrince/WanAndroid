@@ -67,7 +67,7 @@ class ProjectFragment : BaseFragment() {
      */
     private fun getData() {
 
-        projectViewModel.getProject().observe(viewLifecycleOwner, {
+        projectViewModel.getProject().observe(viewLifecycleOwner) {
             wxArticleTabFragments.clear()
             tabIndicator.clear()
             for (projectBean in it.result!!) {
@@ -94,7 +94,7 @@ class ProjectFragment : BaseFragment() {
             }
             viewPager.offscreenPageLimit = wxArticleTabFragments.size
             tabLayout.setupWithViewPager(viewPager)
-        })
+        }
 
 
     }

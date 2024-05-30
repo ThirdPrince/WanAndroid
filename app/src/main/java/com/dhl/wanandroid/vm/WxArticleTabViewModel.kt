@@ -5,9 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.dhl.wanandroid.adapter.ArticlePagingSource
 import com.dhl.wanandroid.http.RetrofitManager
 import com.dhl.wanandroid.model.*
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 /**
@@ -36,24 +42,12 @@ class WxArticleTabViewModel : BaseViewModel() {
     /**
      * 获取文章
      */
-    fun getArticle(pageNum: Int, id: Int): LiveData<RepoResult<MutableList<Article>>> {
-        val exception = CoroutineExceptionHandler { _, throwable ->
-            _resultArticle.value = throwable.message?.let { RepoResult(it) }
-            Log.e(tag, throwable.message!!)
-        }
-
-        viewModelScope.launch(exception) {
-            val response = api.getWxArticleList(id, pageNum)
-            val data = response.body()?.data
-            if (data != null) {
-                _resultArticle.value = RepoResult(data?.datas!!, "")
-            } else {
-                _resultArticle.value = RepoResult(response.message())
-            }
 
 
-        }
-        return resultArticle
+    fun getArticles(id: Int): Flow<PagingData<Article>> {
+        return Pager(PagingConfig(pageSize = 20)) {
+            ArticlePagingSource(api, id)
+        }.flow.cachedIn(viewModelScope)
     }
 
 

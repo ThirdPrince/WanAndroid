@@ -5,9 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.dhl.wanandroid.adapter.ArticlePagingSource
 import com.dhl.wanandroid.http.RetrofitManager
 import com.dhl.wanandroid.model.*
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 /**
@@ -33,6 +39,7 @@ open abstract class BaseViewModel : ViewModel() {
         _errorResponse.value = throwable.message?.let { RepoResult(it) }
         Log.e("BaseViewModel", throwable.message!!)
     }
+
 
 
 }
