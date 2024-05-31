@@ -3,7 +3,6 @@ package com.dhl.wanandroid.adapter
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.dhl.wanandroid.api.ApiService
-import com.dhl.wanandroid.http.RetrofitManager
 import com.dhl.wanandroid.model.Article
 
 class ArticlePagingSource(private val apiService: ApiService, val id:Int) : PagingSource<Int, Article>() {

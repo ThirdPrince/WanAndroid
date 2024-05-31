@@ -1,7 +1,5 @@
 package com.dhl.wanandroid.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -23,21 +21,9 @@ import kotlinx.coroutines.flow.Flow
  */
 class WxArticleTabViewModel : BaseViewModel() {
 
-    val tag = "WxArticleTabViewModel"
-
-
-    /**
-     * 文章LiveData
-     */
-    private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
-    private val resultArticle: LiveData<RepoResult<MutableList<Article>>>
-        get() = _resultArticle
-
     /**
      * 获取文章
      */
-
-
     fun getArticles(id: Int): Flow<PagingData<Article>> {
         return Pager(PagingConfig(pageSize = 20)) {
             ArticlePagingSource(api, id)
