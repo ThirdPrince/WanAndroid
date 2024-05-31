@@ -21,7 +21,7 @@ import com.dhl.wanandroid.drawable.util.ColorGenerator
 import com.dhl.wanandroid.model.Article
 
 class WxArticlePgAdapter(
-    private val context: Context
+    private val context: Context,val onItemClickListener: OnItemClickListener
 ) : PagingDataAdapter<Article, WxArticlePgAdapter.ArticleViewHolder>(ARTICLE_COMPARATOR) {
 
     private val colorGenerator: ColorGenerator = ColorGenerator.MATERIAL
@@ -82,13 +82,17 @@ class WxArticlePgAdapter(
             }
 
             descTv.text = "${article.superChapterName} / ${article.chapterName}"
+
+            itemView.setOnClickListener {
+                onItemClickListener.onItemClick(article)
+            }
         }
     }
 
     companion object {
         private val ARTICLE_COMPARATOR = object : DiffUtil.ItemCallback<Article>() {
             override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem.title == newItem.title
+                oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
                 oldItem == newItem

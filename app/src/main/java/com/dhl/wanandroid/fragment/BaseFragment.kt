@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.util.SettingUtil.getColor
 import com.scwang.smart.refresh.header.MaterialHeader
@@ -32,12 +33,11 @@ abstract class BaseFragment : Fragment() {
     /**
      * smartRefresh
      */
-    protected val refreshLayout: SmartRefreshLayout by lazy {
+    protected val refreshLayout: SwipeRefreshLayout by lazy {
         requireView().findViewById(R.id.refreshLayout)
     }
 
 
-    private var materialHeader: MaterialHeader? =null
     /**
      * rcy
      */
@@ -60,8 +60,6 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected fun initRcy(view: View) {
-        materialHeader = refreshLayout.refreshHeader as MaterialHeader ?
-      //  mClassicsHeader!!.setTimeFormat(SimpleDateFormat("更新于 MM-dd HH:mm", Locale.CHINA))
         recyclerView.layoutManager = LinearLayoutManager(activity)
     }
 

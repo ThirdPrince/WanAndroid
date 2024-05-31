@@ -54,8 +54,6 @@ class KnowledgeSysFragment : BaseFragment() {
         toolbar.title = getString(R.string.title_knowledge)
         initRcy(view)
         recyclerView.adapter = knowledgeAdapter
-        refreshLayout.autoRefresh()
-        refreshLayout.setEnableLoadMore(false)
         refreshLayout.setOnRefreshListener {
             getData()
         }
@@ -65,17 +63,16 @@ class KnowledgeSysFragment : BaseFragment() {
      * 获取数据
      */
     private fun getData() {
-        knowledgeSysViewModel.getKnowledgeTree().observe(viewLifecycleOwner, {
+        knowledgeSysViewModel.getKnowledgeTree().observe(viewLifecycleOwner) {
             knowledgeTreeDataList.clear()
             if (it.isSuccess) {
                 knowledgeTreeDataList.addAll(it.result!!)
                 knowledgeAdapter.notifyDataSetChanged()
-                refreshLayout.finishRefresh()
                 setOnClick()
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
-        })
+        }
     }
 
 

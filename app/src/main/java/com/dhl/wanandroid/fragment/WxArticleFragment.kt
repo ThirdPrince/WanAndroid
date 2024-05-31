@@ -87,7 +87,7 @@ class WxArticleFragment : BaseFragment() {
                     wxArticleTabFragmentList.add(
                         WxArticleTabFragment.newInstance(
                             baseData.name,
-                            baseData.id.toString() + ""
+                            baseData.id
                         )
                     )
                 }

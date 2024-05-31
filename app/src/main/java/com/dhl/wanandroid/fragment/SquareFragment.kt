@@ -56,8 +56,6 @@ class SquareFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRcy(view)
-        refreshLayout.autoRefresh()
-        refreshLayout.setEnableLoadMore(false)
         recyclerView.adapter = homePageAdapter
         refreshLayout.setOnRefreshListener {
             getData()
@@ -72,7 +70,6 @@ class SquareFragment : BaseFragment() {
             it.let {
                 squareList.addAll(it.result!!)
             }
-            refreshLayout.finishRefresh()
             homePageAdapter.notifyDataSetChanged()
             setListOnClick()
 

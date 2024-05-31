@@ -1,20 +1,15 @@
 package com.dhl.wanandroid.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.dhl.wanandroid.adapter.ArticlePagingSource
-import com.dhl.wanandroid.http.RetrofitManager
 import com.dhl.wanandroid.model.*
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 /**
  * @Title: KnowledgeTabViewModel
@@ -37,7 +32,6 @@ class WxArticleTabViewModel : BaseViewModel() {
     private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
     private val resultArticle: LiveData<RepoResult<MutableList<Article>>>
         get() = _resultArticle
-
 
     /**
      * 获取文章

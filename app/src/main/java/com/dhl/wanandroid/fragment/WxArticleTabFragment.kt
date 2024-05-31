@@ -1,22 +1,20 @@
 package com.dhl.wanandroid.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
+import androidx.paging.LoadState
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
-import com.dhl.wanandroid.adapter.WxArticleAdapter
+import com.dhl.wanandroid.adapter.OnItemClickListener
 import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.vm.WxArticleTabViewModel
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -24,12 +22,10 @@ import kotlinx.coroutines.launch
  * 微信公众号TAb Fragment
  * @author dhl
  */
-class WxArticleTabFragment : BaseFragment() {
-    // TODO: Rename and change types of parameters
+class WxArticleTabFragment : BaseFragment(), OnItemClickListener {
     var title: String? = null
         private set
-    private var articleId: String? = null
-
+    private  var articleId: Int = 0
 
 
     private lateinit var wxArticlePgAdapter: WxArticlePgAdapter
@@ -44,9 +40,9 @@ class WxArticleTabFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             title = requireArguments().getString(ARG_PARAM1)
-            articleId = requireArguments().getString(ARG_PARAM2)
+            articleId = requireArguments().getInt(ARG_PARAM2)
         }
-        wxArticlePgAdapter = WxArticlePgAdapter(requireContext())
+        wxArticlePgAdapter = WxArticlePgAdapter(requireContext(),this)
     }
 
     override fun onCreateView(
@@ -75,7 +71,8 @@ class WxArticleTabFragment : BaseFragment() {
      */
     private fun onLoadData() {
         recyclerView.adapter = wxArticlePgAdapter
-        refreshLayout.autoRefresh()
+        refreshLayout.isRefreshing = true
+        getData()
         refreshLayout.setOnRefreshListener { getData() }
         isDataInited = true
     }
@@ -85,12 +82,17 @@ class WxArticleTabFragment : BaseFragment() {
      */
     private fun getData() {
         lifecycleScope.launch {
-            wxArticleTabViewModel.getArticles(articleId!!.toInt()).collectLatest {
+            wxArticleTabViewModel.getArticles(articleId).collect {
                 wxArticlePgAdapter.submitData(it)
+            }
 
+        }
+        wxArticlePgAdapter.addLoadStateListener { loadState ->
+            // 只在加载完成时停止刷新动画
+            if (loadState.source.refresh is LoadState.NotLoading) {
+                refreshLayout.isRefreshing = false
             }
         }
-
     }
 
 
@@ -108,13 +110,16 @@ class WxArticleTabFragment : BaseFragment() {
         private const val ARG_PARAM2 = "param2"
 
         @JvmStatic
-        fun newInstance(param1: String?, param2: String?): WxArticleTabFragment {
+        fun newInstance(param1: String?, param2: Int): WxArticleTabFragment {
             val fragment = WxArticleTabFragment()
             val args = Bundle()
             args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
+            args.putInt(ARG_PARAM2, param2)
             fragment.arguments = args
             return fragment
         }
+    }
+    override fun onItemClick(article: Article) {
+        WebActivity.startActivity(requireActivity(),article.title,article.link)
     }
 }

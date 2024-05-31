@@ -75,7 +75,7 @@ class ProjectFragment : BaseFragment() {
                 wxArticleTabFragments.add(
                     WxArticleTabFragment.newInstance(
                         projectBean.name,
-                        projectBean.id.toString() + ""
+                        projectBean.id
                     )
                 )
             }

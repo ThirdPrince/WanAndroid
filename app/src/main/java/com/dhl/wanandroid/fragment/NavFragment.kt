@@ -43,8 +43,6 @@ class NavFragment : BaseFragment() {
         initToolbar(view)
         toolbar.title = getString(R.string.title_nav)
         initRcy(view)
-        refreshLayout.autoRefresh()
-        refreshLayout.setEnableLoadMore(false)
         setAdapter()
         refreshLayout.setOnRefreshListener { getData() }
     }
@@ -62,7 +60,6 @@ class NavFragment : BaseFragment() {
                 navInfoList.clear()
                 navInfoList.addAll(it)
                 navInfoAdapter.notifyDataSetChanged()
-                refreshLayout.finishRefresh()
             }
 
         }

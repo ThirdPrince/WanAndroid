@@ -68,7 +68,7 @@ class KnowledgeTabFragment : BaseFragment() {
      */
     private fun onLoadData() {
         recyclerView.adapter = knowledgeChildBeanAdapter
-        refreshLayout.autoRefresh()
+
         refreshLayout.setOnRefreshListener { getData() }
         isDataInited = true
     }
@@ -77,25 +77,33 @@ class KnowledgeTabFragment : BaseFragment() {
      * 获取数据
      */
     private fun getData() {
-        knowledgeTabViewModel.getArticle(0, articleId!!.toInt()).observe(viewLifecycleOwner, {
-            if(it.isSuccess){
+        knowledgeTabViewModel.getArticle(0, articleId!!.toInt()).observe(viewLifecycleOwner) {
+            if (it.isSuccess) {
                 knowledgeList.addAll(it.result!!)
                 knowledgeChildBeanAdapter.notifyDataSetChanged()
-                knowledgeChildBeanAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
-                    override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
+                knowledgeChildBeanAdapter.setOnItemClickListener(object :
+                    MultiItemTypeAdapter.OnItemClickListener {
+                    override fun onItemClick(
+                        view: View,
+                        holder: RecyclerView.ViewHolder,
+                        position: Int
+                    ) {
                         val article = knowledgeList[position]
                         WebActivity.startActivity(activity!!, article.title, article.link)
                     }
 
-                    override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
+                    override fun onItemLongClick(
+                        view: View,
+                        holder: RecyclerView.ViewHolder,
+                        position: Int
+                    ): Boolean {
                         return false
                     }
                 })
-            }else{
+            } else {
                 ToastUtils.showLong(it.errorMessage)
             }
-            refreshLayout.finishRefresh()
-        })
+        }
     }
 
 

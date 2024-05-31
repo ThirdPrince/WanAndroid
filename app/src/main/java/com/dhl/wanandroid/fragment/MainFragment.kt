@@ -116,10 +116,10 @@ class MainFragment : BaseFragment() {
             pageCount = 0
             getData()
         }
-        refreshLayout.setOnLoadMoreListener {
-            pageCount++
-            getData()
-        }
+
+        pageCount++
+        getData()
+
         observeData()
     }
 
@@ -140,8 +140,7 @@ class MainFragment : BaseFragment() {
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
-            refreshLayout.finishRefresh()
-            refreshLayout.finishLoadMore()
+
         }
 
         mainViewModel.resultArticle.observe(viewLifecycleOwner) {
@@ -156,8 +155,7 @@ class MainFragment : BaseFragment() {
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
-            refreshLayout.finishRefresh()
-            refreshLayout.finishLoadMore()
+
 
         }
 
