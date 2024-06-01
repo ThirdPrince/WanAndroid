@@ -6,8 +6,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.dhl.wanandroid.adapter.ArticlePagingSource
-import com.dhl.wanandroid.model.*
+import com.dhl.wanandroid.model.Article
+import com.dhl.wanandroid.model.ArticleData
+import com.dhl.wanandroid.model.HttpData
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 /**
  * @Title: KnowledgeTabViewModel
@@ -25,8 +28,12 @@ class WxArticleTabViewModel : BaseViewModel() {
      * 获取文章
      */
     fun getArticles(id: Int): Flow<PagingData<Article>> {
+        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page ->
+            api.getWxArticleList(id, page)
+        }
+
         return Pager(PagingConfig(pageSize = 20)) {
-            ArticlePagingSource(api, id)
+            ArticlePagingSource(apiCall)
         }.flow.cachedIn(viewModelScope)
     }
 

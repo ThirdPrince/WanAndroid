@@ -53,7 +53,7 @@ class ProjectFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initToolbar(view)
+        initToolbar()
         getData()
     }
 
@@ -88,7 +88,7 @@ class ProjectFragment : BaseFragment() {
                     return wxArticleTabFragments.size
                 }
 
-                override fun getPageTitle(position: Int): CharSequence? {
+                override fun getPageTitle(position: Int): CharSequence {
                     return tabIndicator[position]
                 }
             }

@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.dhl.wanandroid.R
-import com.dhl.wanandroid.activity.WebActivity
-import com.dhl.wanandroid.adapter.OnItemClickListener
 import com.dhl.wanandroid.adapter.WxArticlePgAdapter
-import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.vm.WxArticleTabViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -22,13 +18,15 @@ import kotlinx.coroutines.launch
  * 微信公众号TAb Fragment
  * @author dhl
  */
-class WxArticleTabFragment : BaseFragment(), OnItemClickListener {
+class WxArticleTabFragment : BaseFragment() {
     var title: String? = null
         private set
-    private  var articleId: Int = 0
+    private var articleId: Int = 0
 
 
-    private lateinit var wxArticlePgAdapter: WxArticlePgAdapter
+    private val wxArticlePgAdapter: WxArticlePgAdapter by lazy {
+        WxArticlePgAdapter(requireContext(), this)
+    }
     private var isViewCreate = false
     private var isDataInited = false
 
@@ -42,7 +40,6 @@ class WxArticleTabFragment : BaseFragment(), OnItemClickListener {
             title = requireArguments().getString(ARG_PARAM1)
             articleId = requireArguments().getInt(ARG_PARAM2)
         }
-        wxArticlePgAdapter = WxArticlePgAdapter(requireContext(),this)
     }
 
     override fun onCreateView(
@@ -54,7 +51,7 @@ class WxArticleTabFragment : BaseFragment(), OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRcy(view)
+        initRcy()
         isViewCreate = true
     }
 
@@ -119,7 +116,5 @@ class WxArticleTabFragment : BaseFragment(), OnItemClickListener {
             return fragment
         }
     }
-    override fun onItemClick(article: Article) {
-        WebActivity.startActivity(requireActivity(),article.title,article.link)
-    }
+
 }

@@ -6,9 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
@@ -27,7 +24,6 @@ import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
-
 import java.io.IOException
 import java.util.*
 
@@ -96,12 +92,12 @@ class MainFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView(view)
+        initView()
     }
 
-    private fun initView(view: View) {
-        initToolbar(view)
-        initRcy(view)
+    private fun initView() {
+        initToolbar()
+        initRcy()
         initData()
 
     }
@@ -110,9 +106,7 @@ class MainFragment : BaseFragment() {
         recyclerView.adapter = headerAndFooterWrapper
         headerAndFooterWrapper.addHeaderView(mHeaderGroup)
         toolbar.title = "首页"
-        //refreshLayout.autoRefresh()
         refreshLayout.setOnRefreshListener {
-            Log.e(TAG, "setOnRefreshListener")
             pageCount = 0
             getData()
         }
@@ -144,7 +138,6 @@ class MainFragment : BaseFragment() {
         }
 
         mainViewModel.resultArticle.observe(viewLifecycleOwner) {
-            Log.e(TAG, "pageNo = $pageCount" + "-->" + it.result?.size)
             if (it.isSuccess) {
                 if (pageCount == 0) {
                     homePageDataList.clear()

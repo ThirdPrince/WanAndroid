@@ -6,19 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
-import com.dhl.wanandroid.activity.KnowledgeInfoActivity
-import com.dhl.wanandroid.adapter.KnowledgeAdapter
-import com.dhl.wanandroid.model.KnowledgeTreeData
 import com.dhl.wanandroid.util.SettingUtil
-import com.dhl.wanandroid.vm.KnowledgeSysViewModel
 import com.google.android.material.tabs.TabLayout
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
 
 
 /**
@@ -61,7 +52,7 @@ class SysFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initToolbar(view)
+        initToolbar()
         toolbar.title = getString(R.string.title_system)
         initFragment()
     }
@@ -88,7 +79,7 @@ class SysFragment : BaseFragment() {
                 return sysFragmentList.size
             }
 
-            override fun getPageTitle(position: Int): CharSequence? {
+            override fun getPageTitle(position: Int): CharSequence {
                 return tabIndicator[position]
             }
         }

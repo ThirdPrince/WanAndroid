@@ -63,17 +63,28 @@ class WxArticlePgAdapter(
             }
 
             val drawable = if (article.author.isNotEmpty()) {
-                drawableBuilder.build(article.author.first().toString(), colorGenerator.getColor(article.author))
+                drawableBuilder.build(
+                    article.author.first().toString(),
+                    colorGenerator.getColor(article.author)
+                )
+            } else if (article.shareUser.isNotEmpty()) {
+                drawableBuilder.build(
+                    article.shareUser.first().toString(),
+                    colorGenerator.getColor(article.shareUser)
+                )
             } else {
                 drawableBuilder.build("佚", colorGenerator.getColor("佚"))
             }
             headerImg.setImageDrawable(drawable)
 
-            if (TextUtils.isEmpty(article.author)) {
-                nameTv.text = "佚名"
-            } else {
+            if (!TextUtils.isEmpty(article.author)) {
                 nameTv.text = article.author
+            } else if (!TextUtils.isEmpty(article.shareUser)) {
+                nameTv.text = article.shareUser
+            } else {
+                nameTv.text = "佚名"
             }
+
 
             if (article.isTop) {
                 topTv.visibility = View.VISIBLE

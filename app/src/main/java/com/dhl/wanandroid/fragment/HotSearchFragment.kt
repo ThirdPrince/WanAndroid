@@ -1,35 +1,41 @@
 package com.dhl.wanandroid.fragment
 
-import android.os.*
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.text.TextUtils
 import android.util.Log
-import android.view.*
-import android.widget.AdapterView
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
-import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.HomePageAdapter
+import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.model.HotSearchBean
 import com.dhl.wanandroid.util.CommonUtils
 import com.dhl.wanandroid.vm.HotSearchViewModel
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
 import com.zhy.view.flowlayout.FlowLayout
 import com.zhy.view.flowlayout.TagAdapter
 import com.zhy.view.flowlayout.TagFlowLayout
-import com.zhy.view.flowlayout.TagFlowLayout.OnTagClickListener
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 
@@ -70,6 +76,9 @@ class HotSearchFragment : BaseFragment() {
 
     }
 
+    private val searchPgAdapter: WxArticlePgAdapter by lazy {
+        WxArticlePgAdapter(requireContext(), this)
+    }
 
     /**
      * adapter
@@ -110,7 +119,7 @@ class HotSearchFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initToolbar(view)
+        initToolbar()
         initView()
         initData()
         getHotData()
@@ -118,7 +127,7 @@ class HotSearchFragment : BaseFragment() {
 
     private fun initView() {
         searchResultRcy.run {
-            adapter = searchAdapter
+            adapter = searchPgAdapter
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -133,22 +142,7 @@ class HotSearchFragment : BaseFragment() {
                 }
             })
         }
-        searchAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
 
-            override fun onItemClick(p0: View?, p1: RecyclerView.ViewHolder?, position: Int) {
-                val data = searchDataList[position]
-                WebActivity.startActivity(activity!!, data.title, data.link)
-            }
-
-            override fun onItemLongClick(
-                p0: View?,
-                p1: RecyclerView.ViewHolder?,
-                p2: Int
-            ): Boolean {
-                return false
-            }
-
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -195,6 +189,7 @@ class HotSearchFragment : BaseFragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+
     private fun initData() {
         toolbar.title = getString(R.string.action_search)
         setHasOptionsMenu(true)
@@ -212,7 +207,7 @@ class HotSearchFragment : BaseFragment() {
      * getData
      */
     private fun getHotData() {
-        searchViewModel.getSearchHot().observe(viewLifecycleOwner, Observer {
+        searchViewModel.getSearchHot().observe(viewLifecycleOwner) {
             hotSearchFlowLayout.adapter =
                 (object : TagAdapter<HotSearchBean?>(it.result!! as List<HotSearchBean?>?) {
                     override fun getView(
@@ -236,14 +231,14 @@ class HotSearchFragment : BaseFragment() {
                     }
                 })
 
-            hotSearchFlowLayout.setOnTagClickListener(OnTagClickListener { view, position, parent ->
+            hotSearchFlowLayout.setOnTagClickListener { view, position, parent ->
                 val hotBean = it.result!![position]
                 getSearchKey(hotBean.name)
                 searchView.setQuery(hotBean.name, false)
                 false
-            })
+            }
 
-        })
+        }
 
         searchViewModel.errorResponse.observe(viewLifecycleOwner) {
             ToastUtils.showLong(it.errorMessage)
@@ -258,15 +253,22 @@ class HotSearchFragment : BaseFragment() {
             searchViewModel.getSearchResult(0, key).observe(viewLifecycleOwner, Observer {
                 Log.e(TAG, "it -->${it.result?.datas.toString()}")
                 if (it.result != null) {
-                    if (it.result!!.datas != null && it.result!!.datas.size > 0) {
+                    if (it.result!!.datas.size > 0) {
                         searchDataList.clear()
                         searchDataList.addAll(it.result?.datas!!)
                     }
                 }
                 searchResultRcy.visibility = View.VISIBLE
                 searchScrollView.visibility = View.GONE
-                searchAdapter.notifyDataSetChanged()
+
             })
+
+            lifecycleScope.launch {
+                searchViewModel.getSearchRes(key).collect {
+                    searchPgAdapter.submitData(it)
+                }
+            }
+
         } else {
             searchResultRcy.visibility = View.GONE
             searchScrollView.visibility = View.VISIBLE

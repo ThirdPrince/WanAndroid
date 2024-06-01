@@ -5,15 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.KnowledgeInfoActivity
-import com.dhl.wanandroid.adapter.KnowledgeAdapter
+import com.dhl.wanandroid.adapter.KnowledgeListAdapter
+import com.dhl.wanandroid.adapter.OnKnowledgeClickListener
 import com.dhl.wanandroid.model.KnowledgeTreeData
 import com.dhl.wanandroid.vm.KnowledgeSysViewModel
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
-
 
 
 /**
@@ -22,17 +20,13 @@ import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
  * @date 2022 12 24
  * @version V2.0
  */
-class KnowledgeSysFragment : BaseFragment() {
-    /**
-     *
-     */
-    private var knowledgeTreeDataList: MutableList<KnowledgeTreeData> = mutableListOf()
+class KnowledgeSysFragment : BaseFragment(), OnKnowledgeClickListener {
 
     /**
      * adapter
      */
-    private val knowledgeAdapter: KnowledgeAdapter by lazy {
-        KnowledgeAdapter(activity, R.layout.fragment_knowledge_item, knowledgeTreeDataList)
+    private val knowledgeAdapter: KnowledgeListAdapter by lazy {
+        KnowledgeListAdapter(requireActivity(), R.layout.fragment_knowledge_item, this)
     }
 
     /**
@@ -50,9 +44,9 @@ class KnowledgeSysFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initToolbar(view)
+        initToolbar()
         toolbar.title = getString(R.string.title_knowledge)
-        initRcy(view)
+        initRcy()
         recyclerView.adapter = knowledgeAdapter
         refreshLayout.setOnRefreshListener {
             getData()
@@ -64,34 +58,14 @@ class KnowledgeSysFragment : BaseFragment() {
      */
     private fun getData() {
         knowledgeSysViewModel.getKnowledgeTree().observe(viewLifecycleOwner) {
-            knowledgeTreeDataList.clear()
             if (it.isSuccess) {
-                knowledgeTreeDataList.addAll(it.result!!)
-                knowledgeAdapter.notifyDataSetChanged()
-                setOnClick()
+                knowledgeAdapter.submitList(it.result)
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
         }
     }
 
-
-    /**
-     * adapter onClick
-     */
-    private fun setOnClick() {
-            knowledgeAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
-                override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
-                    val knowledgeTreeData = knowledgeTreeDataList[position]
-                    KnowledgeInfoActivity.startActivity(requireActivity(), knowledgeTreeData)
-                }
-
-                override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
-                    return false
-                }
-            })
-
-    }
 
     companion object {
         private const val ARG_PARAM1 = "param1"
@@ -105,5 +79,9 @@ class KnowledgeSysFragment : BaseFragment() {
             fragment.arguments = args
             return fragment
         }
+    }
+
+    override fun onItemClick(knowledgeTreeData: KnowledgeTreeData) {
+        KnowledgeInfoActivity.startActivity(requireActivity(), knowledgeTreeData)
     }
 }

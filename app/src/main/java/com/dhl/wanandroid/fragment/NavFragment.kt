@@ -4,16 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.adapter.NavInfoAdapter
 import com.dhl.wanandroid.model.NavBean
-import com.dhl.wanandroid.vm.KnowledgeTabViewModel
 import com.dhl.wanandroid.vm.NavViewModel
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
 
 /**
  * NavFragment
@@ -40,9 +36,9 @@ class NavFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initToolbar(view)
+        initToolbar()
         toolbar.title = getString(R.string.title_nav)
-        initRcy(view)
+        initRcy()
         setAdapter()
         refreshLayout.setOnRefreshListener { getData() }
     }
@@ -68,7 +64,6 @@ class NavFragment : BaseFragment() {
     }
 
     companion object {
-        private const val TAG = "NavFragment"
         private const val ARG_PARAM1 = "param1"
         private const val ARG_PARAM2 = "param2"
         fun newInstance(param1: String?, param2: String?): NavFragment {

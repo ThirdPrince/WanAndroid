@@ -1,19 +1,17 @@
 package com.dhl.wanandroid.fragment
 
-import android.content.Context
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dhl.wanandroid.R
+import com.dhl.wanandroid.activity.WebActivity
+import com.dhl.wanandroid.adapter.OnItemClickListener
+import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.util.SettingUtil.getColor
-import com.scwang.smart.refresh.header.MaterialHeader
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
 
 
 /**
@@ -22,7 +20,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout
  * Fragment 的存在，是 专注于承担 “视图控制器” 责任，
  * 以分担 Activity 责任、让 Activity 更专注于 “幕后协调者” 工作。
  */
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment(), OnItemClickListener {
     /**
      * 共用ToolBar
      */
@@ -49,21 +47,18 @@ abstract class BaseFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-    }
-
-
-    protected fun initToolbar(view: View) {
+    protected fun initToolbar() {
         toolbar.background = (ColorDrawable(getColor()))
     }
 
-    protected fun initRcy(view: View) {
+    protected fun initRcy() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
     }
 
-    companion object {
-        private const val TITLE = "title"
+    override fun onItemClick(article: Article) {
+        WebActivity.startActivity(requireActivity(), article.title, article.link)
     }
+
+
 }

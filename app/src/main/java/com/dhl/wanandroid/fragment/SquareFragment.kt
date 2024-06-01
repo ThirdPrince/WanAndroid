@@ -1,25 +1,17 @@
 package com.dhl.wanandroid.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.dhl.wanandroid.R
-import com.dhl.wanandroid.activity.WebActivity
-import com.dhl.wanandroid.adapter.HomePageAdapter
-import com.dhl.wanandroid.http.OkHttpManager
-import com.dhl.wanandroid.model.Article
-import com.dhl.wanandroid.util.APIUtil
+import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.vm.SquareViewModel
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
-import java.io.IOException
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 /**
@@ -31,13 +23,8 @@ import java.io.IOException
 class SquareFragment : BaseFragment() {
 
 
-    private val squareList: MutableList<Article> = mutableListOf()
-
-    /**
-     * adapter
-     */
-    private val homePageAdapter: HomePageAdapter by lazy {
-        HomePageAdapter(activity, R.layout.fragment_homepage_item, squareList)
+    private val wxArticlePgAdapter: WxArticlePgAdapter by lazy {
+        WxArticlePgAdapter(requireContext(), this)
     }
 
     /**
@@ -48,15 +35,17 @@ class SquareFragment : BaseFragment() {
     }
 
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_square, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initRcy(view)
-        recyclerView.adapter = homePageAdapter
+        initRcy()
+        recyclerView.adapter = wxArticlePgAdapter
+        getData()
         refreshLayout.setOnRefreshListener {
             getData()
         }
@@ -66,35 +55,20 @@ class SquareFragment : BaseFragment() {
      * 获取数据
      */
     private fun getData() {
-        squareViewModel.getSquareList(0).observe(viewLifecycleOwner, Observer {
-            it.let {
-                squareList.addAll(it.result!!)
+        lifecycleScope.launch {
+            squareViewModel.getSquareList().collect {
+                wxArticlePgAdapter.submitData(it)
             }
-            homePageAdapter.notifyDataSetChanged()
-            setListOnClick()
 
-        })
+        }
+        wxArticlePgAdapter.addLoadStateListener { loadState ->
+            // 只在加载完成时停止刷新动画
+            if (loadState.source.refresh is LoadState.NotLoading) {
+                refreshLayout.isRefreshing = false
+            }
+        }
     }
 
-
-
-    /**
-     * onClick
-     */
-    private fun setListOnClick() {
-        homePageAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
-                val homePageData = squareList[position]
-                WebActivity.startActivity(activity!!, homePageData.title, homePageData.link)
-            }
-
-            override fun onItemLongClick(view: View, holder: RecyclerView.ViewHolder, position: Int): Boolean {
-                return false
-            }
-        })
-
-
-    }
 
     companion object {
         private const val ARG_PARAM1 = "param1"

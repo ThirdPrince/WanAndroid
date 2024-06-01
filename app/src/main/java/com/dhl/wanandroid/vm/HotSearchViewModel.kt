@@ -1,15 +1,21 @@
 package com.dhl.wanandroid.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.dhl.wanandroid.adapter.ArticlePagingSource
+import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.model.ArticleData
 import com.dhl.wanandroid.model.HotSearchBean
-import com.dhl.wanandroid.model.NavBean
+import com.dhl.wanandroid.model.HttpData
 import com.dhl.wanandroid.model.RepoResult
-import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 
 /**
@@ -49,7 +55,7 @@ class HotSearchViewModel : BaseViewModel() {
         viewModelScope.launch(exception) {
             val response = api.getSearchKey(page, key)
             if (response.isSuccessful) {
-                val data = response.body()!!.data
+                val data = response.body()?.data
                 if (data != null) {
                     result.value = RepoResult(data, "")
                 } else {
@@ -61,6 +67,16 @@ class HotSearchViewModel : BaseViewModel() {
 
         }
         return result
+    }
+
+    fun getSearchRes(key: String): Flow<PagingData<Article>> {
+        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page ->
+            api.getSearchKey(page, key)
+        }
+
+        return Pager(PagingConfig(pageSize = 20)) {
+            ArticlePagingSource(apiCall)
+        }.flow.cachedIn(viewModelScope)
     }
 
 }

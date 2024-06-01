@@ -105,7 +105,7 @@ interface ApiService {
      * 广场
      *  https://wanandroid.com/user_article/list/0/json
      */
-    @GET("article/list/{pageNum}/json")
+    @GET("user_article/list/{pageNum}/json")
     suspend fun getSquareList(@Path("pageNum") pageNum: Int): Response<HttpData<ArticleData>>
 
 }

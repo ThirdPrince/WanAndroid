@@ -52,7 +52,7 @@ class KnowledgeTabFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRcy(view)
+        initRcy()
         isViewCreate = true
     }
 

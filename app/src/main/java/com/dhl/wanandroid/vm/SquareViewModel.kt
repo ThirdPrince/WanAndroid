@@ -3,12 +3,19 @@ package com.dhl.wanandroid.vm
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dhl.wanandroid.http.RetrofitManager
-import com.dhl.wanandroid.model.*
-import kotlinx.coroutines.CoroutineExceptionHandler
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.dhl.wanandroid.adapter.ArticlePagingSource
+import com.dhl.wanandroid.model.Article
+import com.dhl.wanandroid.model.ArticleData
+import com.dhl.wanandroid.model.HttpData
+import com.dhl.wanandroid.model.RepoResult
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 /**
  * @Title: SquareViewModel
@@ -37,10 +44,6 @@ class SquareViewModel : BaseViewModel() {
      * 获取文章
      */
     fun getSquareList(pageNum: Int): LiveData<RepoResult<MutableList<Article>>> {
-//        val exception = CoroutineExceptionHandler { _, throwable ->
-//            _resultArticle.value = throwable.message?.let { RepoResult(it) }
-//            Log.e(tag, throwable.message!!)
-//        }
 
         viewModelScope.launch(exception) {
             val response = api.getSquareList(pageNum)
@@ -54,6 +57,15 @@ class SquareViewModel : BaseViewModel() {
 
         }
         return resultArticle
+    }
+
+    fun getSquareList(): Flow<PagingData<Article>> {
+        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page ->
+            api.getSquareList(page)
+        }
+        return Pager(PagingConfig(pageSize = 20)) {
+            ArticlePagingSource(apiCall)
+        }.flow.cachedIn(viewModelScope)
     }
 
 
