@@ -48,6 +48,7 @@ class KnowledgeSysFragment : BaseFragment(), OnKnowledgeClickListener {
         toolbar.title = getString(R.string.title_knowledge)
         initRcy()
         recyclerView.adapter = knowledgeAdapter
+        getData()
         refreshLayout.setOnRefreshListener {
             getData()
         }

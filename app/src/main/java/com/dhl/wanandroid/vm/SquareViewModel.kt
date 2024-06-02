@@ -40,24 +40,6 @@ class SquareViewModel : BaseViewModel() {
         get() = _resultArticle
 
 
-    /**
-     * 获取文章
-     */
-    fun getSquareList(pageNum: Int): LiveData<RepoResult<MutableList<Article>>> {
-
-        viewModelScope.launch(exception) {
-            val response = api.getSquareList(pageNum)
-            Log.i(tag, " response=${response}")
-            val data = response.body()?.data
-            if (data != null) {
-                _resultArticle.value = RepoResult(response.body()?.data?.datas!!, "")
-            } else {
-                _resultArticle.value = RepoResult(response.message())
-            }
-
-        }
-        return resultArticle
-    }
 
     fun getSquareList(): Flow<PagingData<Article>> {
         val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page ->

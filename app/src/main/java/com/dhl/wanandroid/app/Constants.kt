@@ -1,47 +1,40 @@
-package com.dhl.wanandroid.app;
-
+package com.dhl.wanandroid.app
 
 /**
  * 一些基本常量
  * @author dhl
  */
-public class Constants {
-
-
+object Constants {
     /**
      * Retrofit BaseUrl
      */
-    public static final String  BASE_URL = "https://www.wanandroid.com/";
+    const val BASE_URL = "https://www.wanandroid.com/"
+
     /**
      * 首页数据
      */
-    public static final String HOME_PAGE= "https://www.wanandroid.com" ;
-           // "/article/list/0/json";
+    const val HOME_PAGE = "https://www.wanandroid.com"
 
-
-    public static final String WX_ARTICLE = "https://wanandroid.com/wxarticle";
+    // "/article/list/0/json";
+    const val WX_ARTICLE = "https://wanandroid.com/wxarticle"
 
     /**
      * 必应图片下载地址
      */
-
-    public static final String IMAGES_URL = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
-
+    const val IMAGES_URL = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1"
 
     /**
      * register
      */
+    const val REGISTER_URL = "https://www.wanandroid.com/user/register"
 
-    public  static final String REGISTER_URL = "https://www.wanandroid.com/user/register";
     /**
      * login
      */
-
-    public  static final String LOGIN_URL = "https://www.wanandroid.com/user/login";
+    const val LOGIN_URL = "https://www.wanandroid.com/user/login"
 
     /**
      * collection
      */
-
-    public  static final String COLLECTION_URL = "https://www.wanandroid.com/lg/collect/list/0/json";
+    const val COLLECTION_URL = "https://www.wanandroid.com/lg/collect/list/0/json"
 }

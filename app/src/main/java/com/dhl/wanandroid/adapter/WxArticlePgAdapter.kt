@@ -20,6 +20,9 @@ import com.dhl.wanandroid.drawable.TextDrawable
 import com.dhl.wanandroid.drawable.util.ColorGenerator
 import com.dhl.wanandroid.model.Article
 
+/**
+ *公众号adapter
+ */
 class WxArticlePgAdapter(
     private val context: Context,val onItemClickListener: OnItemClickListener
 ) : PagingDataAdapter<Article, WxArticlePgAdapter.ArticleViewHolder>(ARTICLE_COMPARATOR) {
