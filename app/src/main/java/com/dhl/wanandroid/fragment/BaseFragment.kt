@@ -60,5 +60,19 @@ abstract class BaseFragment : Fragment(), OnItemClickListener {
         WebActivity.startActivity(requireActivity(), article.title, article.link)
     }
 
+    companion object{
+        const val ARG_PARAM1 = "param1"
+        const val ARG_PARAM2 = "param2"
+         inline fun <reified T : Fragment> newInstance(param1: String = "", param2: String = ""): T {
+            val fragment = T::class.java.newInstance()
+            val args = Bundle()
+            args.putString(ARG_PARAM1, param1)
+            args.putString(ARG_PARAM2, param2)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+
 
 }

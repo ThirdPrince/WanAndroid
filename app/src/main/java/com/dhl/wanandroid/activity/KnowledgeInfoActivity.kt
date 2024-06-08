@@ -8,12 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.dhl.wanandroid.R
+import com.dhl.wanandroid.fragment.BaseFragment
 import com.dhl.wanandroid.fragment.KnowledgeTabFragment
-import com.dhl.wanandroid.fragment.KnowledgeTabFragment.Companion.newInstance
 import com.dhl.wanandroid.model.KnowledgeTreeData
 import com.dhl.wanandroid.util.SettingUtil
 import com.google.android.material.tabs.TabLayout
-import java.util.*
 
 /**
  * 知识体系 详情
@@ -66,7 +65,7 @@ class KnowledgeInfoActivity : BasicActivity() {
             supportActionBar?.title = knowledgeTreeData.name
             for ((_, _, _, _, id, _, _, name) in knowledgeTreeData.children) {
                 indicators.add(name)
-                fragmentList.add(newInstance(name, id.toString() + ""))
+                fragmentList.add(BaseFragment.newInstance(name, id.toString() + ""))
             }
             viewPager!!.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
                 override fun getItem(i: Int): Fragment {

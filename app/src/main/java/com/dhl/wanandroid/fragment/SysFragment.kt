@@ -66,8 +66,8 @@ class SysFragment : BaseFragment() {
     private fun  initFragment(){
         tabIndicator.add(getString(R.string.title_knowledge))
         tabIndicator.add(getString(R.string.title_nav))
-        sysFragmentList.add(KnowledgeSysFragment.newInstance("",""))
-        sysFragmentList.add(NavFragment.newInstance("",""))
+        sysFragmentList.add(newInstance<KnowledgeSysFragment>())
+        sysFragmentList.add(newInstance<NavFragment>())
         viewPager.adapter = object : FragmentPagerAdapter(childFragmentManager) {
             override fun getItem(i: Int): Fragment {
                 return sysFragmentList[i]
@@ -86,17 +86,4 @@ class SysFragment : BaseFragment() {
     }
 
 
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        fun newInstance(param1: String?, param2: String?): SysFragment {
-            val fragment = SysFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

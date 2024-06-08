@@ -3,14 +3,19 @@ package com.dhl.wanandroid.vm
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dhl.wanandroid.http.RetrofitManager
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.dhl.wanandroid.adapter.ArticlePagingSource
 import com.dhl.wanandroid.model.*
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 /**
  * @Title: MainViewModel
@@ -66,46 +71,36 @@ class MainViewModel : BaseViewModel() {
         }
         return resultBanner
     }
-
-    /**
-     * 获取文章
-     * 包括置顶文章
-     */
-    fun getArticle(pageNum: Int=0): LiveData<RepoResult<MutableList<Article>>> {
-        viewModelScope.launch(exception) {
-            val articleList = mutableListOf<Article>()
-            val deferredArticle = async(exception) { api.getArticleList(pageNum) }
-            if (pageNum == 0) {
-                val deferredTop = async(exception) { api.getTopArticle() }
-                var awaitTop = deferredTop.await()
-                if (awaitTop.isSuccessful) {
-                    awaitTop.body()!!.data.forEach {
-                        it.isTop = true
-                        articleList.add(it)
-                    }
-
-                } else {
-                    _resultArticle.value = RepoResult(awaitTop.message())
-                }
-
-            }
-            var awaitArticle = deferredArticle.await()
-            awaitArticle.body().let {
-                if (awaitArticle.isSuccessful) {
-                    articleList.addAll(it?.data!!.datas)
-                    articleList.let {
-                        _resultArticle.value = RepoResult(articleList, "")
-                    }
-
-                } else {
-                    _resultArticle.value = RepoResult(awaitArticle.message())
-                }
-
-
-            }
-
+    fun getArticles(pageNum: Int = 0): Flow<PagingData<Article>> {
+        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = {
+            fetchArticles(it)
         }
-        return resultArticle
+        return Pager(PagingConfig(pageSize = 20)) {
+            ArticlePagingSource(apiCall)
+        }.flow.cachedIn(viewModelScope)
+    }
+
+    private suspend fun fetchArticles(pageNum: Int): Response<HttpData<ArticleData>> = coroutineScope {
+        val deferredTopArticles = if (pageNum == 0) async { api.getTopArticle() } else null
+        val deferredArticles = async { api.getArticleList(pageNum) }
+
+        val topArticlesResponse = deferredTopArticles?.await()
+        val articlesResponse = deferredArticles.await()
+        val articleList = mutableListOf<Article>()
+        if (pageNum == 0) {
+            if (topArticlesResponse?.isSuccessful == true && articlesResponse.isSuccessful) {
+                val topArticles = topArticlesResponse.body()?.data?.map { it.apply { isTop = true } } ?: emptyList()
+                val articles = articlesResponse.body()?.data?.datas ?: emptyList()
+                articleList.addAll(articles)
+                articleList.addAll(0,topArticles)
+                val httpData = HttpData(ArticleData(0,datas = articleList,0,false,0,0,0))
+                Response.success(httpData)
+            } else {
+                articlesResponse // Prioritize articlesResponse error if exists
+            }
+        } else {
+            articlesResponse
+        }
     }
 
 

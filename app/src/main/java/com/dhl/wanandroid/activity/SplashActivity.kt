@@ -102,7 +102,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun preLoad() {
         mainViewModel.getBanner()
-        mainViewModel.getArticle(0)
+        mainViewModel.getArticles()
     }
 
 

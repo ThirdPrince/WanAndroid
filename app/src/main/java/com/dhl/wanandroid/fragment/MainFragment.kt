@@ -6,26 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
-import com.dhl.wanandroid.adapter.HomePageAdapter
-import com.dhl.wanandroid.http.OkHttpManager
-import com.dhl.wanandroid.model.Article
+import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.BannerBean
 import com.dhl.wanandroid.module.GlideImageLoader
-import com.dhl.wanandroid.util.APIUtil
 import com.dhl.wanandroid.vm.AppScope
 import com.dhl.wanandroid.vm.MainViewModel
 import com.youth.banner.Banner
-import com.zhy.adapter.recyclerview.MultiItemTypeAdapter
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
-import java.io.IOException
-import java.util.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+
 
 /**
  * @author dhl
@@ -44,21 +38,21 @@ class MainFragment : BaseFragment() {
      */
     private val imageUrlList: MutableList<String> = mutableListOf()
 
-    /**
-     * adapter
-     */
-    private val homePageAdapter: HomePageAdapter by lazy {
-        HomePageAdapter(activity, R.layout.fragment_homepage_item, homePageDataList)
+
+    private val wxArticlePgAdapter: WxArticlePgAdapter by lazy {
+        WxArticlePgAdapter(requireContext(), this)
     }
+
+
+
 
     /**
      * 头
      */
     private val headerAndFooterWrapper: HeaderAndFooterWrapper<*> by lazy {
-        HeaderAndFooterWrapper<Any?>(homePageAdapter)
+        HeaderAndFooterWrapper<Any?>(wxArticlePgAdapter)
     }
 
-    private val homePageDataList: MutableList<Article> = mutableListOf()
 
     /**
      * banner Header
@@ -122,7 +116,6 @@ class MainFragment : BaseFragment() {
      */
     private fun getData() {
         mainViewModel.getBanner()
-        mainViewModel.getArticle(pageCount)
     }
 
     private fun observeData() {
@@ -130,27 +123,17 @@ class MainFragment : BaseFragment() {
             if (it.isSuccess) {
                 bannerList = it.result!!
                 setBanner()
-                setHomePageAdapter()
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
 
         }
-
-        mainViewModel.resultArticle.observe(viewLifecycleOwner) {
-            if (it.isSuccess) {
-                if (pageCount == 0) {
-                    homePageDataList.clear()
-                }
-                homePageDataList.addAll(it.result!!)
-                headerAndFooterWrapper.notifyDataSetChanged() //一定要headerAndFooterWrapper 刷新
-                setListOnClick()
-            } else {
-                ToastUtils.showLong(it.errorMessage)
+        lifecycleScope.launch{
+            mainViewModel.getArticles().collect {
+                wxArticlePgAdapter.submitData(it)
             }
-
-
         }
+
 
     }
 
@@ -169,66 +152,4 @@ class MainFragment : BaseFragment() {
         }
     }
 
-    /**
-     * setAdapter
-     */
-    private fun setHomePageAdapter() {
-        setListOnClick()
-    }
-
-
-    /**
-     * onClick
-     */
-    private fun setListOnClick() {
-        homePageAdapter.setOnItemClickListener(object : MultiItemTypeAdapter.OnItemClickListener {
-            override fun onItemClick(view: View, holder: RecyclerView.ViewHolder, position: Int) {
-                val homePageData = homePageDataList[position - 1]
-                WebActivity.startActivity(activity!!, homePageData.title, homePageData.link)
-            }
-
-            override fun onItemLongClick(
-                view: View,
-                holder: RecyclerView.ViewHolder,
-                position: Int
-            ): Boolean {
-                return false
-            }
-        })
-        homePageAdapter.setOnCollectionListener { view, position ->
-            val homePageData = homePageDataList[position - 1]
-            OkHttpManager.getInstance().postCollectionOut(
-                APIUtil.collectionArticleOut(),
-                homePageData.title,
-                homePageData.author,
-                homePageData.link,
-                object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        e.printStackTrace()
-                    }
-
-                    @Throws(IOException::class)
-                    override fun onResponse(call: Call, response: Response) {
-                        val rsp = response.body!!.string()
-                        Log.e(TAG, "rsp=$rsp")
-                        activity!!.runOnUiThread { view.isSelected = true }
-                    }
-                })
-        }
-
-    }
-
-    companion object {
-        private const val TAG = "MainFragment"
-
-        /**
-         *
-         */
-        fun newInstance(param1: String?, param2: String?): MainFragment {
-            val fragment = MainFragment()
-            val args = Bundle()
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

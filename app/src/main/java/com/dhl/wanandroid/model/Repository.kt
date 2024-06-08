@@ -60,7 +60,7 @@ data class BannerBean(@Json(name = "desc") val desc: String,
  */
 data class ArticleData(
         @Json(name = "curPage") val curPage: Int,
-        @Json(name = "datas") var datas: MutableList<Article>,
+        @Json(name = "datas") var datas: List<Article>,
         @Json(name = "offset") val offset: Int,
         @Json(name = "over") val over: Boolean,
         @Json(name = "pageCount") val pageCount: Int,

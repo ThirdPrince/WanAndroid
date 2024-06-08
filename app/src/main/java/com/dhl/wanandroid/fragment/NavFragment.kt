@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.adapter.NavInfoListAdapter
+import com.dhl.wanandroid.adapter.OnItemClickListener
 import com.dhl.wanandroid.vm.NavViewModel
 
 /**
@@ -21,7 +22,7 @@ class NavFragment : BaseFragment() {
      * adapter
      */
     private val navInfoListAdapter: NavInfoListAdapter by lazy {
-        NavInfoListAdapter(requireActivity(), R.layout.nav_info_item)
+        NavInfoListAdapter(requireActivity(), R.layout.nav_info_item,this)
     }
 
 
@@ -62,16 +63,5 @@ class NavFragment : BaseFragment() {
 
     }
 
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-        fun newInstance(param1: String?, param2: String?): NavFragment {
-            val fragment = NavFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
-    }
+
 }

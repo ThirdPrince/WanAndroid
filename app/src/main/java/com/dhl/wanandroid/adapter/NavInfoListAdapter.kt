@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity.Companion.startActivity
-import com.dhl.wanandroid.app.MyApplication.Companion.context
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.model.NavBean
 import com.dhl.wanandroid.util.CommonUtils
@@ -22,13 +21,13 @@ import com.zhy.view.flowlayout.TagFlowLayout
 
 
 class NavInfoListAdapter(
-    context: Context,
-    private val layoutId: Int
+    private val context: Context,
+    private val layoutId: Int, private val onItemClickListener: OnItemClickListener
 ) : ListAdapter<NavBean, NaviViewHolder>(NavDiffCallback()) {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NaviViewHolder {
         val view = inflater.inflate(layoutId, parent, false)
-        return NaviViewHolder(view)
+        return NaviViewHolder(view,onItemClickListener)
     }
 
     override fun onBindViewHolder(holder: NaviViewHolder, position: Int) {
@@ -38,7 +37,7 @@ class NavInfoListAdapter(
 
 }
 
-class NaviViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class NaviViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
     fun bind(navInfo: NavBean) {
         val textView = itemView.findViewById<TextView>(R.id.item_nav_tv)
         textView.text = navInfo.name
@@ -69,7 +68,7 @@ class NaviViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
         mTagFlowLayout.setOnTagClickListener { _, position, _ ->
             val article = mArticles[position];
-             startActivity((context as Activity?)!!, article.title, article.link)
+            onItemClickListener.onItemClick(article)
             false
         }
 

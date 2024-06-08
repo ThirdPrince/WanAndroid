@@ -146,7 +146,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
-        mainFragment = MainFragment.newInstance("", "")
+        mainFragment = BaseFragment.newInstance()
         if (savedInstanceState == null) {
             fragmentTransaction.add(
                 R.id.content,
@@ -229,7 +229,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
         when (index) {
             MAIN_INDEX -> {
                 if (mainFragment == null) {
-                    mainFragment = MainFragment.newInstance("", "")
+                    mainFragment = BaseFragment.newInstance()
                     fragmentTransaction.add(
                         R.id.content,
                         mainFragment,
@@ -242,7 +242,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             }
             KNOWLEDGE_INDEX -> {
                 if (sysFragment == null) {
-                    sysFragment = SysFragment.newInstance("", "")
+                    sysFragment = BaseFragment.newInstance()
                     fragmentTransaction.add(
                         R.id.content,
                         sysFragment!!,
@@ -255,7 +255,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             }
             WX_ARTICLE_INDEX -> {
                 if (wxArticleFragment == null) {
-                    wxArticleFragment = WxArticleFragment.newInstance("", "")
+                    wxArticleFragment = BaseFragment.newInstance()
                     fragmentTransaction.add(
                         R.id.content,
                         wxArticleFragment!!,
@@ -281,7 +281,7 @@ class MainActivity : BasicActivity(), NavigationView.OnNavigationItemSelectedLis
             }
             PROJECT_INDEX -> {
                 if (projectFragment == null) {
-                    projectFragment = ProjectFragment.newInstance("", "")
+                    projectFragment = BaseFragment.newInstance()
                     fragmentTransaction.add(
                         R.id.content,
                         projectFragment!!,

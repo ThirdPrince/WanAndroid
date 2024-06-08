@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -16,7 +15,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,9 +23,7 @@ import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
-import com.dhl.wanandroid.adapter.HomePageAdapter
 import com.dhl.wanandroid.adapter.WxArticlePgAdapter
-import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.model.HotSearchBean
 import com.dhl.wanandroid.util.CommonUtils
 import com.dhl.wanandroid.vm.HotSearchViewModel
@@ -49,7 +45,7 @@ private const val SEARCH_WHAT = 1024
 
 class HotSearchFragment : BaseFragment() {
 
-    val TAG = "HotSearchFragment"
+
 
     private lateinit var searchView: SearchView
 
@@ -73,22 +69,11 @@ class HotSearchFragment : BaseFragment() {
     private val searchResultRcy: RecyclerView by lazy {
         requireView().findViewById(R.id.search_result_rcy)
 
-
     }
 
     private val searchPgAdapter: WxArticlePgAdapter by lazy {
         WxArticlePgAdapter(requireContext(), this)
     }
-
-    /**
-     * adapter
-     */
-    private val searchAdapter: HomePageAdapter by lazy {
-        HomePageAdapter(activity, R.layout.fragment_homepage_item, searchDataList)
-    }
-
-
-    private val searchDataList: MutableList<Article> = mutableListOf()
 
     private val searchScrollView: NestedScrollView by lazy {
         requireView().findViewById(R.id.search_scroll_view)
@@ -101,7 +86,6 @@ class HotSearchFragment : BaseFragment() {
             super.handleMessage(msg)
             when (msg.what) {
                 SEARCH_WHAT -> {
-                    Log.e(TAG, "you search -->${msg.obj}")
                     val key = msg.obj.toString()
                     getSearchKey(key)
 
@@ -250,22 +234,11 @@ class HotSearchFragment : BaseFragment() {
      */
     private fun getSearchKey(key: String) {
         if (!TextUtils.isEmpty(key)) {
-            searchViewModel.getSearchResult(0, key).observe(viewLifecycleOwner, Observer {
-                Log.e(TAG, "it -->${it.result?.datas.toString()}")
-                if (it.result != null) {
-                    if (it.result!!.datas.size > 0) {
-                        searchDataList.clear()
-                        searchDataList.addAll(it.result?.datas!!)
-                    }
-                }
-                searchResultRcy.visibility = View.VISIBLE
-                searchScrollView.visibility = View.GONE
-
-            })
-
             lifecycleScope.launch {
                 searchViewModel.getSearchRes(key).collect {
                     searchPgAdapter.submitData(it)
+                    searchResultRcy.visibility = View.VISIBLE
+                    searchScrollView.visibility = View.GONE
                 }
             }
 

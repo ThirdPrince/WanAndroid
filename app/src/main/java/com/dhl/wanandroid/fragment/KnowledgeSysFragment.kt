@@ -37,9 +37,10 @@ class KnowledgeSysFragment : BaseFragment(), OnKnowledgeClickListener {
     }
 
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_knowledge_sys, container, false)
     }
 
@@ -64,21 +65,6 @@ class KnowledgeSysFragment : BaseFragment(), OnKnowledgeClickListener {
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
-        }
-    }
-
-
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        fun newInstance(param1: String?, param2: String?): KnowledgeSysFragment {
-            val fragment = KnowledgeSysFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
         }
     }
 
