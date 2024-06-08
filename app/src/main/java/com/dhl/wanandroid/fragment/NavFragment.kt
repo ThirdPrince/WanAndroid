@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dhl.wanandroid.R
-import com.dhl.wanandroid.adapter.NavInfoAdapter
-import com.dhl.wanandroid.model.NavBean
+import com.dhl.wanandroid.adapter.NavInfoListAdapter
 import com.dhl.wanandroid.vm.NavViewModel
 
 /**
@@ -18,19 +17,23 @@ import com.dhl.wanandroid.vm.NavViewModel
  */
 class NavFragment : BaseFragment() {
 
-    private val navInfoList: MutableList<NavBean>  = mutableListOf()
-
-    private val navInfoAdapter: NavInfoAdapter by lazy {
-        NavInfoAdapter(activity, R.layout.nav_info_item, navInfoList)
+    /**
+     * adapter
+     */
+    private val navInfoListAdapter: NavInfoListAdapter by lazy {
+        NavInfoListAdapter(requireActivity(), R.layout.nav_info_item)
     }
 
-    private val navViewModel:NavViewModel by lazy {
+
+    private val navViewModel: NavViewModel by lazy {
         ViewModelProvider(this).get(NavViewModel::class.java)
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_nav, container, false)
     }
 
@@ -40,26 +43,22 @@ class NavFragment : BaseFragment() {
         toolbar.title = getString(R.string.title_nav)
         initRcy()
         setAdapter()
+        getData()
         refreshLayout.setOnRefreshListener { getData() }
     }
 
 
-
     private fun setAdapter() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = navInfoAdapter
+        recyclerView.adapter = navInfoListAdapter
     }
 
-    private fun getData(){
-        navViewModel.getNav().observe(viewLifecycleOwner) { repo->
+    private fun getData() {
+        navViewModel.getNav().observe(viewLifecycleOwner) { repo ->
             repo.result?.let {
-                navInfoList.clear()
-                navInfoList.addAll(it)
-                navInfoAdapter.notifyDataSetChanged()
+                navInfoListAdapter.submitList(it)
             }
-
         }
-
 
     }
 

@@ -20,8 +20,6 @@ import com.google.android.material.tabs.TabLayout
  */
 class SysFragment : BaseFragment() {
 
-
-
     /**
      * tabLayout
      */
