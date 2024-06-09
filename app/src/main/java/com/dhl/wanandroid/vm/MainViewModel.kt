@@ -14,6 +14,17 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -49,6 +60,17 @@ class MainViewModel : BaseViewModel() {
         get() = _resultArticle
 
 
+    private val _articles = MutableStateFlow<PagingData<Article>>(PagingData.empty())
+    val articles: StateFlow<PagingData<Article>> = _articles.asStateFlow()
+    private val articleListCache = mutableListOf<Article>()
+
+    init {
+        viewModelScope.launch {
+            fetchArticles(0)
+        }
+
+    }
+
     /**
      * 获取Banner
      */
@@ -71,37 +93,63 @@ class MainViewModel : BaseViewModel() {
         }
         return resultBanner
     }
+
     fun getArticles(pageNum: Int = 0): Flow<PagingData<Article>> {
         val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = {
-            fetchArticles(it)
+            fetchArticles(pageNum)
         }
         return Pager(PagingConfig(pageSize = 20)) {
-            ArticlePagingSource(apiCall)
+            ArticlePagingSource(apiCall, cache = articleListCache)
         }.flow.cachedIn(viewModelScope)
     }
+//    fun getArticles(pageNum: Int = 0) {
+//        Log.d(tag, "getArticles")
+//        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page ->
+//            api.getArticleList(page)
+//        }
+//        val pager = Pager(PagingConfig(pageSize = 20)) {
+//            ArticlePagingSource(apiCall,articleListCache)
+//        }
+//        Log.d(tag, "getArticles over")
+//        val pagingData = pager.flow.cachedIn(viewModelScope)
+//        viewModelScope.launch {
+//            _articles.emitAll(pagingData)
+//        }
+//
+//    }
 
-    private suspend fun fetchArticles(pageNum: Int): Response<HttpData<ArticleData>> = coroutineScope {
-        val deferredTopArticles = if (pageNum == 0) async { api.getTopArticle() } else null
-        val deferredArticles = async { api.getArticleList(pageNum) }
+    private suspend fun fetchArticles(pageNum: Int): Response<HttpData<ArticleData>> =
 
-        val topArticlesResponse = deferredTopArticles?.await()
-        val articlesResponse = deferredArticles.await()
-        val articleList = mutableListOf<Article>()
-        if (pageNum == 0) {
-            if (topArticlesResponse?.isSuccessful == true && articlesResponse.isSuccessful) {
-                val topArticles = topArticlesResponse.body()?.data?.map { it.apply { isTop = true } } ?: emptyList()
-                val articles = articlesResponse.body()?.data?.datas ?: emptyList()
-                articleList.addAll(articles)
-                articleList.addAll(0,topArticles)
-                val httpData = HttpData(ArticleData(0,datas = articleList,0,false,0,0,0))
+        coroutineScope {
+            if (articleListCache.isNotEmpty() && pageNum == 0) {
+                val httpData = HttpData(ArticleData(0, datas = articleListCache, 0, false, 0, 0, 0))
                 Response.success(httpData)
             } else {
-                articlesResponse // Prioritize articlesResponse error if exists
+                Log.d(tag, "fetchArticles start")
+                val deferredTopArticles = if (pageNum == 0) async { api.getTopArticle() } else null
+                val deferredArticles = async { api.getArticleList(pageNum) }
+                val topArticlesResponse = deferredTopArticles?.await()
+                val articlesResponse = deferredArticles.await()
+                Log.d(tag, "fetchArticles over")
+                articleListCache.clear()
+                if (pageNum == 0) {
+                    if (topArticlesResponse?.isSuccessful == true && articlesResponse.isSuccessful) {
+                        val topArticles =
+                            topArticlesResponse.body()?.data?.map { it.apply { isTop = true } }
+                                ?: emptyList()
+                        val articles = articlesResponse.body()?.data?.datas ?: emptyList()
+                        articleListCache.addAll(articles)
+                        articleListCache.addAll(0, topArticles)
+                        val httpData =
+                            HttpData(ArticleData(0, datas = articleListCache, 0, false, 0, 0, 0))
+                        Response.success(httpData)
+                    } else {
+                        articlesResponse // Prioritize articlesResponse error if exists
+                    }
+                } else {
+                    articlesResponse
+                }
             }
-        } else {
-            articlesResponse
         }
-    }
-
 
 }

@@ -30,6 +30,8 @@ class WxArticlePgAdapter(
     private val colorGenerator: ColorGenerator = ColorGenerator.MATERIAL
     private val drawableBuilder: TextDrawable.IBuilder = TextDrawable.builder().round()
 
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.fragment_homepage_item, parent, false)
         return ArticleViewHolder(view)

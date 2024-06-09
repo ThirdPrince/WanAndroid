@@ -31,10 +31,11 @@ class MyApplication : Application(), ViewModelStoreOwner {
     private val splashViewModel: SplashViewModel by lazy {
         AppScope.getAppScopeViewModel(SplashViewModel::class.java)
     }
+
     override fun onCreate() {
         super.onCreate()
         context = this
-        if(ProcessUtils.isMainProcess(this)){
+        if (ProcessUtils.isMainProcess(this)) {
             Utils.init(this)
             CrashUtils.init()
             AppScope.init(this)
@@ -51,16 +52,15 @@ class MyApplication : Application(), ViewModelStoreOwner {
     }
 
 
-
     override fun getViewModelStore(): ViewModelStore {
         return appViewModelStore
     }
 
-    private  fun preloadSplashImage(){
+    private fun preloadSplashImage() {
         splashViewModel.getImage()
     }
 
-    private  fun imageWork(){
+    private fun imageWork() {
         val uploadWorkRequest: WorkRequest =
             OneTimeWorkRequestBuilder<ImageWork>()
                 .build()

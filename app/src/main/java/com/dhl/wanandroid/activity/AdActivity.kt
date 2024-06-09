@@ -19,6 +19,9 @@ import com.dhl.wanandroid.util.SystemBar
 import com.dhl.wanandroid.vm.AppScope
 import com.dhl.wanandroid.vm.MainViewModel
 import com.dhl.wanandroid.vm.SplashViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -124,7 +127,7 @@ class AdActivity : AppCompatActivity() {
      */
     private fun preLoad() {
         mainViewModel.getBanner()
-        mainViewModel.getArticles()
+        //mainViewModel.getArticles()
     }
 
 

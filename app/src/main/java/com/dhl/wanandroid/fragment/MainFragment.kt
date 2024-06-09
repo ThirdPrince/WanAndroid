@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ConcatAdapter
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
+import com.dhl.wanandroid.adapter.BannerAdapter
 import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.BannerBean
 import com.dhl.wanandroid.module.GlideImageLoader
@@ -18,6 +20,7 @@ import com.dhl.wanandroid.vm.MainViewModel
 import com.youth.banner.Banner
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -44,38 +47,16 @@ class MainFragment : BaseFragment() {
     }
 
 
-
-
-    /**
-     * 头
-     */
-    private val headerAndFooterWrapper: HeaderAndFooterWrapper<*> by lazy {
-        HeaderAndFooterWrapper<Any?>(wxArticlePgAdapter)
-    }
-
-
-    /**
-     * banner Header
-     */
-    private val mHeaderGroup: LinearLayout by lazy {
-        LayoutInflater.from(activity).inflate(R.layout.fragment_main_banner, null) as LinearLayout
-    }
-
-    /**
-     * Banner
-     */
-    private val banner: Banner by lazy {
-        mHeaderGroup.findViewById(R.id.banner)
-    }
-
-    private var pageCount = 0
-
     /**
      * viewModel
      */
     private val mainViewModel: MainViewModel by lazy {
         AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
+    private val bannerAdapter by lazy {
+        BannerAdapter(bannerList)
+    }
+    val concatAdapter = ConcatAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -97,17 +78,13 @@ class MainFragment : BaseFragment() {
     }
 
     private fun initData() {
-        recyclerView.adapter = headerAndFooterWrapper
-        headerAndFooterWrapper.addHeaderView(mHeaderGroup)
+        recyclerView.adapter = concatAdapter
         toolbar.title = "首页"
         refreshLayout.setOnRefreshListener {
-            pageCount = 0
             getData()
         }
 
-        pageCount++
         getData()
-
         observeData()
     }
 
@@ -122,14 +99,16 @@ class MainFragment : BaseFragment() {
         mainViewModel.resultBanner.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
                 bannerList = it.result!!
-                setBanner()
+                concatAdapter.addAdapter(bannerAdapter)
+                concatAdapter.addAdapter(1,wxArticlePgAdapter)
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
 
         }
-        lifecycleScope.launch{
+        lifecycleScope.launchWhenStarted{
             mainViewModel.getArticles().collect {
+                Log.d("MainViewModel", "collect over")
                 wxArticlePgAdapter.submitData(it)
             }
         }
@@ -137,19 +116,5 @@ class MainFragment : BaseFragment() {
 
     }
 
-    /**
-     * 给Banner 赋值
-     */
-    private fun setBanner() {
-        imageUrlList.clear()
-        for (banner in bannerList) {
-            imageUrlList.add(banner.imagePath)
-        }
-        banner.setImages(imageUrlList).setImageLoader(GlideImageLoader()).start()
-        banner.setOnBannerListener { position ->
-            val bannerBean = bannerList[position]
-            WebActivity.startActivity(requireActivity(), bannerBean.title, bannerBean.url)
-        }
-    }
 
 }
