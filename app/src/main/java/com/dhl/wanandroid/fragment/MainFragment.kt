@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.BannerAdapter
+import com.dhl.wanandroid.adapter.OnBannerItemClickListener
 import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.BannerBean
 import com.dhl.wanandroid.module.GlideImageLoader
@@ -28,19 +29,13 @@ import kotlinx.coroutines.launch
  * @author dhl
  * 首页Fragment
  */
-class MainFragment : BaseFragment() {
+class MainFragment : BaseFragment(), OnBannerItemClickListener {
 
 
     /**
      * banner List
      */
     private var bannerList: MutableList<BannerBean> = mutableListOf()
-
-    /**
-     * banner ImageList
-     */
-    private val imageUrlList: MutableList<String> = mutableListOf()
-
 
     private val wxArticlePgAdapter: WxArticlePgAdapter by lazy {
         WxArticlePgAdapter(requireContext(), this)
@@ -54,9 +49,9 @@ class MainFragment : BaseFragment() {
         AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
     private val bannerAdapter by lazy {
-        BannerAdapter(bannerList)
+        BannerAdapter(bannerList, this)
     }
-    val concatAdapter = ConcatAdapter()
+    private val concatAdapter = ConcatAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -100,13 +95,13 @@ class MainFragment : BaseFragment() {
             if (it.isSuccess) {
                 bannerList = it.result!!
                 concatAdapter.addAdapter(bannerAdapter)
-                concatAdapter.addAdapter(1,wxArticlePgAdapter)
+                concatAdapter.addAdapter(1, wxArticlePgAdapter)
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
 
         }
-        lifecycleScope.launchWhenStarted{
+        lifecycleScope.launchWhenStarted {
             mainViewModel.getArticles().collect {
                 Log.d("MainViewModel", "collect over")
                 wxArticlePgAdapter.submitData(it)
@@ -114,6 +109,10 @@ class MainFragment : BaseFragment() {
         }
 
 
+    }
+
+    override fun onItemClick(bannerBean: BannerBean) {
+        WebActivity.startActivity(requireActivity(), bannerBean.title, bannerBean.url)
     }
 
 

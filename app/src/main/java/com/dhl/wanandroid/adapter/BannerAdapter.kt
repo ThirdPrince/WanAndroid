@@ -3,6 +3,7 @@ package com.dhl.wanandroid.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.datastore.preferences.core.preferencesOf
 import androidx.recyclerview.widget.RecyclerView
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
@@ -11,11 +12,11 @@ import com.dhl.wanandroid.module.GlideImageLoader
 import com.youth.banner.Banner
 
 
-class BannerAdapter(private val bannerList: List<BannerBean>) : RecyclerView.Adapter<BannerViewHolder>() {
+class BannerAdapter(private val bannerList: List<BannerBean>,private val onBannerItemClickListener: OnBannerItemClickListener) : RecyclerView.Adapter<BannerViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_main_banner, parent, false)
-        return BannerViewHolder(view)
+        return BannerViewHolder(view,onBannerItemClickListener)
     }
 
     override fun onBindViewHolder(holder: BannerViewHolder, position: Int) {
@@ -25,7 +26,7 @@ class BannerAdapter(private val bannerList: List<BannerBean>) : RecyclerView.Ada
     override fun getItemCount(): Int = 1
 }
 
-class BannerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class BannerViewHolder(itemView: View, private val onBannerItemClickListener: OnBannerItemClickListener) : RecyclerView.ViewHolder(itemView) {
     fun bind(bannerList: List<BannerBean>) {
         val bannerView = itemView.findViewById<Banner>(R.id.banner)
         val imageUrlList: MutableList<String> = mutableListOf()
@@ -33,6 +34,11 @@ class BannerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             imageUrlList.add(banner.imagePath)
         }
         bannerView.setImages(imageUrlList).setImageLoader(GlideImageLoader()).start()
+        bannerView.setOnBannerListener{pos->
+            val bannerBean = bannerList[pos]
+            onBannerItemClickListener.onItemClick(bannerBean)
+
+        }
 
     }
 }
