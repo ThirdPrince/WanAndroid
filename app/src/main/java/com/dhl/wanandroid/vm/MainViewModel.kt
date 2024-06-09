@@ -55,8 +55,8 @@ class MainViewModel : BaseViewModel() {
     /**
      * 文章LiveData
      */
-    private val _resultArticle = MutableLiveData<RepoResult<MutableList<Article>>>()
-    val resultArticle: LiveData<RepoResult<MutableList<Article>>>
+    private val _resultArticle = MutableLiveData<List<Article>>()
+    val resultArticle: LiveData<List<Article>>
         get() = _resultArticle
 
 
@@ -66,7 +66,23 @@ class MainViewModel : BaseViewModel() {
 
     init {
         viewModelScope.launch {
-            fetchArticles(0)
+            val exception = CoroutineExceptionHandler { _, throwable ->
+                _resultBanner.value = throwable.message?.let { RepoResult(it) }
+                Log.e("CoroutinesViewModel", throwable.message!!)
+            }
+
+            viewModelScope.launch(exception) {
+                val response = api.getBanner()
+                Log.i(tag, " response=${response}")
+                var data = response.body()?.data
+                if (data != null) {
+                    _resultBanner.value = RepoResult(data!!, "")
+                } else {
+                    _resultBanner.value = RepoResult(response.message())
+                }
+
+            }
+
         }
 
     }
@@ -75,56 +91,37 @@ class MainViewModel : BaseViewModel() {
      * 获取Banner
      */
     fun getBanner(): LiveData<RepoResult<MutableList<BannerBean>>> {
-        val exception = CoroutineExceptionHandler { _, throwable ->
-            _resultBanner.value = throwable.message?.let { RepoResult(it) }
-            Log.e("CoroutinesViewModel", throwable.message!!)
-        }
 
-        viewModelScope.launch(exception) {
-            val response = api.getBanner()
-            Log.i(tag, " response=${response}")
-            var data = response.body()?.data
-            if (data != null) {
-                _resultBanner.value = RepoResult(data!!, "")
-            } else {
-                _resultBanner.value = RepoResult(response.message())
-            }
-
-        }
         return resultBanner
     }
 
-    fun getArticles(pageNum: Int = 0): Flow<PagingData<Article>> {
-        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = {
-            fetchArticles(pageNum)
+    fun getArticles(): Flow<PagingData<Article>> {
+        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page->
+            api.getArticleList(page)
         }
         return Pager(PagingConfig(pageSize = 20)) {
             ArticlePagingSource(apiCall, cache = articleListCache)
         }.flow.cachedIn(viewModelScope)
     }
-//    fun getArticles(pageNum: Int = 0) {
-//        Log.d(tag, "getArticles")
-//        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page ->
-//            api.getArticleList(page)
-//        }
-//        val pager = Pager(PagingConfig(pageSize = 20)) {
-//            ArticlePagingSource(apiCall,articleListCache)
-//        }
-//        Log.d(tag, "getArticles over")
-//        val pagingData = pager.flow.cachedIn(viewModelScope)
-//        viewModelScope.launch {
-//            _articles.emitAll(pagingData)
-//        }
-//
-//    }
+
+    fun getTopArticles(): LiveData<List<Article>> {
+        viewModelScope.launch {
+            val topArticlesResponse = api.getTopArticle()
+            if (topArticlesResponse?.isSuccessful) {
+                val topArticles =
+                    topArticlesResponse.body()?.data?.map { it.apply { isTop = true } }
+                        ?: emptyList()
+                _resultArticle.value = topArticles
+            }
+
+        }
+       return resultArticle
+    }
+
 
     private suspend fun fetchArticles(pageNum: Int): Response<HttpData<ArticleData>> =
 
         coroutineScope {
-            if (articleListCache.isNotEmpty() && pageNum == 0) {
-                val httpData = HttpData(ArticleData(0, datas = articleListCache, 0, false, 0, 0, 0))
-                Response.success(httpData)
-            } else {
                 Log.d(tag, "fetchArticles start")
                 val deferredTopArticles = if (pageNum == 0) async { api.getTopArticle() } else null
                 val deferredArticles = async { api.getArticleList(pageNum) }
@@ -150,6 +147,6 @@ class MainViewModel : BaseViewModel() {
                     articlesResponse
                 }
             }
-        }
+
 
 }

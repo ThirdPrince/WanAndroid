@@ -12,8 +12,9 @@ import com.dhl.wanandroid.module.GlideImageLoader
 import com.youth.banner.Banner
 
 
-class BannerAdapter(private val bannerList: List<BannerBean>,private val onBannerItemClickListener: OnBannerItemClickListener) : RecyclerView.Adapter<BannerViewHolder>() {
+class BannerAdapter(private val onBannerItemClickListener: OnBannerItemClickListener) : RecyclerView.Adapter<BannerViewHolder>() {
 
+    private var bannerList: List<BannerBean> = emptyList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_main_banner, parent, false)
         return BannerViewHolder(view,onBannerItemClickListener)
@@ -24,6 +25,11 @@ class BannerAdapter(private val bannerList: List<BannerBean>,private val onBanne
     }
 
     override fun getItemCount(): Int = 1
+
+    fun refreshAdapter( bannerList: List<BannerBean>){
+        this.bannerList = bannerList
+        notifyItemChanged(0)
+    }
 }
 
 class BannerViewHolder(itemView: View, private val onBannerItemClickListener: OnBannerItemClickListener) : RecyclerView.ViewHolder(itemView) {

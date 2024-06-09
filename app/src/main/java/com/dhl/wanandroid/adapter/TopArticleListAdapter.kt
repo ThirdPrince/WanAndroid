@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -20,33 +20,28 @@ import com.dhl.wanandroid.drawable.TextDrawable
 import com.dhl.wanandroid.drawable.util.ColorGenerator
 import com.dhl.wanandroid.model.Article
 
-/**
- *公众号adapter
- */
-class WxArticlePgAdapter(
-    private val context: Context,val onItemClickListener: OnItemClickListener
-) : PagingDataAdapter<Article, WxArticlePgAdapter.ArticleViewHolder>(ARTICLE_COMPARATOR) {
+
+class TopArticleListAdapter(
+    private val context: Context,
+    private val onItemClickListener: OnItemClickListener
+) : ListAdapter<Article, TopArticleListAdapter.TopArticleViewHolder>(TopArticleDiffCallback()) {
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     private val colorGenerator: ColorGenerator = ColorGenerator.MATERIAL
     private val drawableBuilder: TextDrawable.IBuilder = TextDrawable.builder().round()
-
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopArticleViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.fragment_homepage_item, parent, false)
-        return ArticleViewHolder(view)
+        return TopArticleViewHolder(view,onItemClickListener)
     }
-
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-        val article = getItem(position)
-        if (article != null) {
-            holder.bind(article)
-        }
+    override fun onBindViewHolder(holder: TopArticleViewHolder, position: Int) {
+        val navInfo = getItem(position)
+        holder.bind(navInfo)
     }
 
-    inner class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TopArticleViewHolder(itemView: View, private val onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
+
         private val headerImg: ImageView = itemView.findViewById(R.id.header_image)
         private val nameTv: TextView = itemView.findViewById(R.id.name)
         private val titleTv: TextView = itemView.findViewById(R.id.content)
@@ -99,17 +94,26 @@ class WxArticlePgAdapter(
 
             itemView.setOnClickListener {
                 onItemClickListener.onItemClick(article)
+
             }
-        }
-    }
 
-    companion object {
-        private val ARTICLE_COMPARATOR = object : DiffUtil.ItemCallback<Article>() {
-            override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem.id == newItem.id
-
-            override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem == newItem
         }
     }
 }
+
+
+
+class TopArticleDiffCallback : DiffUtil.ItemCallback<Article>() {
+    override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(
+        oldItem: Article,
+        newItem: Article
+    ): Boolean {
+        return oldItem == newItem
+    }
+}
+
+

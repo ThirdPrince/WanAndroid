@@ -13,6 +13,7 @@ import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.BannerAdapter
 import com.dhl.wanandroid.adapter.OnBannerItemClickListener
+import com.dhl.wanandroid.adapter.TopArticleListAdapter
 import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.BannerBean
 import com.dhl.wanandroid.module.GlideImageLoader
@@ -41,6 +42,9 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
         WxArticlePgAdapter(requireContext(), this)
     }
 
+    private val topArticleListAdapter: TopArticleListAdapter by lazy {
+        TopArticleListAdapter(requireContext(), this)
+    }
 
     /**
      * viewModel
@@ -49,7 +53,7 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
         AppScope.getAppScopeViewModel(MainViewModel::class.java)
     }
     private val bannerAdapter by lazy {
-        BannerAdapter(bannerList, this)
+        BannerAdapter( this)
     }
     private val concatAdapter = ConcatAdapter()
 
@@ -73,6 +77,9 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
     }
 
     private fun initData() {
+        concatAdapter.addAdapter(bannerAdapter)
+        concatAdapter.addAdapter(1,topArticleListAdapter)
+        concatAdapter.addAdapter(2, wxArticlePgAdapter)
         recyclerView.adapter = concatAdapter
         toolbar.title = "首页"
         refreshLayout.setOnRefreshListener {
@@ -93,18 +100,26 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
     private fun observeData() {
         mainViewModel.resultBanner.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
+                Log.d(TAG, "resultBanner")
                 bannerList = it.result!!
-                concatAdapter.addAdapter(bannerAdapter)
-                concatAdapter.addAdapter(1, wxArticlePgAdapter)
+                bannerAdapter.refreshAdapter(bannerList)
+
+
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
 
         }
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             mainViewModel.getArticles().collect {
                 Log.d("MainViewModel", "collect over")
                 wxArticlePgAdapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            mainViewModel.getTopArticles().observe(viewLifecycleOwner){
+                topArticleListAdapter.submitList(it)
             }
         }
 
@@ -113,6 +128,10 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
 
     override fun onItemClick(bannerBean: BannerBean) {
         WebActivity.startActivity(requireActivity(), bannerBean.title, bannerBean.url)
+    }
+
+    companion object{
+        const val TAG = "MainFragment"
     }
 
 

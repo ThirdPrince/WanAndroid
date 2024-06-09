@@ -17,7 +17,7 @@ class ArticlePagingSource(
         val position = params.key ?: 0
         return try {
             Log.e(TAG,"load ->${position}")
-            val articles = if(position == 0 && cache.isNotEmpty()) cache else apiCall(position).body()?.data?.datas ?: emptyList()
+            val articles =  apiCall(position).body()?.data?.datas ?: emptyList()
             LoadResult.Page(
                 data = articles,
                 prevKey = if (position == 0) null else position - 1,
