@@ -118,7 +118,7 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
         }
 
         lifecycleScope.launch {
-            mainViewModel.getTopArticles().observe(viewLifecycleOwner){
+            mainViewModel.resultArticle.observe(viewLifecycleOwner){
                 topArticleListAdapter.submitList(it)
             }
         }

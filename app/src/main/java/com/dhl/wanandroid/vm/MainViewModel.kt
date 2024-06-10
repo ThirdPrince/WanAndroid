@@ -65,26 +65,8 @@ class MainViewModel : BaseViewModel() {
     private val articleListCache = mutableListOf<Article>()
 
     init {
-        viewModelScope.launch {
-            val exception = CoroutineExceptionHandler { _, throwable ->
-                _resultBanner.value = throwable.message?.let { RepoResult(it) }
-                Log.e("CoroutinesViewModel", throwable.message!!)
-            }
-
-            viewModelScope.launch(exception) {
-                val response = api.getBanner()
-                Log.i(tag, " response=${response}")
-                var data = response.body()?.data
-                if (data != null) {
-                    _resultBanner.value = RepoResult(data!!, "")
-                } else {
-                    _resultBanner.value = RepoResult(response.message())
-                }
-
-            }
-
-        }
-
+        getBanner()
+        getTopArticles()
     }
 
     /**
@@ -92,11 +74,26 @@ class MainViewModel : BaseViewModel() {
      */
     fun getBanner(): LiveData<RepoResult<MutableList<BannerBean>>> {
 
+        val exception = CoroutineExceptionHandler { _, throwable ->
+            _resultBanner.value = throwable.message?.let { RepoResult(it) }
+            Log.e("CoroutinesViewModel", throwable.message!!)
+        }
+        viewModelScope.launch(exception) {
+            val response = api.getBanner()
+            Log.i(tag, " response=${response}")
+            var data = response.body()?.data
+            if (data != null) {
+                _resultBanner.value = RepoResult(data!!, "")
+            } else {
+                _resultBanner.value = RepoResult(response.message())
+            }
+
+        }
         return resultBanner
     }
 
     fun getArticles(): Flow<PagingData<Article>> {
-        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page->
+        val apiCall: suspend (Int) -> Response<HttpData<ArticleData>> = { page ->
             api.getArticleList(page)
         }
         return Pager(PagingConfig(pageSize = 20)) {
@@ -104,7 +101,7 @@ class MainViewModel : BaseViewModel() {
         }.flow.cachedIn(viewModelScope)
     }
 
-    fun getTopArticles(): LiveData<List<Article>> {
+    private fun getTopArticles(): LiveData<List<Article>> {
         viewModelScope.launch {
             val topArticlesResponse = api.getTopArticle()
             if (topArticlesResponse?.isSuccessful) {
@@ -113,40 +110,9 @@ class MainViewModel : BaseViewModel() {
                         ?: emptyList()
                 _resultArticle.value = topArticles
             }
-
         }
-       return resultArticle
+        return resultArticle
     }
-
-
-    private suspend fun fetchArticles(pageNum: Int): Response<HttpData<ArticleData>> =
-
-        coroutineScope {
-                Log.d(tag, "fetchArticles start")
-                val deferredTopArticles = if (pageNum == 0) async { api.getTopArticle() } else null
-                val deferredArticles = async { api.getArticleList(pageNum) }
-                val topArticlesResponse = deferredTopArticles?.await()
-                val articlesResponse = deferredArticles.await()
-                Log.d(tag, "fetchArticles over")
-                articleListCache.clear()
-                if (pageNum == 0) {
-                    if (topArticlesResponse?.isSuccessful == true && articlesResponse.isSuccessful) {
-                        val topArticles =
-                            topArticlesResponse.body()?.data?.map { it.apply { isTop = true } }
-                                ?: emptyList()
-                        val articles = articlesResponse.body()?.data?.datas ?: emptyList()
-                        articleListCache.addAll(articles)
-                        articleListCache.addAll(0, topArticles)
-                        val httpData =
-                            HttpData(ArticleData(0, datas = articleListCache, 0, false, 0, 0, 0))
-                        Response.success(httpData)
-                    } else {
-                        articlesResponse // Prioritize articlesResponse error if exists
-                    }
-                } else {
-                    articlesResponse
-                }
-            }
 
 
 }
