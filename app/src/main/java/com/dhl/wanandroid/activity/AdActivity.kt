@@ -42,7 +42,6 @@ class AdActivity : AppCompatActivity() {
     }
     private val splashViewModel: SplashViewModel by lazy {
         AppScope.getAppScopeViewModel(SplashViewModel::class.java)
-        // ViewModelProvider(this).get(SplashViewModel::class.java)
     }
 
     /**
@@ -74,7 +73,6 @@ class AdActivity : AppCompatActivity() {
         setContentView(R.layout.activity_ad)
         initSystemBar()
         splashViewModel.getImage().observe(this) { imageBean -> showImage(imageBean) }
-        preLoad()
         jumpBtn.setOnClickListener {
             goMain()
         }
@@ -119,17 +117,6 @@ class AdActivity : AppCompatActivity() {
         super.onDestroy()
         handler.removeMessages(WHAT)
     }
-
-
-    /**
-     * 预加载首页
-     * 更快展示数据
-     */
-    private fun preLoad() {
-        mainViewModel.getBanner()
-        //mainViewModel.getArticles()
-    }
-
 
     companion object {
         private const val WHAT = 1024

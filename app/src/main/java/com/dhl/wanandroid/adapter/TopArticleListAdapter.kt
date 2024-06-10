@@ -25,7 +25,6 @@ class TopArticleListAdapter(
     private val context: Context,
     private val onItemClickListener: OnItemClickListener
 ) : ListAdapter<Article, TopArticleListAdapter.TopArticleViewHolder>(TopArticleDiffCallback()) {
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     private val colorGenerator: ColorGenerator = ColorGenerator.MATERIAL
     private val drawableBuilder: TextDrawable.IBuilder = TextDrawable.builder().round()
