@@ -76,11 +76,9 @@ class MainViewModel : BaseViewModel() {
 
         val exception = CoroutineExceptionHandler { _, throwable ->
             _resultBanner.value = throwable.message?.let { RepoResult(it) }
-            Log.e("CoroutinesViewModel", throwable.message!!)
         }
         viewModelScope.launch(exception) {
             val response = api.getBanner()
-            Log.i(tag, " response=${response}")
             var data = response.body()?.data
             if (data != null) {
                 _resultBanner.value = RepoResult(data!!, "")
@@ -101,7 +99,7 @@ class MainViewModel : BaseViewModel() {
         }.flow.cachedIn(viewModelScope)
     }
 
-    private fun getTopArticles(): LiveData<List<Article>> {
+     fun getTopArticles(): LiveData<List<Article>> {
         viewModelScope.launch {
             val topArticlesResponse = api.getTopArticle()
             if (topArticlesResponse?.isSuccessful) {

@@ -22,11 +22,6 @@ import kotlinx.coroutines.launch
  */
 class SquareFragment : BaseFragment() {
 
-
-    private val wxArticlePgAdapter: WxArticlePgAdapter by lazy {
-        WxArticlePgAdapter(requireContext(), this)
-    }
-
     /**
      * viewModel
      */
@@ -44,7 +39,7 @@ class SquareFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRcy()
-        recyclerView.adapter = wxArticlePgAdapter
+        recyclerView.adapter = basePgAdapter
         getData()
         refreshLayout.setOnRefreshListener {
             getData()
@@ -57,16 +52,11 @@ class SquareFragment : BaseFragment() {
     private fun getData() {
         lifecycleScope.launch {
             squareViewModel.getSquareList().collect {
-                wxArticlePgAdapter.submitData(it)
+                basePgAdapter.submitData(it)
             }
 
         }
-        wxArticlePgAdapter.addLoadStateListener { loadState ->
-            // 只在加载完成时停止刷新动画
-            if (loadState.source.refresh is LoadState.NotLoading) {
-                refreshLayout.isRefreshing = false
-            }
-        }
+
     }
 
 

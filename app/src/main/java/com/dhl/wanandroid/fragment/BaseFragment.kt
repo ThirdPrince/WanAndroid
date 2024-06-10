@@ -4,14 +4,19 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dhl.wanandroid.R
 import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.OnItemClickListener
+import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.Article
 import com.dhl.wanandroid.util.SettingUtil.getColor
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 /**
@@ -42,9 +47,25 @@ abstract class BaseFragment : Fragment(), OnItemClickListener {
     protected val recyclerView: RecyclerView by lazy {
         requireView().findViewById(R.id.rcy_view)
     }
+
+    // 使用 lazy 初始化适配器
+    protected val basePgAdapter: WxArticlePgAdapter by lazy {
+        WxArticlePgAdapter(requireContext(), this)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        basePgAdapter.addLoadStateListener { loadState ->
+            // 只在加载完成时停止刷新动画
+            if (loadState.source.refresh is LoadState.NotLoading) {
+                lifecycleScope.launch {
+                    delay(500)
+                    refreshLayout.isRefreshing = false
+                }
+
+            }
+        }
     }
 
 

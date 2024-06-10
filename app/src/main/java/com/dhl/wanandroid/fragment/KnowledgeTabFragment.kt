@@ -23,11 +23,6 @@ class KnowledgeTabFragment : BaseFragment() {
         private set
     private var articleId: String = ""
 
-
-    private val wxArticlePgAdapter: WxArticlePgAdapter by lazy {
-        WxArticlePgAdapter(requireContext(), this)
-    }
-
     private var isViewCreate = false
     private var isDataInited = false
 
@@ -65,7 +60,7 @@ class KnowledgeTabFragment : BaseFragment() {
      * 加载数据
      */
     private fun onLoadData() {
-        recyclerView.adapter = wxArticlePgAdapter
+        recyclerView.adapter = basePgAdapter
         getData()
         refreshLayout.setOnRefreshListener { getData() }
         isDataInited = true
@@ -77,7 +72,7 @@ class KnowledgeTabFragment : BaseFragment() {
     private fun getData() {
         lifecycleScope.launch {
             knowledgeTabViewModel.getArticles(articleId.toInt()).collect {
-                wxArticlePgAdapter.submitData(it)
+                basePgAdapter.submitData(it)
             }
         }
 

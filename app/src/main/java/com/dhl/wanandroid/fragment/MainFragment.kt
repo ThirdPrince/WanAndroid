@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import com.blankj.utilcode.util.ToastUtils
@@ -14,15 +13,10 @@ import com.dhl.wanandroid.activity.WebActivity
 import com.dhl.wanandroid.adapter.BannerAdapter
 import com.dhl.wanandroid.adapter.OnBannerItemClickListener
 import com.dhl.wanandroid.adapter.TopArticleListAdapter
-import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.BannerBean
-import com.dhl.wanandroid.module.GlideImageLoader
 import com.dhl.wanandroid.vm.AppScope
 import com.dhl.wanandroid.vm.MainViewModel
-import com.youth.banner.Banner
-import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -38,9 +32,6 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
      */
     private var bannerList: MutableList<BannerBean> = mutableListOf()
 
-    private val wxArticlePgAdapter: WxArticlePgAdapter by lazy {
-        WxArticlePgAdapter(requireContext(), this)
-    }
 
     private val topArticleListAdapter: TopArticleListAdapter by lazy {
         TopArticleListAdapter(requireContext(), this)
@@ -79,14 +70,13 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
     private fun initData() {
         concatAdapter.addAdapter(bannerAdapter)
         concatAdapter.addAdapter(1,topArticleListAdapter)
-        concatAdapter.addAdapter(2, wxArticlePgAdapter)
+        concatAdapter.addAdapter(2, basePgAdapter)
         recyclerView.adapter = concatAdapter
         toolbar.title = "首页"
         refreshLayout.setOnRefreshListener {
             getData()
         }
 
-        getData()
         observeData()
     }
 
@@ -95,16 +85,15 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
      */
     private fun getData() {
         mainViewModel.getBanner()
+        mainViewModel.getTopArticles()
+        basePgAdapter.refresh()
     }
 
     private fun observeData() {
         mainViewModel.resultBanner.observe(viewLifecycleOwner) {
             if (it.isSuccess) {
-                Log.d(TAG, "resultBanner")
                 bannerList = it.result!!
                 bannerAdapter.refreshAdapter(bannerList)
-
-
             } else {
                 ToastUtils.showLong(it.errorMessage)
             }
@@ -112,8 +101,7 @@ class MainFragment : BaseFragment(), OnBannerItemClickListener {
         }
         lifecycleScope.launch {
             mainViewModel.getArticles().collect {
-                Log.d("MainViewModel", "collect over")
-                wxArticlePgAdapter.submitData(it)
+                basePgAdapter.submitData(it)
             }
         }
 

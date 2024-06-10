@@ -71,9 +71,7 @@ class HotSearchFragment : BaseFragment() {
 
     }
 
-    private val searchPgAdapter: WxArticlePgAdapter by lazy {
-        WxArticlePgAdapter(requireContext(), this)
-    }
+    private val searchPgAdapter = basePgAdapter
 
     private val searchScrollView: NestedScrollView by lazy {
         requireView().findViewById(R.id.search_scroll_view)
