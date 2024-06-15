@@ -23,7 +23,6 @@ import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dhl.wanandroid.R
-import com.dhl.wanandroid.adapter.WxArticlePgAdapter
 import com.dhl.wanandroid.model.HotSearchBean
 import com.dhl.wanandroid.util.CommonUtils
 import com.dhl.wanandroid.vm.HotSearchViewModel
@@ -67,11 +66,13 @@ class HotSearchFragment : BaseFragment() {
      * 搜索结果
      */
     private val searchResultRcy: RecyclerView by lazy {
-        requireView().findViewById(R.id.search_result_rcy)
+        requireView().findViewById(R.id.rcy_view)
 
     }
 
-    private val searchPgAdapter = basePgAdapter
+    private val searchPgAdapter by lazy {
+        basePgAdapter
+    }
 
     private val searchScrollView: NestedScrollView by lazy {
         requireView().findViewById(R.id.search_scroll_view)
@@ -149,7 +150,7 @@ class HotSearchFragment : BaseFragment() {
                     handlerUI.removeMessages(SEARCH_WHAT)
                     if (TextUtils.isEmpty(newText)) {
                         searchResultRcy.visibility = View.GONE
-                        searchScrollView.visibility = View.VISIBLE
+                        refreshLayout.visibility = View.VISIBLE
                     } else {
                         val message = Message.obtain()
                         message.obj = newText
@@ -235,7 +236,7 @@ class HotSearchFragment : BaseFragment() {
             lifecycleScope.launch {
                 searchViewModel.getSearchRes(key).collect {
                     searchPgAdapter.submitData(it)
-                    searchResultRcy.visibility = View.VISIBLE
+                    refreshLayout.visibility = View.VISIBLE
                     searchScrollView.visibility = View.GONE
                 }
             }

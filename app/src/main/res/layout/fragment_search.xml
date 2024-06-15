@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/viewBackground"
@@ -9,14 +8,19 @@
 
     <include layout="@layout/fragment_toolbar" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_result_rcy"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray_bg"
+        android:layout_height="wrap_content"
         android:visibility="gone"
-        ></androidx.recyclerview.widget.RecyclerView>
+        app:srlEnableLoadMore="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcy_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/search_scroll_view"
@@ -56,7 +60,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:drawablePadding="@dimen/dp_6"
                     android:text="@string/clear_all"
                     android:textColor="@color/Grey400" />
@@ -65,19 +68,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/search_history_clear_all_tv"
-                    android:layout_toLeftOf="@+id/search_history_clear_all_tv"
                     android:text="@string/history_search"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/sp_16" />
             </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/search_history_rcy"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
-
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
